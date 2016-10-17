@@ -1,4 +1,0 @@
-read_verilog counters/counter_32_for_synth.v
-hierarchy 
-proc; opt; memory; opt; fsm; opt; techmap; opt
-write_verilog synth.v
