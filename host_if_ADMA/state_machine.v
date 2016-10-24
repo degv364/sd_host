@@ -70,19 +70,18 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
 
 	   end
 	   ST_CADR: begin
-	      //*****TODO: ELSE this will have inferred latches*********
-	      if (TRAN) begin 
+	      if (TRAN==1) begin 
 		 state = ST_TFR;
-	      end
-	      if (END==1 & TRAN==0) begin
-		 state = ST_STOP;
-	      end
-	      if (END==0 & TRAN==0) begin
-		 state = ST_FDS;
-	      end
-	   end // always @ (posedge CLK)
+	      end else begin
+		 if (END==1) begin
+		    state = ST_STOP;
+		 end else begin
+		    state = ST_FDS;
+		 end
+	      end 
+	   end 
 	   ST_TFR: begin
-	      //*****TODO: ELSE this will have inferred latches********
+	     
 	      if (TFC==0) begin
 		 state = ST_TFR;
 	      end else begin
