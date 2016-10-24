@@ -1,5 +1,9 @@
 //includes
 
+
+//TODO: PASAR esto a separacion de logica combinacional y flipflops
+
+
 module state_machine(address_descriptor, RESET, STOP, CLK );
    
    input [95:0] address_descriptor;
@@ -10,15 +14,11 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
    
    
    reg [1:0] 	state;
-   //there are 4 states, so
-   //ST_STOP  00
-   //ST_FDS   01
-   //ST_CACDR 10
-   //ST_TFR   11
-   parameter ST_STOP = 0;
-   parameter ST_FDS  = 1;
-   parameter ST_CACDR= 2;
-   parameter ST_TFR  = 3;
+   
+   parameter ST_STOP = 0'b0001;
+   parameter ST_FDS  = 0'b0010;
+   parameter ST_CACDR= 0'b0100;
+   parameter ST_TFR  = 0'b1000;
 
 
    //command related variables
@@ -45,62 +45,77 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
 
    //internal variables
    reg 		TFC; //transfer data complete flag
+   wire 	next_state;
+   
+
+   //Parte secuencial
+   always @(posedge CLK)begin
+      if (RESET) begin
+	 state=ST_STOP;
+	 //salidas nulas
+      end
+      else begin
+	 state<=next_state;
+	 //salida<=next_salida;
+      
+      
+   end
    
 
    //state selector
-   always @(posedge CLK) begin
+   always @(*) begin
       if (RESET) begin
-	 state=ST_STOP;
+	 next_state=ST_STOP;
       end else begin
 	 case (state)
 	   ST_STOP: begin 
 	      //******TODO: implement command_reg************
 	      if (command_reg_write | command_reg_continue) begin
-		 state=ST_FDS;
+		 next_state=ST_FDS;
 	      end else begin
-		 state=ST_STOP;
+		 next_state=ST_STOP;
 	      end
 	   end
 	   ST_FDS: begin
 	      if (VALID==0) begin
-		 state=ST_FDS;
+		 next_state=ST_FDS;
 	      end else begin
-		 state=ST_CACDR;
+		 next_state=ST_CACDR;
 	      end
 
 	   end
 	   ST_CADR: begin
 	      if (TRAN==1) begin 
-		 state = ST_TFR;
+		 next_state = ST_TFR;
 	      end else begin
 		 if (END==1) begin
-		    state = ST_STOP;
+		    next_state = ST_STOP;
 		 end else begin
-		    state = ST_FDS;
+		    next_state = ST_FDS;
 		 end
 	      end 
 	   end 
 	   ST_TFR: begin
 	     
 	      if (TFC==0) begin
-		 state = ST_TFR;
+		 next_state = ST_TFR;
 	      end else begin
 		 if (END==1 | STOP==1) begin
-		    state= ST_STOP;
+		    next_state= ST_STOP;
 		 end else begin
-		    state = ST_FDS;
+		    next_state = ST_FDS;
 		 end
 	      end 
 	   end 
 	   default: begin
-	      state=ST_STOP;
+	      next_state=ST_STOP;
 	   end
 	 endcase // case (state)
       end // else: !if(RESET)
    end // always @ (posedge CLK)
    
-
-   always @(state) begin
+   //definicion de las salidas (entradas a bloques funcionales)
+   always @(*) begin
       case (state)
 	ST_STOP: begin
 	   //implementation
