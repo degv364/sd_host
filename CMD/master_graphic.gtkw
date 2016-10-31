@@ -1,0 +1,58 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Fri Oct 28 04:51:23 2016
+[*]
+[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/test.vcd"
+[dumpfile_mtime] "Fri Oct 28 04:51:16 2016"
+[dumpfile_size] 3549
+[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/master_graphic.gtkw"
+[timestart] 1
+[size] 1301 744
+[pos] -1 -1
+*-2.367184 8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_cmd_master.
+[treeopen] tb_cmd_master.test_master.
+[sst_width] 225
+[signals_width] 244
+[sst_expanded] 1
+[sst_vpaned_height] 211
+@28
+tb_cmd_master.test_master.CLK_host
+tb_cmd_master.test_master.reset
+@23
+tb_cmd_master.test_master.current_st[3:0]
+@28
+tb_cmd_master.test_master.new_cmd
+@24
+tb_cmd_master.test_master.timeout_value[15:0]
+@28
+tb_cmd_master.test_master.timeout_error_counter
+tb_cmd_master.test_master.timeout_error
+tb_cmd_master.test_master.counter_flag
+tb_cmd_master.test_master.cmd_busy
+@22
+tb_cmd_master.test_master.cmd_arg[31:0]
+tb_cmd_master.test_master.cmd_index[5:0]
+@28
+tb_cmd_master.test_master.REQ_in
+tb_cmd_master.test_master.REQ_out
+tb_cmd_master.test_master.ACK_in
+tb_cmd_master.test_master.execute_complete
+tb_cmd_master.test_master.ACK_out
+@22
+tb_cmd_master.test_master.cmd_out[37:0]
+tb_cmd_master.test_master.cmd_response[37:0]
+tb_cmd_master.test_master.response_arg[31:0]
+tb_cmd_master.test_master.response_index[5:0]
+@200
+-counterSignals
+@22
+tb_cmd_master.test_master.time_counter_1.max_timeout_value[15:0]
+@28
+tb_cmd_master.test_master.time_counter_1.start_count
+@22
+tb_cmd_master.test_master.time_counter_1.time_counter[15:0]
+@28
+tb_cmd_master.test_master.time_counter_1.timeout_error
+[pattern_trace] 1
+[pattern_trace] 0
