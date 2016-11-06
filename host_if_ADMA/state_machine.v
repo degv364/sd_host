@@ -11,15 +11,13 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
    input 	CLK;
    input 	STOP;
    
-   
-   
    reg [1:0] 	state;
-   
+
+   //One hot
    parameter ST_STOP = 0'b0001;
    parameter ST_FDS  = 0'b0010;
    parameter ST_CACDR= 0'b0100;
    parameter ST_TFR  = 0'b1000;
-
 
    //command related variables
    reg [63:0] 	address;
@@ -56,16 +54,13 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
       end
       else begin
 	 state<=next_state;
-	 //salida<=next_salida;
-      
-      
+	 //salida<=next_salida;      
    end
    
-
    //state selector
    always @(*) begin
       if (RESET) begin
-	 next_state=ST_STOP;
+	 next_state=ST_STOP; //reset asincronico
       end else begin
 	 case (state)
 	   ST_STOP: begin 
@@ -134,6 +129,12 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
 	end
       endcase // case (state)
    end // always @ (state)
+
+   //submodules
+
+
+
+endmodule // state_machine
 
 	 
      
