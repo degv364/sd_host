@@ -1,29 +1,31 @@
 //includes
+`include "fetch.v"
+`include "transfer.v"
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
 
 //TODO: tener dos entradas de data, para cada lado, al igual que salidas.
 module state_machine(
-		     input  address_descriptor, 
-		     input  RESET, 
-		     input  STOP, 
-		     input  CLK,
-		     input  data_from_ram,
-		     input  data_from_fifo,
-		     input  fifo_full,
-		     input  fifo_empty,
-		     input  command_reg_write,
-		     input  command_reg_continue,
-		     input  direction,
-		     output data_to_ram,
-		     output data_to_fifo,
-		     output ram_address,
-		     output ram_write,
-		     output ram_read,
-		     output fifo_write,
-		     output fifo_read,
-		     output start_transfer
+		     input [63:0] starting_address,
+		     input 	   RESET, 
+		     input 	   STOP, 
+		     input 	   CLK,
+		     input [31:0]  data_from_ram,
+		     input [31:0]  data_from_fifo,
+		     input 	   fifo_full,
+		     input 	   fifo_empty,
+		     input 	   command_reg_write,
+		     input 	   command_reg_continue,
+		     input 	   direction, //1 -> ram to fifo
+		     output [31:0] data_to_ram,
+		     output [31:0] data_to_fifo,
+		     output [63:0] ram_address,
+		     output 	   ram_write,
+		     output 	   ram_read,
+		     output 	   fifo_write,
+		     output 	   fifo_read,
+		     output 	   start_transfer
 		     );
    
    wire [95:0] 	address_descriptor;
@@ -31,7 +33,7 @@ module state_machine(
    wire 	CLK;
    wire 	STOP;
    
-   reg [1:0] 	state;
+   reg [3:0] 	state;
 
    //One hot
    parameter ST_STOP = 4'b0001;
@@ -63,7 +65,15 @@ module state_machine(
 
    //internal variables
    reg 		TFC; //transfer data complete flag
-   wire 	next_state;
+   wire [3:0]	next_state;
+   wire [63:0] 	ram_fetch_address;
+   wire 	address_fetch_done;
+   reg 		begin_fetch;
+   wire 	next_ram_address;
+   
+   
+   
+   
    
 
    //Parte secuencial
@@ -94,7 +104,12 @@ module state_machine(
 	      if (VALID==0) begin
 		 next_state=ST_FDS;
 	      end else begin
-		 next_state=ST_CACDR;
+		 if (address_fetch_done==1) begin
+		    next_state_ST_CACDR;
+		 end else begin
+		    next_state=ST_FDS;
+		 end
+		 
 	      end
 
 	   end
@@ -132,16 +147,54 @@ module state_machine(
    always @(*) begin
       case (state)
 	ST_STOP: begin
-	   //implementation
+	   //STOP DMA
+	   TFC=0;
+	   address_descriptor=0;
+	   ram_read=0;
+	   ram_write=0;
+	   fifo_read=0;
+	   fifo_write=0;
+	   ram_fetch_address=starting_address;
+	   begin_fetch=0;
+	   start_transfer=0;
+	   
+	   	   
+	   
 	end
 	ST_FDS: begin
-	   //implementation
+	   //Load address descriptor from memory
+	   //requires 3 cycles to complete
+	   begin_fetch=1; //habilitar submodulo fetch
+	   start_transfer=0;
+	   
+	   ram_write=0;
+	   ram_read=1; //habilitar lectura de ram
+	   fifo_read=0;
+	   fifo_write=0;
+	   
 	end
 	ST_CACDR: begin
-	   //implementation
+	   //change reading address to fetch next cycle
+	   begin_fetch=0;
+	   start_transfer=0;
+	   
+	   ram_address=next_ram_address;
+	   if (LINK==1) begin
+	      //read descriptor for new address
+	      next_ram_address=address;
+	   end
+	   else begin
+	      next_ram_address=ram_address+4;
+	   end
+	   
 	end
 	ST_TFR: begin
-	   //implementation
+	   //Actually transfer the data.
+	   begin_fetch=0;
+	   start_transfer=1;
+	   //TODO fifo full, fifo empty
+	   
+	   
 	end
 	default: begin
 	   //ST_STOP
@@ -150,7 +203,33 @@ module state_machine(
    end // always @ (state)
 
    //submodules
+   fetch fetch(.start(begin_fetch),
+	       .address(ram_fetch_address),
+	       .address_fetch_done(address_fetch_done),
+	       .address_descriptor(address_descriptor),
+	       .ram_data(data_from_ram),
+	       .address_to_fetch(ram_address),
+	       .CLK(CLK));
 
+   transfer transfer(.start(start_transfer),
+		     .direction(direction),
+		     .TFC(TFC),
+		     .address_init(address),
+		     .length(length),
+		     .ram_read(ram_read),
+		     .ram_write(ram_write),
+		     .fifo_read(fifo_read),
+		     .fifo_write(fifo_write),
+		     .data_from_ram(data_from_ram),
+		     .data_to_ram(data_to_ram),
+		     .data_from_fifo(data_to_fifo),
+		     .data_to_fifo(data_to_fifo),
+		     .ram_address(ram_address),
+		     .fifo_full(fifo_full),
+		     .fifo_empty(fifo_empty),
+		     .CLK(CLK));
+   
+   
 
 
 endmodule // state_machine

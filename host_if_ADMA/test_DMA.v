@@ -7,7 +7,7 @@
 
 module test_dma;
 
-   wire [96:0] address_descriptor;
+   //wire [96:0] address_descriptor;
    wire RESET;
    wire STOP;
    wire CLK;
@@ -31,7 +31,7 @@ module test_dma;
    
    
 
-   state_machine dma(.address_descriptor(address_descriptor)
+   state_machine dma(.starting_address(starting_address),
 		     .RESET(RESET),
 		     .STOP(STOP),
 		     .CLK(CLK),
@@ -51,7 +51,7 @@ module test_dma;
 		     .fifo_read(fifo_read),
 		     .fifo_write(fifo_write));
 
-   dma_signal dma_signal(.address_descriptor(address_descriptor)
+   dma_signal dma_signal(.starting_address(starting_address)
 			 .RESET(RESET),
 			 .STOP(STOP),
 			 .CLK(CLK),
