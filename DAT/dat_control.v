@@ -9,7 +9,7 @@
 //TODO: Check if a DAT_control busy signal is necessary
 //TODO: Timeout check
 //TODO?: tx_buf_full input
-module data_control(input host_clk, 
+module dat_control(input host_clk, 
 		    input  rst_L,
 		    input  data_init_tx,
 		    input  data_init_rx,

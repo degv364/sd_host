@@ -4,11 +4,11 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "data_defines.v"
+`include "defines.v"
 
 `timescale 1ns/10ps
 
-module data_phys(input sd_clk,
+module dat_phys(input sd_clk,
 		 input 			  rst_L,
 		 input [`FIFO_WIDTH-1:0]  tx_buf_din,
 		 input [3:0] 		  DAT_din,
