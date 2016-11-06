@@ -1,15 +1,19 @@
 
-module ram_signal(address, write, data_out, CLK);
+module ram_signal(address, write, read, data_out, CLK);
 
    output [63:0] address;
    output [31:0] data_out;
    output 	 write;
    output 	 CLK;
+   output 	 read;
+   
    
    
    reg [63:0]	 address=512; 
    reg [31:0] 	 data_out=0;
    reg 		 write=1;
+   reg 		 read=0;
+   
    reg 		 CLK=0;
       
    initial begin
@@ -69,6 +73,8 @@ module ram_signal(address, write, data_out, CLK);
       
 
       # 5 write = 0;
+      # 0 read =1;
+      
       
       # 1 address=512;
       
