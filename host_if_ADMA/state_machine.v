@@ -3,21 +3,41 @@
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
 
-
-module state_machine(address_descriptor, RESET, STOP, CLK );
+//TODO: tener dos entradas de data, para cada lado, al igual que salidas.
+module state_machine(
+		     input  address_descriptor, 
+		     input  RESET, 
+		     input  STOP, 
+		     input  CLK,
+		     input  data_from_ram,
+		     input  data_from_fifo,
+		     input  fifo_full,
+		     input  fifo_empty,
+		     input  command_reg_write,
+		     input  command_reg_continue,
+		     input  direction,
+		     output data_to_ram,
+		     output data_to_fifo,
+		     output ram_address,
+		     output ram_write,
+		     output ram_read,
+		     output fifo_write,
+		     output fifo_read,
+		     output start_transfer
+		     );
    
-   input [95:0] address_descriptor;
-   input 	RESET;
-   input 	CLK;
-   input 	STOP;
+   wire [95:0] 	address_descriptor;
+   wire 	RESET;
+   wire 	CLK;
+   wire 	STOP;
    
    reg [1:0] 	state;
 
    //One hot
-   parameter ST_STOP = 0'b0001;
-   parameter ST_FDS  = 0'b0010;
-   parameter ST_CACDR= 0'b0100;
-   parameter ST_TFR  = 0'b1000;
+   parameter ST_STOP = 4'b0001;
+   parameter ST_FDS  = 4'b0010;
+   parameter ST_CACDR= 4'b0100;
+   parameter ST_TFR  = 4'b1000;
 
    //command related variables
    reg [63:0] 	address;
@@ -64,8 +84,7 @@ module state_machine(address_descriptor, RESET, STOP, CLK );
       end else begin
 	 case (state)
 	   ST_STOP: begin 
-	      //******TODO: implement command_reg************
-	      if (command_reg_write | command_reg_continue) begin
+	      if (command_reg_write==1 | command_reg_continue==1) begin
 		 next_state=ST_FDS;
 	      end else begin
 		 next_state=ST_STOP;

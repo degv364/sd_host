@@ -3,10 +3,13 @@
 //Pero es necesario para el testbench.
 //Lee y escribe en la direccion determinada.
 
-module ram(address,data_in, write, data_out);
+module ram(address,data_in, write, read, data_out, CLK);
    input [63:0] address;
    input [31:0] data_in;
    input 	write;
+   input 	read;
+   input 	CLK;
+   
    
    
    output [31:0] data_out;
@@ -14,31 +17,22 @@ module ram(address,data_in, write, data_out);
    
 
    reg [1024:0] info;
-   wire [7:0] 	scope;
+   wire [96:0] 	scope;
    
    //assign address_end= address+31;
-   assign scope = info[520:512];
+   assign scope = info[608:512];
    
    
    //verify mod 32, valid address. whole words
-   always @(address) begin
+
+   always @(posedge CLK) begin
       if (address[4:0]==0) begin
-	 //read or write
 	 if (write==1) begin
-	    //write
 	    info[address+:32]=data_in;
-	    
-	 end else begin
-	    //read
-	    data_out=info[address+:32];
-	    
 	 end
-	 
-	 
-      end else begin
-	 //do nothing
-	 data_out=data_out;
-	 
+	 if (read==1) begin
+	    data_out=info[address+:32];
+	 end
       end
    end
 
