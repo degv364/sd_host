@@ -1,5 +1,5 @@
-`include "ram.v"
-`include "ram_signals.v"
+`include "modules/ram.v"
+`include "signals/ram_signals.v"
 
 
 module test_ram;

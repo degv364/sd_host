@@ -1,8 +1,8 @@
 //testbench para DMA
-`include "state_machine.v"
-`include "ram.v"
-`include "simple_fifo.v"
-`include "dma_signals.v"
+`include "modules/state_machine.v"
+`include "modules/ram.v"
+`include "modules/simple_fifo.v"
+`include "signals/dma_signals.v"
 
 
 module test_dma;

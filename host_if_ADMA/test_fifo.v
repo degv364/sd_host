@@ -1,5 +1,5 @@
-`include "fifo_signals.v"
-`include "simple_fifo.v"
+`include "signals/fifo_signals.v"
+`include "modules/simple_fifo.v"
 
 module test_fifo;
 
