@@ -8,9 +8,9 @@ module CMD_master(
 	input reset, 
 	input CLK_host,
 	input new_cmd,
-	input cmd_error,
 	input ACK_in,
 	input REQ_in,
+	input physical_inactive,
 	input [31:0] cmd_arg,
 	input [5:0] cmd_index, 
 	input [15:0]timeout_value,
@@ -30,11 +30,11 @@ module CMD_master(
 	//States (one-hot)
 	parameter st_waiting_for_cmd = 4'b0001;
 	parameter st_setup = 4'b0010;
-	parameter st_waiting_for_response = 4'b0100;
+	parameter st_waiting_response = 4'b0100;
 	parameter st_finishing = 4'b1000;
 
 	//inputs
-	wire reset, CLK_host, new_cmd,cmd_error, ACK_in, REQ_in;
+	wire reset, CLK_host, new_cmd, ACK_in, REQ_in;
 	wire [31:0] cmd_arg;
 	wire [5:0] cmd_index; 
 	wire [15:0]timeout_value;
@@ -48,22 +48,24 @@ module CMD_master(
 	reg [37:0]cmd_out;
 	
 	//other wires
-	wire [2:0] next_st;
+	
 	
 	//other regs
 	reg [3:0] current_st = st_waiting_for_cmd;
-	reg counter_flag;
+	reg start_counting;
 	reg execute_complete;
 	
 	//other blocks
-	timeout_counter time_counter_1(CLK_host,timeout_value, counter_flag, timeout_error_counter);
+	timeout_counter time_counter_1(CLK_host,timeout_value, start_counting, timeout_error_counter);
 	
 	
 	//FF's and next state block
 	always @(posedge CLK_host) begin
-			current_st <= current_st;
 			if (reset) begin
 				current_st <= st_waiting_for_cmd;
+			end
+			else begin
+				current_st <= current_st;
 			end
 			case(current_st)
 				
@@ -78,15 +80,15 @@ module CMD_master(
 				
 				st_setup: begin			
 					if(ACK_in == 1) begin
-						current_st <= st_waiting_for_response;
+						current_st <= st_waiting_response;
 					end
 					else begin
 						current_st <= current_st;
 					end
 				end
 				
-				st_waiting_for_response: begin
-					if((timeout_error_counter == 1) || (cmd_error == 1) || (execute_complete == 1) ) begin
+				st_waiting_response: begin
+					if((physical_inactive == 1) || (execute_complete == 1) ) begin
 						current_st <= st_finishing;
 					end
 					else begin
@@ -117,7 +119,7 @@ module CMD_master(
 		response_arg = response_arg;
 		response_index = response_index;
 		cmd_out = cmd_out;
-		counter_flag = counter_flag;
+		start_counting = start_counting;
 		execute_complete = execute_complete;
 		
 		case (current_st)
@@ -131,7 +133,7 @@ module CMD_master(
 				response_arg = 32'h0000_0000;
 				response_index = 6'b000000;
 				cmd_out = 38'h0000_0000;
-				counter_flag =0;
+				start_counting =0;
 				execute_complete =0;
 					
 			end
@@ -145,34 +147,37 @@ module CMD_master(
 							
 			end
 		
-			st_waiting_for_response: begin
-				counter_flag = 1;
-				if (timeout_error_counter == 1) begin
-					timeout_error = 1;
+			st_waiting_response: begin
+				start_counting = 1;
 				
-				end
-				if (cmd_error == 1) begin
-					cmd_index_error = 1;
-				
-				end
 				if (REQ_in == 1) begin
 					ACK_out = 1;
-					cmd_complete = 1;
 					execute_complete =1;
 				end
 			
 			end
 			
 			st_finishing: begin
-				counter_flag = 0;
 				response_index = cmd_response [37:32];
 				response_arg = cmd_response [31:0];
 				ACK_out = 0;
+				if (timeout_error_counter == 1) begin
+					timeout_error = 1;
+				end
+				else begin
+					timeout_error = 0;
+					cmd_complete = 1;
+					
+				end
+				
 			end
 			
 			
 	
 		endcase
+		
+		
+		
 	end
 
 endmodule
@@ -191,12 +196,13 @@ module timeout_counter(clk,max_timeout_value, start_count, timeout_error);
 	
 	always @(posedge clk) begin
 		if(start_count) begin
-			time_counter <= time_counter + 1;
-			if(time_counter == max_timeout_value)begin
-				timeout_error = 1;
+			if(time_counter < max_timeout_value)begin
+				time_counter <= time_counter + 1;
+				timeout_error = 0;
+				
 			end
 			else begin
-				timeout_error = 0;
+				timeout_error = 1;
 			end
 		end
 		else begin
