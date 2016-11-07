@@ -4,6 +4,7 @@ module fetch(input start,
 	     output [95:0] address_descriptor,
 	     input [31:0]  ram_data,
 	     output [63:0] address_to_fetch,
+	     output address_fetch_done,
 	     input 	   CLK);
 
    parameter FST_FETCH = 3'b001;
@@ -11,10 +12,15 @@ module fetch(input start,
    parameter TRD_FETCH = 3'b100;
 
    reg [2:0] 		   state;
-   wire [2:0] 		   next_state;
+   reg [2:0] 		   next_state;
+
+   reg [95:0] 		   address_descriptor;
+   
    
    reg 			   internal_start;
    reg [63:0] 		   address_to_fetch;
+   reg 			   address_fetch_done;
+   
    
 
    always @(posedge CLK) begin
