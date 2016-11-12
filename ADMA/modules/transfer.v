@@ -28,7 +28,7 @@ module transfer(input start,
    reg 	       fifo_write;
    reg 	       data_to_ram;
    reg 	       data_to_fifo;
-   reg 	       ram_address;
+   reg [63:0]	       ram_address; 
    
 
    //when transmission is completed, TFC is 1

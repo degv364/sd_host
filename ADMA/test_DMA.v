@@ -28,6 +28,8 @@ module test_dma;
    wire        ram_read;
    wire        fifo_read;
    wire        fifo_write;
+   wire [63:0] starting_address;
+   
    
    
 

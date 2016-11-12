@@ -27,4 +27,4 @@ dma:
 
 
 clean:
-	rm *~ test.vcd test_bench *.vcd test_4_bit *.x
+	rm  *.vcd *.x
