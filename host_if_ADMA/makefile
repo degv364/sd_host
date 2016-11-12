@@ -21,7 +21,7 @@ transfer:
 	gtkwave test_transfer.vcd
 
 dma:
-	iverilog -o test_dma.x test_dma,v
+	iverilog -o test_dma.x test_DMA.v
 	./test_dma.x
 	gtkwave test_dma.vcd
 

@@ -13,7 +13,7 @@ module fetch_signal(output CLK,
       $dumpfile ("test_fetch.vcd");
       $dumpvars (0, test_fetch);
 
-      # 1 start = 1;
+      # 2 start = 1;
       # 0 address =64;
 
       # 30 $finish;

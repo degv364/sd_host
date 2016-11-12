@@ -1,6 +1,6 @@
 //includes
-`include "fetch.v"
-`include "transfer.v"
+`include "modules/fetch.v"
+`include "modules/transfer.v"
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
@@ -28,7 +28,7 @@ module state_machine(
 		     output 	   start_transfer
 		     );
    
-   wire [95:0] 	address_descriptor;
+   reg [95:0] 	address_descriptor;
    wire 	RESET;
    wire 	CLK;
    wire 	STOP;
@@ -42,13 +42,13 @@ module state_machine(
    parameter ST_TFR  = 4'b1000;
 
    //command related variables
-   reg [63:0] 	address;
-   reg [16:0] 	length;
-   reg 		ACT1;
-   reg 		ACT2;
-   reg 		INT;
-   reg 		END;
-   reg 		VALID;
+   wire [63:0] 	address;
+   wire [15:0] 	length;
+   wire 		ACT1;
+   wire 		ACT2;
+   wire 		INT;
+   wire 		END;
+   wire 		VALID;
    
    assign address = address_descriptor[95:32];
    assign length  = address_descriptor[31:16];
@@ -64,16 +64,16 @@ module state_machine(
    assign LINK    = (ACT2) & (ACT1);
 
    //internal variables
-   reg 		TFC; //transfer data complete flag
-   wire [3:0]	next_state;
+   wire 		TFC; //transfer data complete flag
+   reg [3:0]	next_state;
    wire [63:0] 	ram_fetch_address;
    wire 	address_fetch_done;
    reg 		begin_fetch;
    wire 	next_ram_address;
-   
-   
-   
-   
+   wire 	start_transfer;
+
+
+   reg 		zero=0;
    
 
    //Parte secuencial
@@ -84,7 +84,8 @@ module state_machine(
       end
       else begin
 	 state<=next_state;
-	 //salida<=next_salida;      
+	 //salida<=next_salida;
+      end 
    end
    
    //state selector
@@ -105,7 +106,7 @@ module state_machine(
 		 next_state=ST_FDS;
 	      end else begin
 		 if (address_fetch_done==1) begin
-		    next_state_ST_CACDR;
+		    next_state=ST_CACDR;
 		 end else begin
 		    next_state=ST_FDS;
 		 end
@@ -113,7 +114,7 @@ module state_machine(
 	      end
 
 	   end
-	   ST_CADR: begin
+	   ST_CACDR: begin
 	      if (TRAN==1) begin 
 		 next_state = ST_TFR;
 	      end else begin
@@ -148,7 +149,7 @@ module state_machine(
       case (state)
 	ST_STOP: begin
 	   //STOP DMA
-	   TFC=0;
+	   TFC=zero;
 	   address_descriptor=0;
 	   ram_read=0;
 	   ram_write=0;
@@ -222,7 +223,7 @@ module state_machine(
 		     .fifo_write(fifo_write),
 		     .data_from_ram(data_from_ram),
 		     .data_to_ram(data_to_ram),
-		     .data_from_fifo(data_to_fifo),
+		     .data_from_fifo(data_from_fifo),
 		     .data_to_fifo(data_to_fifo),
 		     .ram_address(ram_address),
 		     .fifo_full(fifo_full),
