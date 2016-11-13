@@ -13,7 +13,7 @@ fifo:
 fetch:
 	iverilog -o test_fetch.x test_fetch.v
 	./test_fetch.x
-	gtkwave test_fetch.vcd
+	gtkwave test_fetch.vcd gtks/fetch.gtkw &
 
 transfer:
 	iverilog -o test_transfer.x test_transfer.v
