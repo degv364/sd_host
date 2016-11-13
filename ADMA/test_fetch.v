@@ -18,14 +18,14 @@ module test_fetch;
    reg        read=1;
    wire        write;
 
-   reg 	       start_internal;
+   //reg 	       start_internal;
    
    
    assign write=0;
    assign data_in_to_ram=0;
    
    
-   fetch fetch(.start(start_internal),
+   fetch fetch(.start(start),
 	     .address(address),
 	     .address_descriptor(address_descriptor),
 	     .ram_data(ram_data),
@@ -45,14 +45,14 @@ module test_fetch;
 	   .data_out(ram_data));
    
 
-   always @(*) begin
-      if (address_fetch_done==1) begin
-	 start_internal=0;
-      end
-      else begin
-	 start_internal=start;
-      end
-   end
+   // always @(*) begin
+   //    if (address_fetch_done==1) begin
+   // 	 start_internal=0;
+   //    end
+   //    else begin
+   // 	 start_internal=start;
+   //    end
+   // end
    
    
 endmodule // test
