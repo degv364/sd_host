@@ -4,17 +4,20 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "defines.v"
+`include "../defines.v"
 
 `timescale 1ns/10ps
 
 
 //TODO: Single/multiple block selection
 //TODO: Check for FIFOs full/empty cases
+//TODO: Start/End Sequence
+//TODO: Read transaction
 
-module dat_phys(input sd_clk,
+module DAT_phys (
+		 input 			      sd_clk,
 		 input 			      rst_L,
-		 input [`FIFO_WIDTH-1:0]      tx_buf_din,
+		 input [`FIFO_WIDTH-1:0]      tx_buf_dout_in,
 		 input [3:0] 		      DAT_din,
 		 input [`BLOCK_SZ_WIDTH-1:0]  block_sz,
 		 input [`BLOCK_CNT_WIDTH-1:0] block_cnt,
@@ -22,70 +25,75 @@ module dat_phys(input sd_clk,
 		 input 			      read_flag,
 		 output 		      tx_buf_rd_enb,
 		 output 		      rx_buf_wr_enb,
-		 output [`FIFO_WIDTH-1:0]     rx_buf_dout,
+		 output [`FIFO_WIDTH-1:0]     rx_buf_din_out,
 		 output [3:0] 		      DAT_dout,
-		 output 		      data_phys_busy,
+		 output 		      dat_phys_busy,
 		 output 		      tf_finished,
 		 output 		      sdc_busy_L
-		);
+		 );
    //Regs
-   reg 			  tx_buf_rd_enb;
+   //Outputs
+   reg 		          tx_buf_rd_enb;
    reg 			  rx_buf_wr_enb;
-   reg [`FIFO_WIDTH-1:0]  rx_buf_dout;
+   reg [`FIFO_WIDTH-1:0]  rx_buf_din_out;
    reg [3:0] 		  DAT_dout;
-   
+   reg 			  DAT_din_reg; //TODO: Check when implementing READ
+   reg 			  tf_finished;
+
+   //Internal
    reg [(`FIFO_WIDTH/4)-1:0] sel_offset;
    reg [`BLOCK_CNT_WIDTH-1:0] curr_block_cnt;
    reg [`BLOCK_SZ_WIDTH-1:0]  curr_block_sz; 
-   reg [`FIFO_WIDTH-1:0]      curr_tx_buf_din;
+   reg [`FIFO_WIDTH-1:0]      curr_tx_buf_dout_in;
    reg 			      new_block; 
-
 			      
-   parameter SIZE = 4;
+   parameter SIZE = 3;
    reg [SIZE-1:0] 	 state;
    reg [SIZE-1:0] 	 next_state;
 
    //FSM States
-   parameter IDLE  = 4'b0001;
-   parameter WRITE  = 4'b0010;
-   parameter READ = 4'b0100;
+   parameter IDLE  = 3'b001;
+   parameter WRITE  = 3'b010;
+   parameter READ = 3'b100;
 
+
+   assign sdc_busy_L = !DAT_din[0];
+   assign dat_phys_busy = (state != IDLE);
    
    //Update state 
    always @ (posedge sd_clk or !rst_L) begin
       if(!rst_L) begin
-	 state 		<= IDLE;	
-	 tx_buf_rd_enb 	<= 0;
-	 rx_buf_wr_enb 	<= 0;
-	 rx_buf_dout 	<= 0;	
-	 DAT_dout 	<= 0;
-	 curr_block_cnt <= 0;
-	 curr_block_sz 	<= 0;
-	 sel_offset 	<= 0;
-	 new_block 	<= 0;
+	 state 		     <= IDLE;	
+	 tx_buf_rd_enb 	     <= 0;
+	 rx_buf_wr_enb 	     <= 0;
+	 rx_buf_din_out      <= 0;	
+	 tf_finished 	     <= 0;
+	 DAT_dout 	     <= 0;
+	 DAT_din_reg 	     <= 0;
+	 curr_block_cnt      <= 0;
+	 curr_block_sz 	     <= 0;
+	 sel_offset 	     <= 0;
+	 curr_tx_buf_dout_in <= 0;
+	 new_block 	     <= 0;
       end	
       else
 	 state <= next_state;
    end
 
-   assign sdc_busy_L = DAT_din[0];
-
-   
-   //Combinational logic (next state, outputs)
-   always @(*) begin
+   //Next state, outputs logic
+   always @(posedge sd_clk or !rst_L) begin
       //Default output values
-      tx_buf_rd_enb <= 0;
-      rx_buf_wr_enb <= 0;
-      rx_buf_dout   <= 0;	
-      DAT_dout 	    <= 0;
-      tf_finished   <= 0;
-      
+      tx_buf_rd_enb  <= 0;
+      rx_buf_wr_enb  <= 0;
+      rx_buf_din_out <= 0;	
+      DAT_dout 	     <= 0;
+      tf_finished    <= 0;
       case (state)
 	 IDLE: begin
 	    curr_block_cnt <= block_cnt;
 	    curr_block_sz  <= block_sz;
 
-	    if(!sdc_busy_L) begin //If card is busy keep IDLE state
+	    if(sdc_busy_L) begin //If card is busy keep IDLE state
 	       next_state <= IDLE;
 	    end
 	    else begin
@@ -109,24 +117,24 @@ module dat_phys(input sd_clk,
          
 	 WRITE: begin
 	    if(curr_block_cnt > 0) begin
+
+	       next_state <= WRITE;
 	       
-	       if(new_block && !sdc_busy_L) begin
-		  new_block <= 1;
-		  next_state <= WRITE; //If sd card is busy retry the write operation
+	       if(new_block && sdc_busy_L) begin
+		  new_block <= 1; //If sd card is busy retry the write operation
 	       end
 	       else begin
 		  new_block <= 0;
-		  next_state <= WRITE;
 		  
 		  if(sel_offset == 0) begin //Get new data from Tx FIFO
-		     curr_tx_buf_din <= tx_buf_din;
+		     curr_tx_buf_dout_in <= tx_buf_dout_in;
 		  end
 		  else begin
-		     curr_tx_buf_din <= curr_tx_buf_din;
+		     curr_tx_buf_dout_in <= curr_tx_buf_dout_in;
 		  end
 
 		  if(sel_offset < `FIFO_WIDTH/4) begin
-		     DAT_dout  <= curr_tx_buf_din[(`FIFO_WIDTH-1-(sel_offset<<2))-:4];
+		     DAT_dout  <= curr_tx_buf_dout_in[(`FIFO_WIDTH-1-(sel_offset<<2))-:4];
 		     
 		     if(sel_offset < `FIFO_WIDTH/4-1) begin
 			sel_offset <= sel_offset+1;
@@ -156,8 +164,12 @@ module dat_phys(input sd_clk,
 	       tf_finished <= 1;
 	    end
 	 end
-	 
+	
+	 READ: begin
+	    next_state <= IDLE; //Temporary for testing
+	 end
 	 default:
+	    next_state <= IDLE;
       endcase
 
    end
