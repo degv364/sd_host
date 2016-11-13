@@ -28,6 +28,8 @@ module test_dma;
    wire        ram_read;
    wire        fifo_read;
    wire        fifo_write;
+   wire [63:0] starting_address;
+   
    
    
 
@@ -51,7 +53,7 @@ module test_dma;
 		     .fifo_read(fifo_read),
 		     .fifo_write(fifo_write));
 
-   dma_signal dma_signal(.starting_address(starting_address)
+   dma_signal dma_signal(.starting_address(starting_address),
 			 .RESET(RESET),
 			 .STOP(STOP),
 			 .CLK(CLK),

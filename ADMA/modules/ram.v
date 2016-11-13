@@ -17,16 +17,22 @@ module ram(address,data_in, write, read, data_out, CLK);
    
 
    reg [1024:0] info;
-   wire [96:0] 	scope;
+   wire [11:0] 	scope;
+
+   initial begin
+      # 0 info=0;
+   end
+   
    
    //assign address_end= address+31;
-   assign scope = info[608:512];
+   assign scope = info[75:64];
    
    
    //verify mod 32, valid address. whole words
 
    always @(posedge CLK) begin
-      if (address[4:0]==0) begin
+      //if (address[4:0]==0) begin
+      if (address[1:0]==0)begin
 	 if (write==1) begin
 	    info[address+:32]=data_in;
 	 end
@@ -35,6 +41,17 @@ module ram(address,data_in, write, read, data_out, CLK);
 	 end
       end
    end
+
+   //Escritura de constantes en ram
+   always @(CLK) begin
+      info [67:64]=2;
+      
+      info[71:68]= 1;
+      info[75:72]=1;
+      
+   end
+   
+   
 
 endmodule // ram
 

@@ -3,17 +3,17 @@
 module transfer(input start,
 		input  direction,
 		output TFC,
-		input  address_init,
-		input  length,
+		input [63:0]  address_init,
+		input  [15:0] length,
 		output ram_read,
 		output ram_write,
 		output fifo_read,
 		output fifo_write,
-		input  data_from_ram,
-		output data_to_ram,
-		input  data_from_fifo,
-		output data_to_fifo,
-		output ram_address,
+		input  [31:0] data_from_ram,
+		output [31:0] data_to_ram,
+		input  [31:0] data_from_fifo,
+		output [31:0] data_to_fifo,
+		output [63:0] ram_address,
 		input  fifo_empty,
 		input fifo_full,
 		input  CLK);
@@ -21,6 +21,14 @@ module transfer(input start,
    
    //direction: 1-> ram to fifo
    //direction: 0-> fifo to ram
+   reg	       TFC;
+   reg 	       ram_read;
+   reg 	       ram_write;
+   reg 	       fifo_read;
+   reg 	       fifo_write;
+   reg 	       data_to_ram;
+   reg 	       data_to_fifo;
+   reg [63:0]	       ram_address; 
    
 
    //when transmission is completed, TFC is 1
@@ -42,7 +50,7 @@ module transfer(input start,
 	 TFC=0;
 	 
 	 //trnasmission
-	 if (direcion==1) begin
+	 if (direction==1) begin
 	    if (fifo_full==1) begin
 	       TFC=1;
 	       ram_read=0;

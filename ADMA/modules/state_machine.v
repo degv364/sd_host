@@ -1,6 +1,6 @@
 //includes
-`include "fetch.v"
-`include "transfer.v"
+`include "modules/fetch.v"
+`include "modules/transfer.v"
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
@@ -42,13 +42,13 @@ module state_machine(
    parameter ST_TFR  = 4'b1000;
 
    //command related variables
-   reg [63:0] 	address;
-   reg [16:0] 	length;
-   reg 		ACT1;
-   reg 		ACT2;
-   reg 		INT;
-   reg 		END;
-   reg 		VALID;
+   wire [63:0] 	address;
+   wire [15:0] 	length;
+   wire 		ACT1;
+   wire 		ACT2;
+   wire 		INT;
+   wire 		END;
+   wire 		VALID;
    
    assign address = address_descriptor[95:32];
    assign length  = address_descriptor[31:16];
@@ -63,17 +63,35 @@ module state_machine(
    assign TRAN    = (ACT2) & (~ACT1);
    assign LINK    = (ACT2) & (ACT1);
 
+   //read write flags
+   reg 			ram_read;
+   reg 			ram_write;
+   reg 			fifo_read;
+   reg 			fifo_write;
+   wire 		ram_read_transfer;
+   wire 		ram_write_transfer;
+   wire 		fifo_read_transfer;
+   wire 		fifo_write_transfer;
+   
+
+
+   
    //internal variables
-   reg 		TFC; //transfer data complete flag
-   wire [3:0]	next_state;
-   wire [63:0] 	ram_fetch_address;
-   wire 	address_fetch_done;
-   reg 		begin_fetch;
-   wire 	next_ram_address;
+   wire 		TFC; //transfer data complete flag
+   reg [3:0] 		next_state;
+   wire [63:0] 		ram_fetch_address;
+   wire 		address_fetch_done;
+   reg 			begin_fetch;
+   reg 		next_ram_address;
+   reg 		start_transfer;
+   wire [63:0]	ram_address_transfer;
+   wire [63:0] 	ram_address_fetch;
+   
+   reg [63:0] 	ram_address;
    
    
-   
-   
+
+   reg 		zero=0;
    
 
    //Parte secuencial
@@ -84,7 +102,8 @@ module state_machine(
       end
       else begin
 	 state<=next_state;
-	 //salida<=next_salida;      
+	 //salida<=next_salida;
+      end 
    end
    
    //state selector
@@ -105,7 +124,7 @@ module state_machine(
 		 next_state=ST_FDS;
 	      end else begin
 		 if (address_fetch_done==1) begin
-		    next_state_ST_CACDR;
+		    next_state=ST_CACDR;
 		 end else begin
 		    next_state=ST_FDS;
 		 end
@@ -113,7 +132,7 @@ module state_machine(
 	      end
 
 	   end
-	   ST_CADR: begin
+	   ST_CACDR: begin
 	      if (TRAN==1) begin 
 		 next_state = ST_TFR;
 	      end else begin
@@ -148,13 +167,13 @@ module state_machine(
       case (state)
 	ST_STOP: begin
 	   //STOP DMA
-	   TFC=0;
-	   address_descriptor=0;
+	   //TFC=zero; //this is handled by transfer
+	   //address_descriptor=0;
 	   ram_read=0;
 	   ram_write=0;
 	   fifo_read=0;
 	   fifo_write=0;
-	   ram_fetch_address=starting_address;
+	   //ram_fetch_address=starting_address;
 	   begin_fetch=0;
 	   start_transfer=0;
 	   
@@ -171,6 +190,8 @@ module state_machine(
 	   ram_read=1; //habilitar lectura de ram
 	   fifo_read=0;
 	   fifo_write=0;
+	   ram_address=ram_address_fetch;
+	   
 	   
 	end
 	ST_CACDR: begin
@@ -189,9 +210,17 @@ module state_machine(
 	   
 	end
 	ST_TFR: begin
+	   //read write flags
+	   ram_read=ram_read_transfer;
+	   ram_write=ram_write_transfer;
+	   fifo_read=fifo_read_transfer;
+	   fifo_write=fifo_write_transfer;
+	   
 	   //Actually transfer the data.
 	   begin_fetch=0;
 	   start_transfer=1;
+	   ram_address=ram_address_transfer;
+	   
 	   //TODO fifo full, fifo empty
 	   
 	   
@@ -208,7 +237,7 @@ module state_machine(
 	       .address_fetch_done(address_fetch_done),
 	       .address_descriptor(address_descriptor),
 	       .ram_data(data_from_ram),
-	       .address_to_fetch(ram_address),
+	       .address_to_fetch(ram_address_fetch),
 	       .CLK(CLK));
 
    transfer transfer(.start(start_transfer),
@@ -216,15 +245,15 @@ module state_machine(
 		     .TFC(TFC),
 		     .address_init(address),
 		     .length(length),
-		     .ram_read(ram_read),
-		     .ram_write(ram_write),
-		     .fifo_read(fifo_read),
-		     .fifo_write(fifo_write),
+		     .ram_read(ram_read_transfer),
+		     .ram_write(ram_write_transfer),
+		     .fifo_read(fifo_read_transfer),
+		     .fifo_write(fifo_write_transfer),
 		     .data_from_ram(data_from_ram),
 		     .data_to_ram(data_to_ram),
-		     .data_from_fifo(data_to_fifo),
+		     .data_from_fifo(data_from_fifo),
 		     .data_to_fifo(data_to_fifo),
-		     .ram_address(ram_address),
+		     .ram_address(ram_address_transfer),
 		     .fifo_full(fifo_full),
 		     .fifo_empty(fifo_empty),
 		     .CLK(CLK));

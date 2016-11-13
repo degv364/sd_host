@@ -21,10 +21,10 @@ transfer:
 	gtkwave test_transfer.vcd
 
 dma:
-	iverilog -o test_dma.x test_dma,v
+	iverilog -o test_dma.x test_DMA.v
 	./test_dma.x
 	gtkwave test_dma.vcd
 
 
 clean:
-	rm *~ test.vcd test_bench *.vcd test_4_bit *.x
+	rm  *.vcd *.x

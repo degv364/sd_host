@@ -1,12 +1,13 @@
 //modulo para las senales de prueba para el dma
 
 module dma_signal(output [96:0] address_descriptor,
-		  output RESET,
-		  output STOP,
-		  output CLK,
-		  output command_reg_write,
-		  output command_reg_continue,
-		  output direction);
+		  output 	RESET,
+		  output 	STOP,
+		  output 	CLK,
+		  output 	command_reg_write,
+		  output 	command_reg_continue,
+		  output 	direction,
+		  output [63:0] starting_address);
    
    reg [96:0]	 address_descriptor=0; 
    reg 		 RESET=0;
