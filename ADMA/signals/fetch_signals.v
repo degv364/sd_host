@@ -17,7 +17,7 @@ module fetch_signal(output CLK,
       # 2 start = 1;
       # 1 start = 0;
       
-      # 0 address =64;
+      # 0 address =0;
 
       # 30 $finish;
    end

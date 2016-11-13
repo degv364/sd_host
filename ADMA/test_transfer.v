@@ -50,7 +50,7 @@ module test_transfer;
    ram ram(.address(ram_address), //from transfer 
 	   .write(ram_write), //from transfer
 	   .read(ram_read), //from transfer
-	   .data_in(data_ro_ram), //from transfer
+	   .data_in(data_to_ram), //from transfer
 	   .data_out(data_from_ram), //from transfer
 	   .CLK(CLK));
 

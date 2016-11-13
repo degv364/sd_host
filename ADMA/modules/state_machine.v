@@ -232,7 +232,7 @@ module state_machine(
    end // always @ (state)
 
    //submodules
-   fetch fetch(.start(begin_fetch),
+   fetch fetch(.start((begin_fetch & CLK)), //this signal is a trigger not an enable
 	       .address(ram_fetch_address),
 	       .address_fetch_done(address_fetch_done),
 	       .address_descriptor(address_descriptor),
