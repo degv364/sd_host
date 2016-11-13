@@ -1,0 +1,73 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Fri Nov 11 04:18:40 2016
+[*]
+[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/test_cmd_physical.vcd"
+[dumpfile_mtime] "Fri Nov 11 03:23:42 2016"
+[dumpfile_size] 12369
+[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/physical_graphic.gtkw"
+[timestart] 324
+[size] 1215 1000
+[pos] -1 -1
+*-2.532387 328 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_cmd_physical.
+[treeopen] tb_cmd_physical.CMD_physical_1.
+[treeopen] tb_cmd_physical.gm_cmd_physical_1.
+[sst_width] 225
+[signals_width] 247
+[sst_expanded] 1
+[sst_vpaned_height] 451
+@28
+tb_cmd_physical.CMD_physical_1.CLK_SD_card
+tb_cmd_physical.CMD_physical_1.current_st[5:0]
+@22
+tb_cmd_physical.CMD_physical_1.cmd_index_arg[37:0]
+tb_cmd_physical.CMD_physical_1.cmd_to_send[47:0]
+@28
+tb_cmd_physical.CMD_physical_1.send_finished
+tb_cmd_physical.CMD_physical_1.listening_finished
+tb_cmd_physical.CMD_physical_1.start_counting
+tb_cmd_physical.CMD_physical_1.start_listening
+tb_cmd_physical.CMD_physical_1.finished_64_cycles
+tb_cmd_physical.CMD_physical_1.start_sending
+@29
+tb_cmd_physical.CMD_physical_1.cmd_response[37:0]
+@28
+tb_cmd_physical.CMD_physical_1.cmd_to_sd
+tb_cmd_physical.CMD_physical_1.cmd_from_sd
+@200
+-parallelToSerial
+@22
+tb_cmd_physical.CMD_physical_1.parallel_to_serial_1.parallel_in[47:0]
+@28
+tb_cmd_physical.CMD_physical_1.parallel_to_serial_1.start_sending
+tb_cmd_physical.CMD_physical_1.parallel_to_serial_1.serial_out
+@24
+tb_cmd_physical.CMD_physical_1.parallel_to_serial_1.counter[5:0]
+@28
+tb_cmd_physical.CMD_physical_1.parallel_to_serial_1.finished
+@200
+-listening_block
+@28
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.CLK
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.start_listening
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.serial_in
+@22
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.parallel_out[47:0]
+@24
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.counter[5:0]
+@28
+tb_cmd_physical.gm_cmd_physical_1.serial_to_parallel_1.finished
+@200
+-serial_parallel_physical
+@28
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.CLK
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.start_listening
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.finished
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.serial_in
+@24
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.counter[5:0]
+@28
+tb_cmd_physical.CMD_physical_1.serial_to_parallel_1.parallel_out[47:0]
+[pattern_trace] 1
+[pattern_trace] 0

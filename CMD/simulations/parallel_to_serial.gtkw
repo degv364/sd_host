@@ -1,0 +1,30 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Wed Nov  9 14:44:55 2016
+[*]
+[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/test_parallel_to_serial.vcd"
+[dumpfile_mtime] "Wed Nov  9 14:26:48 2016"
+[dumpfile_size] 3752
+[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/parallel_to_serial.gtkw"
+[timestart] 0
+[size] 1301 744
+[pos] -1 -117
+*-3.034609 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_parallel_to_serial.
+[sst_width] 225
+[signals_width] 166
+[sst_expanded] 1
+[sst_vpaned_height] 211
+@28
+tb_parallel_to_serial.dut.CLK
+@22
+tb_parallel_to_serial.dut.counter[5:0]
+@28
+tb_parallel_to_serial.dut.finished
+@29
+tb_parallel_to_serial.dut.parallel_in[47:0]
+@28
+tb_parallel_to_serial.dut.serial_out
+tb_parallel_to_serial.dut.start_sending
+[pattern_trace] 1
+[pattern_trace] 0
