@@ -25,6 +25,9 @@ dma:
 	./test_dma.x
 	gtkwave test_dma.vcd
 
+synth_fetch:
+	yosys yosys/fetch.ys
+
 
 clean:
 	rm  *.vcd *.x
