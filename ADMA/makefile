@@ -18,7 +18,7 @@ fetch:
 transfer:
 	iverilog -o test_transfer.x test_transfer.v
 	./test_transfer.x
-	gtkwave test_transfer.vcd
+	gtkwave test_transfer.vcd gtks/transfer.gtkw
 
 dma:
 	iverilog -o test_dma.x test_DMA.v
