@@ -6,32 +6,35 @@
 
 `timescale 1ns/10ps
 
-//TODO: Check if a DAT_control busy signal is necessary
+//TODO: Check if a DAT_control/DAT_phys busy signal is necessary
 //TODO: Timeout check
-module dat_control(input host_clk, 
-		   input  rst_L,
-		   input  tx_data_init,
-		   input  rx_data_init,
-		   input  tx_buf_empty,
-		   input  tx_buf_full,
-		   input  rx_buf_full,
-		   input  tf_finished,
-		   output dat_wr_flag,
-		   output dat_rd_flag,
-		   );
+module DAT_control (
+		    input  host_clk, 
+		    input  rst_L,
+		    input  tx_data_init,
+		    input  rx_data_init,
+		    input  tx_buf_empty,
+		    input  rx_buf_full,
+		    input  tf_finished,
+		    input  dat_phys_busy,
+		    output dat_wr_flag,
+		    output dat_rd_flag
+		    );
    //Regs
-   reg 			   wr_data_flag; //Cleared after WRITE_START
-   reg 			   rd_data_flag; //Cleared after READ_START
+   //Outputs
+   reg 			   dat_wr_flag;
+   reg 			   dat_rd_flag;
    
-   parameter SIZE = 4;
+   parameter SIZE = 5;
    reg [SIZE-1:0] 	   state;
    reg [SIZE-1:0] 	   next_state;
    
    //FSM States
-   parameter IDLE = 4'b0001;
-   parameter WRITE_START = 4'b0010;
-   parameter READ_START = 4'b0100;
-   parameter TRANSFER = 4'b1000;
+   parameter IDLE = 5'b00001;
+   parameter WRITE_START = 5'b00010;
+   parameter READ_START = 5'b00100;
+   parameter READ_TRANSFER  = 5'b01000;
+   parameter WRITE_TRANSFER  = 5'b10000;
    
    //Update state 
    always @ (posedge host_clk or !rst_L) begin
@@ -44,8 +47,8 @@ module dat_control(input host_clk,
 	 state <= next_state;
    end
 
-   //Combinational logic (next state, outputs)
-   always @(*) begin
+   //Next state, outputs logic
+   always @(posedge host_clk) begin
       //Default output values
       dat_wr_flag <= 0;	
       dat_rd_flag <= 0;
@@ -55,18 +58,18 @@ module dat_control(input host_clk,
 	    if(tx_data_init && !rx_data_init) begin
 	       next_state <= WRITE_START;
 	    end
-	    else	begin
+	    else begin
 	       if(rx_data_init && !tx_data_init) begin
 		  next_state <= READ_START;
 	       end
 	       else
 		  next_state <= IDLE;
 	    end
-	    	 end
-
+	 end 
+   
 	 WRITE_START: begin
-	    if(!tx_buf_empty) begin
-	       next_state <= TRANSFER;
+	    if(!tx_buf_empty && !dat_phys_busy) begin
+	       next_state <= WRITE_TRANSFER;
 	       dat_wr_flag <= 1;
 	       //TODO: Set Write Transfer Active bit (Present State Register)
 	    end
@@ -75,26 +78,41 @@ module dat_control(input host_clk,
 	 end	
 
 	 READ_START: begin
-	    if(!rx_buf_full) begin
-	       next_state <= TRANSFER;
+	    if(!rx_buf_full && !dat_phys_busy) begin
+	       next_state <= READ_TRANSFER;
 	       dat_rd_flag <= 1;
 	       //TODO: Set Read Transfer Active bit (Present State Register)
 	    end
 	    else
 	       next_state <= READ_START;
 	 end
-	 
-	 TRANSFER: begin
+
+	 READ_TRANSFER: begin
 	    if(!tf_finished) begin
-	       next_state <= TRANSFER;
+	       dat_rd_flag <= !rx_buf_full;
+	       next_state <= READ_TRANSFER;
 	    end	
-	    else //Transfer completed
+	    else begin
 	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
-	       //TODO: Clear Write Transfer Active bit (Present State Register)
 	       //TODO: Clear Read Transfer Active bit (Present State Register)
 	       next_state <= IDLE;
-	 end	
-	 
+	    end
+	    
+	 end
+
+	 WRITE_TRANSFER: begin
+	    if(!tf_finished) begin
+	       dat_wr_flag <= !tx_buf_empty;
+	       next_state <= WRITE_TRANSFER;
+	    end	
+	    else begin
+	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
+	       //TODO: Clear Write Transfer Active bit (Present State Register)
+	       next_state <= IDLE;
+	    end
+	    
+	 end
+ 
 	 default: begin
 	    next_state <= IDLE;
 	 end

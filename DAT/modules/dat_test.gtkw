@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Sun Nov 13 19:07:58 2016
+[*]
+[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/dat_test.vcd"
+[dumpfile_mtime] "Sun Nov 13 19:06:57 2016"
+[dumpfile_size] 12621
+[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/modules/dat_test.gtkw"
+[timestart] 0
+[size] 1918 1027
+[pos] -1 -1
+*-12.000000 10710 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dat_tb.
+[sst_width] 243
+[signals_width] 181
+[sst_expanded] 1
+[sst_vpaned_height] 303
+@200
+-General Signals
+@28
+dat_tb.HOST_clk
+dat_tb.SD_clk
+dat_tb.RST_L
+@200
+-
+-DAT_control
+@28
+dat_tb.dat_control0.dat_phys_busy
+dat_tb.dat_control0.dat_rd_flag
+dat_tb.dat_control0.dat_wr_flag
+dat_tb.dat_control0.host_clk
+@22
+dat_tb.dat_control0.next_state[4:0]
+@28
+dat_tb.dat_control0.rst_L
+dat_tb.dat_control0.rx_buf_full
+dat_tb.dat_control0.rx_data_init
+@22
+dat_tb.dat_control0.state[4:0]
+@28
+dat_tb.dat_control0.tf_finished
+dat_tb.dat_control0.tx_buf_empty
+dat_tb.dat_control0.tx_data_init
+@200
+-
+-DAT_phys
+[pattern_trace] 1
+[pattern_trace] 0
