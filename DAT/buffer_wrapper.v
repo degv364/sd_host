@@ -12,10 +12,10 @@
 module buffer_wrapper(input host_clk,
 		      input  sd_clk,
 		      input  rst_L,
-		      input  rx_rd_host,
-		      input  tx_wr_host,
-		      input  rx_wr_dat,
-		      input  tx_rd_dat,
+		      input  rx_buf_rd_host,
+		      input  tx_buf_wr_host,
+		      input  rx_buf_wr_dat,
+		      input  tx_buf_rd_dat,
 		      input  rx_buf_din,
 		      input  tx_buf_din,
 		      output rx_buf_dout,
@@ -34,8 +34,8 @@ module buffer_wrapper(input host_clk,
 		.clr(0)
 		.din(tx_buf_din), //DMA
 		.dout(tx_buf_dout), //DAT
-		.we(tx_wr_host), //DMA
-		.re(tx_rd_dat), //DAT
+		.we(tx_buf_wr_host), //DMA
+		.re(tx_buf_rd_dat), //DAT
 		.full(tx_buf_full),
 		.empty(tx_buf_empty),
 		.rd_level(),
@@ -50,8 +50,8 @@ module buffer_wrapper(input host_clk,
 		.clr(0)
 		.din(rx_buf_din), //DAT
 		.dout(rx_buf_dout), //DMA
-		.we(rx_wr_dat), //DAT
-		.re(rx_rd_host), //DMA
+		.we(rx_buf_wr_dat), //DAT
+		.re(rx_buf_rd_host), //DMA
 		.full(rx_buf_full),
 		.empty(rx_buf_empty),
 		.rd_level(),

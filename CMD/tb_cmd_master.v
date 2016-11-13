@@ -13,13 +13,12 @@ module gm_cmd_master(
 
 	input cmd_busy,
 	input cmd_complete,
-	input cmd_index_error,
 	input REQ_out,
 	input ACK_out,
 	input timeout_error,
 	input [31:0]response_arg,
 	input [5:0]response_index,
-	input [37:0]cmd_out
+	input [37:0]cmd_to_physical
 	);
 	
 	reg reset=0;
@@ -68,11 +67,11 @@ module tb_cmd_master;
 	wire cmd_busy, cmd_complete,cmd_index_error,REQ_out,ACK_out,timeout_error;
 	wire [31:0]response_arg;
 	wire [5:0]response_index;
-	wire [37:0]cmd_out;
+	wire [37:0]cmd_to_physical;
 	
-	gm_cmd_master generator(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, timeout_value, cmd_response, cmd_busy, cmd_complete, cmd_index_error, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_out);
+	gm_cmd_master generator(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, timeout_value, cmd_response, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_to_physical);
 	
-	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, timeout_value, cmd_response, cmd_busy, cmd_complete, cmd_index_error, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_out);
+	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, timeout_value, cmd_response, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_to_physical);
 
 
 endmodule

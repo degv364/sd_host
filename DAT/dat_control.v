@@ -8,24 +8,20 @@
 
 //TODO: Check if a DAT_control busy signal is necessary
 //TODO: Timeout check
-//TODO?: tx_buf_full input
 module dat_control(input host_clk, 
-		    input  rst_L,
-		    input  data_init_tx,
-		    input  data_init_rx,
-		    input  tx_buf_empty,
-		    input  rx_buf_full,
-		    input  tf_finished,
-		    output wr_data_flag,
-		    output rd_data_flag,
-		    output buf_init_tx, // Move to data_phys? //TODO: Check FIFO timing requirements
-		    output buf_init_rx
-		    );
+		   input  rst_L,
+		   input  tx_data_init,
+		   input  rx_data_init,
+		   input  tx_buf_empty,
+		   input  tx_buf_full,
+		   input  rx_buf_full,
+		   input  tf_finished,
+		   output dat_wr_flag,
+		   output dat_rd_flag,
+		   );
    //Regs
    reg 			   wr_data_flag; //Cleared after WRITE_START
    reg 			   rd_data_flag; //Cleared after READ_START
-   reg 			   buf_init_tx;  //Cleared after WRITE_START
-   reg 			   buf_init_rx;  //Cleared after READ_START
    
    parameter SIZE = 4;
    reg [SIZE-1:0] 	   state;
@@ -40,11 +36,9 @@ module dat_control(input host_clk,
    //Update state 
    always @ (posedge host_clk or !rst_L) begin
       if(!rst_L) begin
-	 state <= IDLE;	
-	 wr_data_flag <= 0;	
-	 rd_data_flag <= 0;
-	 buf_init_tx <= 0;
-	 buf_init_rx <= 0;
+	 state 		<= IDLE;	
+	 dat_wr_flag 	<= 0;	
+	 dat_rd_flag 	<= 0;
       end	
       else
 	 state <= next_state;
@@ -53,18 +47,16 @@ module dat_control(input host_clk,
    //Combinational logic (next state, outputs)
    always @(*) begin
       //Default output values
-      wr_data_flag <= 0;	
-      rd_data_flag <= 0;
-      buf_init_tx  <= 0;
-      buf_init_rx  <= 0;
+      dat_wr_flag <= 0;	
+      dat_rd_flag <= 0;
       
       case (state)
 	 IDLE: begin
-	    if(data_init_tx && !data_init_rx) begin
+	    if(tx_data_init && !rx_data_init) begin
 	       next_state <= WRITE_START;
 	    end
 	    else	begin
-	       if(data_init_rx && !data_init_tx) begin
+	       if(rx_data_init && !tx_data_init) begin
 		  next_state <= READ_START;
 	       end
 	       else
@@ -75,8 +67,7 @@ module dat_control(input host_clk,
 	 WRITE_START: begin
 	    if(!tx_buf_empty) begin
 	       next_state <= TRANSFER;
-	       wr_data_flag <= 1;
-	       buf_init_tx <= 1;
+	       dat_wr_flag <= 1;
 	       //TODO: Set Write Transfer Active bit (Present State Register)
 	    end
 	    else
@@ -86,8 +77,7 @@ module dat_control(input host_clk,
 	 READ_START: begin
 	    if(!rx_buf_full) begin
 	       next_state <= TRANSFER;
-	       rd_data_flag <= 1;
-	       buf_init_rx <= 1;
+	       dat_rd_flag <= 1;
 	       //TODO: Set Read Transfer Active bit (Present State Register)
 	    end
 	    else

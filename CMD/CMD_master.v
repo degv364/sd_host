@@ -1,7 +1,8 @@
 // Author: Daniel Piedra
 //Description: interface between sd host and CMD_physical. Works with SD host clock
 
-
+`ifndef CMD_MASTER
+`define CMD_MASTER
 
 module CMD_master(
 
@@ -18,20 +19,19 @@ module CMD_master(
 
 	output cmd_busy,
 	output cmd_complete,
-	output cmd_index_error,
 	output REQ_out,
 	output ACK_out,
 	output timeout_error,
 	output [31:0]response_arg,
 	output [5:0]response_index,
-	output [37:0]cmd_out
+	output [37:0]cmd_to_physical
 	);
 
 	//States (one-hot)
-	parameter st_waiting_for_cmd = 4'b0001;
-	parameter st_setup = 4'b0010;
-	parameter st_waiting_response = 4'b0100;
-	parameter st_finishing = 4'b1000;
+	parameter ST_WAITING_CMD = 4'b0001;
+	parameter ST_SETUP = 4'b0010;
+	parameter ST_WAITING_RESPONSE = 4'b0100;
+	parameter ST_FINISHING = 4'b1000;
 
 	//inputs
 	wire reset, CLK_host, new_cmd, ACK_in, REQ_in;
@@ -45,13 +45,13 @@ module CMD_master(
 	reg cmd_busy, cmd_complete,cmd_index_error,REQ_out,ACK_out,timeout_error;
 	reg [31:0]response_arg;
 	reg [5:0]response_index;
-	reg [37:0]cmd_out;
+	reg [37:0]cmd_to_physical;
 	
 	//other wires
 	
 	
 	//other regs
-	reg [3:0] current_st = st_waiting_for_cmd;
+	reg [3:0] current_st = ST_WAITING_CMD;
 	reg start_counting;
 	reg execute_complete;
 	
@@ -62,46 +62,46 @@ module CMD_master(
 	//FF's and next state block
 	always @(posedge CLK_host) begin
 			if (reset) begin
-				current_st <= st_waiting_for_cmd;
+				current_st <= ST_WAITING_CMD;
 			end
 			else begin
 				current_st <= current_st;
 			end
 			case(current_st)
 				
-				st_waiting_for_cmd: begin
+				ST_WAITING_CMD: begin
 					if (new_cmd == 1) begin
-						current_st <= st_setup;
+						current_st <= ST_SETUP;
 					end
 					else begin
 						current_st <= current_st;
 					end
 				end
 				
-				st_setup: begin			
+				ST_SETUP: begin			
 					if(ACK_in == 1) begin
-						current_st <= st_waiting_response;
+						current_st <= ST_WAITING_RESPONSE;
 					end
 					else begin
 						current_st <= current_st;
 					end
 				end
 				
-				st_waiting_response: begin
+				ST_WAITING_RESPONSE: begin
 					if((physical_inactive == 1) || (execute_complete == 1) ) begin
-						current_st <= st_finishing;
+						current_st <= ST_FINISHING;
 					end
 					else begin
 						current_st <= current_st;
 					end
 				end
 				
-				st_finishing: begin
-					current_st <= st_waiting_for_cmd;
+				ST_FINISHING: begin
+					current_st <= ST_WAITING_CMD;
 							
 				end
 				
-				default: current_st <= st_waiting_for_cmd;
+				default: current_st <= ST_WAITING_CMD;
 			endcase
 	
 	end
@@ -118,12 +118,12 @@ module CMD_master(
 		timeout_error = timeout_error;
 		response_arg = response_arg;
 		response_index = response_index;
-		cmd_out = cmd_out;
+		cmd_to_physical = cmd_to_physical;
 		start_counting = start_counting;
 		execute_complete = execute_complete;
 		
 		case (current_st)
-			st_waiting_for_cmd: begin
+			ST_WAITING_CMD: begin
 				cmd_busy = 0;
 				cmd_complete = 0;
 				cmd_index_error = 0;
@@ -132,22 +132,22 @@ module CMD_master(
 				timeout_error = 0;
 				response_arg = 32'h0000_0000;
 				response_index = 6'b000000;
-				cmd_out = 38'h0000_0000;
+				cmd_to_physical = 38'h0000_0000;
 				start_counting =0;
 				execute_complete =0;
 					
 			end
 		
-			st_setup: begin
+			ST_SETUP: begin
 				cmd_busy = 1;
 				REQ_out = 1;
-				cmd_out[37:32] = cmd_index;
-				cmd_out[31:0] = cmd_arg;
+				cmd_to_physical[37:32] = cmd_index;
+				cmd_to_physical[31:0] = cmd_arg;
 			
 							
 			end
 		
-			st_waiting_response: begin
+			ST_WAITING_RESPONSE: begin
 				start_counting = 1;
 				
 				if (REQ_in == 1) begin
@@ -157,7 +157,7 @@ module CMD_master(
 			
 			end
 			
-			st_finishing: begin
+			ST_FINISHING: begin
 				response_index = cmd_response [37:32];
 				response_arg = cmd_response [31:0];
 				ACK_out = 0;
@@ -182,9 +182,12 @@ module CMD_master(
 
 endmodule
 
-
+`endif
 
 //////                     Other modules                             ///////
+
+`ifndef TIMEOUT_COUNTER
+`define TIMEOUT_COUNTER
 
 module timeout_counter(clk,max_timeout_value, start_count, timeout_error);
 	input clk, start_count;
@@ -214,4 +217,4 @@ module timeout_counter(clk,max_timeout_value, start_count, timeout_error);
 
 endmodule
 
-
+`endif
