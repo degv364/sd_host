@@ -81,7 +81,7 @@ module DAT_phys (
    end
 
    //Next state, outputs logic
-   always @(posedge sd_clk or !rst_L) begin
+   always @(posedge sd_clk) begin
       //Default output values
       tx_buf_rd_enb  <= 0;
       rx_buf_wr_enb  <= 0;
@@ -152,6 +152,7 @@ module DAT_phys (
 
 		  if(curr_block_sz == 4) begin //Finished to send current block
 		     new_block <= (curr_block_cnt-1 > 0) ? 1 : 0; //Need to tranfer more blocks
+		     curr_block_sz <= block_sz;
 		     curr_block_cnt <= curr_block_cnt-1;
 		  end
 		  else begin

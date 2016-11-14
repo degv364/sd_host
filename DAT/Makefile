@@ -8,13 +8,14 @@ BINARY := dat_test
 TEST_BENCH := dat_tb.v
 
 SRC_DIR := modules
+GTKW_DIR := gtkw
 
 FLAGS := -I$(SRC_DIR) -Ttyp
 
 #Targets
 run: $(BINARY).vcd
-ifneq ("$(wildcard $(SRC_DIR)/$(BINARY).gtkw)","")
-	$(VIEW) $(SRC_DIR)/$(BINARY).gtkw
+ifneq ("$(wildcard $(GTKW_DIR)/$(BINARY).gtkw)","")
+	$(VIEW) $(GTKW_DIR)/$(BINARY).gtkw
 else
 	$(VIEW) $(BINARY).vcd
 endif

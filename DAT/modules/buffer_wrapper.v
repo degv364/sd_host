@@ -31,7 +31,7 @@ module buffer_wrapper(
    tx_buffer (	
 		.rd_clk(sd_clk),
 		.wr_clk(host_clk),
-		.rst(!rst_L),
+		.rst(rst_L),
 		.clr(1'b0),
 		.din(tx_buf_din), //DMA
 		.dout(tx_buf_dout), //DAT
@@ -47,7 +47,7 @@ module buffer_wrapper(
    rx_buffer (	
 		.rd_clk(sd_clk),
 		.wr_clk(host_clk),
-		.rst(!rst_L),
+		.rst(rst_L),
 		.clr(1'b0),
 		.din(rx_buf_din), //DAT
 		.dout(rx_buf_dout), //DMA

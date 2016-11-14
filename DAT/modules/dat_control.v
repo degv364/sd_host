@@ -39,7 +39,7 @@ module DAT_control (
    //Update state 
    always @ (posedge host_clk or !rst_L) begin
       if(!rst_L) begin
-	 state 		<= IDLE;	
+	 state 		<= IDLE;
 	 dat_wr_flag 	<= 0;	
 	 dat_rd_flag 	<= 0;
       end	
