@@ -1,12 +1,12 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Sun Nov  6 03:40:03 2016
+[*] Wed Nov  9 14:56:31 2016
 [*]
 [dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/test_serial_to_parallel.vcd"
-[dumpfile_mtime] "Sun Nov  6 03:39:03 2016"
-[dumpfile_size] 9202
+[dumpfile_mtime] "Wed Nov  9 14:54:16 2016"
+[dumpfile_size] 10109
 [savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/serial_to_paralell.gtkw"
-[timestart] 81
+[timestart] 0
 [size] 1301 744
 [pos] -1 -1
 *-3.087076 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
@@ -17,12 +17,13 @@
 [sst_vpaned_height] 211
 @28
 tb_serial_to_parallel.dut.CLK
-tb_serial_to_parallel.dut.start_listening_nxt_cycle
-@25
+@24
 tb_serial_to_parallel.dut.counter[5:0]
 @28
 tb_serial_to_parallel.dut.serial_in
 tb_serial_to_parallel.dut.parallel_out[47:0]
 tb_serial_to_parallel.dut.finished
+@23
+tb_serial_to_parallel.dut.counter[5:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -13,18 +13,24 @@ fifo:
 fetch:
 	iverilog -o test_fetch.x test_fetch.v
 	./test_fetch.x
-	gtkwave test_fetch.vcd
+	gtkwave test_fetch.vcd gtks/fetch.gtkw &
 
 transfer:
 	iverilog -o test_transfer.x test_transfer.v
 	./test_transfer.x
-	gtkwave test_transfer.vcd
+	gtkwave test_transfer.vcd gtks/transfer.gtkw
 
 dma:
-	iverilog -o test_dma.x test_dma,v
+	iverilog -o test_dma.x test_DMA.v
 	./test_dma.x
 	gtkwave test_dma.vcd
 
+synth_fetch:
+	yosys yosys/fetch.ys
+
+synth_transfer:
+	yosys yosys/transfer.ys
+
 
 clean:
-	rm *~ test.vcd test_bench *.vcd test_4_bit *.x
+	rm  *.vcd *.x
