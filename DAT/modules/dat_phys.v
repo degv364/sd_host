@@ -81,35 +81,35 @@ module DAT_phys (
    end
 
    //Next state, outputs logic
-   always @(posedge sd_clk) begin
+   always @(posedge sd_clk or state) begin
       //Default output values
-      tx_buf_rd_enb  <= 0;
-      rx_buf_wr_enb  <= 0;
-      rx_buf_din_out <= 0;	
-      DAT_dout 	     <= 0;
-      tf_finished    <= 0;
+      tx_buf_rd_enb  = 0;
+      rx_buf_wr_enb  = 0;
+      rx_buf_din_out = 0;
+      DAT_dout 	     = 0;
+      tf_finished    = 0;
       case (state)
 	 IDLE: begin
-	    curr_block_cnt <= block_cnt;
-	    curr_block_sz  <= block_sz;
+	    curr_block_cnt = block_cnt;
+	    curr_block_sz  = block_sz;
 
 	    if(sdc_busy_L) begin //If card is busy keep IDLE state
-	       next_state <= IDLE;
+	       next_state = IDLE;
 	    end
 	    else begin
 	       if(write_flag && !read_flag) begin
-		  next_state    <= WRITE;
-		  new_block     <= 1;
-		  tx_buf_rd_enb <= 1; //Request data from Tx FIFO
-		  sel_offset    <= 0;
+		  next_state    = WRITE;
+		  new_block     = 1;
+		  tx_buf_rd_enb = 1; //Request data from Tx FIFO
+		  sel_offset    = 0;
 	       end
 	       else begin
 		  if(read_flag && !write_flag) begin
-		     next_state    <= READ;
-		     rx_buf_wr_enb <= 1;
+		     next_state    = READ;
+		     rx_buf_wr_enb = 1;
 		  end
 		  else begin
-		     next_state <= IDLE;
+		     next_state = IDLE;
     		  end
 	       end
 	    end
@@ -118,59 +118,60 @@ module DAT_phys (
 	 WRITE: begin
 	    if(curr_block_cnt > 0) begin
 
-	       next_state <= WRITE;
+	       next_state = WRITE;
 	       
 	       if(new_block && sdc_busy_L) begin
-		  new_block <= 1; //If sd card is busy retry the write operation
+		  new_block = 1; //If sd card is busy retry the write operation
 	       end
 	       else begin
-		  new_block <= 0;
+		  new_block = 0;
 		  
 		  if(sel_offset == 0) begin //Get new data from Tx FIFO
-		     curr_tx_buf_dout_in <= tx_buf_dout_in;
+		     curr_tx_buf_dout_in = tx_buf_dout_in;
 		  end
 		  else begin
-		     curr_tx_buf_dout_in <= curr_tx_buf_dout_in;
+		     curr_tx_buf_dout_in = curr_tx_buf_dout_in;
 		  end
 
 		  if(sel_offset < `FIFO_WIDTH/4) begin
-		     DAT_dout  <= curr_tx_buf_dout_in[(`FIFO_WIDTH-1-(sel_offset<<2))-:4];
-		     
+		     DAT_dout  = curr_tx_buf_dout_in[(`FIFO_WIDTH-1-(sel_offset<<2))-:4];
+		     curr_block_sz = curr_block_sz-4;
+
 		     if(sel_offset < `FIFO_WIDTH/4-1) begin
-			sel_offset <= sel_offset+1;
-			curr_block_sz <= curr_block_sz-4;
+			sel_offset = sel_offset+1;
 		     end
 		     else begin  //sel_offset == (`FIFO_WIDTH/4)-1)
-			sel_offset    <= 0;
-			tx_buf_rd_enb <= 1; //Prepare to request data from Tx FIFO
+			sel_offset     = 0; //Need to tranfer more blocks
+			//Prepare to request data from Tx FIFO
+			tx_buf_rd_enb  = (curr_block_cnt-1 > 0) ? 1 : 0;
 		     end
 		  end
 		  else begin //Default unexpected case
-		     DAT_dout   <= DAT_dout;
-		     sel_offset <= 0;     
+		     DAT_dout   = DAT_dout;
+		     sel_offset = 0;     
 		  end
 
-		  if(curr_block_sz == 4) begin //Finished to send current block
-		     new_block <= (curr_block_cnt-1 > 0) ? 1 : 0; //Need to tranfer more blocks
-		     curr_block_sz <= block_sz;
-		     curr_block_cnt <= curr_block_cnt-1;
+		  if(curr_block_sz == 0) begin //Finished to send current block
+		     new_block = (curr_block_cnt-1 > 0) ? 1 : 0; //Need to tranfer more blocks
+		     curr_block_sz = block_sz;
+		     curr_block_cnt = curr_block_cnt-1;
 		  end
 		  else begin
-		     curr_block_cnt <= curr_block_cnt;
+		     curr_block_cnt = curr_block_cnt;
 		  end
 	       end
 	    end 
 	    else begin
-	       next_state <= IDLE; //Return to IDLE if all the blocks were transfered
-	       tf_finished <= 1;
+	       next_state = IDLE; //Return to IDLE if all the blocks were transfered
+	       tf_finished = 1;
 	    end
 	 end
 	
 	 READ: begin
-	    next_state <= IDLE; //Temporary for testing
+	    next_state = IDLE; //Temporary for testing
 	 end
 	 default:
-	    next_state <= IDLE;
+	    next_state = IDLE;
       endcase
 
    end

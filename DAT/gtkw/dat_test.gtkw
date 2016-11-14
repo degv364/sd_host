@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Mon Nov 14 03:04:54 2016
+[*] Mon Nov 14 05:29:51 2016
 [*]
 [dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/dat_test.vcd"
-[dumpfile_mtime] "Mon Nov 14 03:03:22 2016"
-[dumpfile_size] 20724
+[dumpfile_mtime] "Mon Nov 14 05:25:48 2016"
+[dumpfile_size] 19076
 [savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/gtkw/dat_test.gtkw"
-[timestart] 24570
+[timestart] 0
 [size] 1918 1026
 [pos] -1 -1
-*-12.000000 48000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.000000 320000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] dat_tb.
 [sst_width] 243
 [signals_width] 258
@@ -61,6 +61,8 @@ dat_tb.dat_tester0.tx_buf_full
 @28
 dat_tb.dat_phys0.next_state[2:0]
 dat_tb.dat_phys0.state[2:0]
+dat_tb.dat_phys0.tx_buf_rd_enb
+dat_tb.dat_phys0.rx_buf_wr_enb
 @24
 dat_tb.dat_phys0.curr_block_cnt[15:0]
 dat_tb.dat_phys0.curr_block_sz[8:0]
