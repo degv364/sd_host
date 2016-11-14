@@ -4,7 +4,8 @@ module fetch (input start,
 	     output [95:0] address_descriptor,
 	     input [31:0]  ram_data,
 	     output [63:0] address_to_fetch,
-	     output address_fetch_done,
+	     output 	   address_fetch_done,
+	     output start_confirmation,	   
 	     input 	   CLK);
 
    parameter WAIT = 4'b0001;
@@ -17,6 +18,8 @@ module fetch (input start,
    reg [95:0] 		   address_descriptor;
    reg [63:0] 		   address_to_fetch;
    reg 			   address_fetch_done;
+   reg 			   start_confirmation;
+   
 
    //secuential part part
    always @(posedge CLK) begin
@@ -55,13 +58,16 @@ module fetch (input start,
 	WAIT: begin
 	   address_fetch_done=1;
 	   address_to_fetch = address;
-	   address_descriptor = 0;
+	   address_descriptor = address_descriptor;
+	   start_confirmation =0;
+	   
 	   
 	end
 	FST_FETCH: begin
 	   address_fetch_done=0;
 	   address_to_fetch = address+4;
 	   address_descriptor[31:0]=ram_data;
+	   start_confirmation=0;
 	   
 	   
 	end
@@ -69,16 +75,22 @@ module fetch (input start,
 	   address_fetch_done=0;
 	   address_to_fetch = address+8;
 	   address_descriptor[63:32] = ram_data;
+	   start_confirmation=1;
+	   
 	end
 	TRD_FETCH: begin
-	   address_fetch_done=0;
+	   address_fetch_done=1;
 	   address_to_fetch = address;
 	   address_descriptor[95:64] = ram_data;
+	   start_confirmation=0;
+	   
 	end
 	default: begin
 	   address_fetch_done=1;
 	   address_to_fetch = address;
 	   address_descriptor = 0;
+	   start_confirmation=0;
+	   
 	end
       endcase // case (state)
    end // always @ (*)

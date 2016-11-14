@@ -3,6 +3,9 @@
 //Pero es necesario para el testbench.
 //Lee y escribe en la direccion determinada.
 
+//`define GENERAL
+`define DMA
+
 module ram(input [63:0] address,
 	   input [31:0] data_in, 
 	   input write, 
@@ -30,6 +33,8 @@ module ram(input [63:0] address,
       end
    end
 
+`ifdef GENERAL
+   
    //Escritura de constantes en ram
    always @(CLK) begin
       info [31:0]=1;
@@ -39,7 +44,30 @@ module ram(input [63:0] address,
       info [159:128]=5;
       
    end
+`endif //  `ifdef GENERAL
 
+`ifdef DMA
+   always @(CLK) begin
+      //first address descriptor
+      info [95:32]=40; //initial address (to read)
+      info [31:16]=5; //length
+      info [15:6]=0;
+      info [5:0]=6'b010001;//tran, valid.
+      //second address descriptor
+      info [191:128]=64; //initial address (to write)
+      info [127:112]=5; //length
+      info [111:102]=0;
+      info [101:96]=6'b010001;//tran, valid.
+      //third address descriptor
+      info [287:224]=0; //address to link
+      info [223:208]=0;
+      info [207:198]=0;
+      info [197:192]=6'b110001; //link, valid
+   end // always @ (CLK)
+   
+
+`endif
+   
    wire [63:0] scope_00;
    wire [63:0] scope_01;
    wire [63:0] scope_02;
