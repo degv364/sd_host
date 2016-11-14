@@ -47,7 +47,9 @@ module dat_tb;
    wire [3:0] 		  DAT_dout;
    wire [3:0] 		  DAT_din;
    
-   DAT_tester dat_tester0 (.host_clk(HOST_clk),
+   DAT_tester dat_tester0 (.tx_buf_full(tx_fifo_full),
+			   .rx_buf_empty(rx_fifo_empty),
+			   .host_clk(HOST_clk),
 			   .sd_clk(SD_clk),
 			   .rst_L(RST_L),
 			   .tx_data_init(dat_tx_init),
