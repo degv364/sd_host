@@ -9,7 +9,7 @@ module ram_signal(address, write, read, data_out, CLK);
    
    
    
-   reg [63:0]	 address=512; 
+   reg [63:0]	 address=0; 
    reg [31:0] 	 data_out=0;
    reg 		 write=1;
    reg 		 read=0;

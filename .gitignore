@@ -1,2 +1,4 @@
 *.x
 *.vcd
+synth_fetch.v
+synth_transfer.v

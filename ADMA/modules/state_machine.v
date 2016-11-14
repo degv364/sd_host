@@ -227,12 +227,21 @@ module state_machine(
 	end
 	default: begin
 	   //ST_STOP
+	   //TFC=zero; //this is handled by transfer
+	   //address_descriptor=0;
+	   ram_read=0;
+	   ram_write=0;
+	   fifo_read=0;
+	   fifo_write=0;
+	   //ram_fetch_address=starting_address;
+	   begin_fetch=0;
+	   start_transfer=0;
 	end
       endcase // case (state)
    end // always @ (state)
 
    //submodules
-   fetch fetch(.start(begin_fetch),
+   fetch fetch(.start((begin_fetch & CLK)), //this signal is a trigger not an enable
 	       .address(ram_fetch_address),
 	       .address_fetch_done(address_fetch_done),
 	       .address_descriptor(address_descriptor),
@@ -240,7 +249,7 @@ module state_machine(
 	       .address_to_fetch(ram_address_fetch),
 	       .CLK(CLK));
 
-   transfer transfer(.start(start_transfer),
+   transfer transfer(.start((start_transfer & CLK)),
 		     .direction(direction),
 		     .TFC(TFC),
 		     .address_init(address),

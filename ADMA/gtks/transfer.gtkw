@@ -1,0 +1,33 @@
+[*]
+[*] GTKWave Analyzer v3.3.76 (w)1999-2016 BSI
+[*] Sun Nov 13 17:18:35 2016
+[*]
+[dumpfile] "/home/daniel/repos/ucr/sd_host/ADMA/test_transfer.vcd"
+[dumpfile_mtime] "Sun Nov 13 17:16:22 2016"
+[dumpfile_size] 3330
+[savefile] "/home/daniel/repos/ucr/sd_host/ADMA/gtks/transfer.gtkw"
+[timestart] 0
+[size] 1920 1062
+[pos] -1 -1
+*-2.056748 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 205
+[signals_width] 190
+[sst_expanded] 1
+[sst_vpaned_height] 317
+@28
+test_transfer.CLK
+@22
+test_transfer.data_from_ram[31:0]
+test_transfer.data_to_fifo[31:0]
+test_transfer.data_from_fifo[31:0]
+test_transfer.data_to_ram[31:0]
+@28
+test_transfer.fifo_write
+test_transfer.fifo_read
+test_transfer.ram_read
+test_transfer.ram_write
+test_transfer.TFC
+@29
+test_transfer.start_transfer
+[pattern_trace] 1
+[pattern_trace] 0

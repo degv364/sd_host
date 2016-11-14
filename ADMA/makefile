@@ -18,12 +18,18 @@ fetch:
 transfer:
 	iverilog -o test_transfer.x test_transfer.v
 	./test_transfer.x
-	gtkwave test_transfer.vcd
+	gtkwave test_transfer.vcd gtks/transfer.gtkw
 
 dma:
 	iverilog -o test_dma.x test_DMA.v
 	./test_dma.x
 	gtkwave test_dma.vcd
+
+synth_fetch:
+	yosys yosys/fetch.ys
+
+synth_transfer:
+	yosys yosys/transfer.ys
 
 
 clean:
