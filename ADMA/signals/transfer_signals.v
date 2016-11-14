@@ -16,21 +16,21 @@ module transfer_signal(output start,
    initial begin
       $dumpfile ("test_transfer.vcd");
       $dumpvars (0, test_transfer);
-      # 0 length = 3;
+      # 0 length = 6;
       # 0 address_init=0;
       
       # 2 start = 1;
       # 1 start = 0;
-      # 11 address_init=4;
+      # 15 address_init=12;
       
       # 0 direction=0;
       # 0 length=5;
-      # 2 start=1;
+      # 8 start=1;
       # 1 start=0;
       
       
       
-      # 10 $finish;
+      # 28 $finish;
    end // initial begin
 
    always #1 CLK=!CLK;

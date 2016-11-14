@@ -35,6 +35,9 @@ module ram(input [63:0] address,
       info [31:0]=1;
       info [63:32]=2;
       info [95:64]=3;
+      info [127:96]=4;
+      info [159:128]=5;
+      
    end
 
    wire [63:0] scope_00;

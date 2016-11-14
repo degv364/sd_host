@@ -28,6 +28,9 @@ dma:
 synth_fetch:
 	yosys yosys/fetch.ys
 
+synth_transfer:
+	yosys yosys/transfer.ys
+
 
 clean:
 	rm  *.vcd *.x
