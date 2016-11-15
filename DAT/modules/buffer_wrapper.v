@@ -45,8 +45,8 @@ module buffer_wrapper(
 
    generic_fifo_dc_gray #(.aw(4),.dw(`FIFO_WIDTH)) 
    rx_buffer (	
-		.rd_clk(sd_clk),
-		.wr_clk(host_clk),
+		.rd_clk(host_clk),
+		.wr_clk(sd_clk),
 		.rst(rst_L),
 		.clr(1'b0),
 		.din(rx_buf_din), //DAT
