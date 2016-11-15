@@ -6,7 +6,6 @@
 
 `timescale 1ns/10ps
 
-//TODO: Check if a DAT_control/DAT_phys busy signal is necessary
 //TODO: Timeout check
 module DAT_control (
 		    input  host_clk, 

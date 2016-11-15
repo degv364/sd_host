@@ -13,6 +13,9 @@
 //TODO: Check for FIFOs full/empty cases
 //TODO: Start/End Sequence
 //TODO: Read transaction
+//TODO: DAT Control flags synchronization
+//TODO: Sel_offset counter should be updated in sequential logic
+
 
 module DAT_phys (
 		 input 			      sd_clk,
@@ -45,7 +48,7 @@ module DAT_phys (
    reg [`BLOCK_CNT_WIDTH-1:0] curr_block_cnt;
    reg [`BLOCK_SZ_WIDTH-1:0]  curr_block_sz; 
    reg [`FIFO_WIDTH-1:0]      curr_tx_buf_dout_in;
-   reg 			      new_block; 
+   reg 			      new_block;
 			      
    parameter SIZE = 3;
    reg [SIZE-1:0] 	 state;
@@ -76,8 +79,9 @@ module DAT_phys (
 	 curr_tx_buf_dout_in <= 0;
 	 new_block 	     <= 0;
       end	
-      else
+      else begin
 	 state <= next_state;
+      end
    end
 
    //Next state, outputs logic
