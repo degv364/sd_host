@@ -3,7 +3,7 @@
 `include "modules/ram.v"
 `include "modules/simple_fifo.v"
 
-`define FULL_EMPTY
+//`define FULL_EMPTY
 
 module test_transfer;
 

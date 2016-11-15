@@ -27,6 +27,12 @@ module state_machine(
 		     output 	   fifo_read,
 		     output 	   start_transfer
 		     );
+
+   
+
+
+
+   
    
    wire [95:0] 	fetch_address_descriptor;
    reg [95:0] 	address_descriptor;
@@ -87,7 +93,7 @@ module state_machine(
    reg [63:0] 		ram_fetch_address;
    wire 		address_fetch_done;
    reg 			begin_fetch;
-   reg 		next_ram_address;
+   reg [63:0] 		next_ram_address;
    reg 		start_transfer;
    wire [63:0]	ram_address_transfer;
    wire [63:0] 	ram_address_fetch;
@@ -102,17 +108,7 @@ module state_machine(
    reg 		zero=0;
    
 
-   //Parte secuencial
-   always @(posedge CLK)begin
-      if (RESET) begin
-	 state=ST_STOP;
-	 //salidas nulas
-      end
-      else begin
-	 state<=next_state;
-	 //salida<=next_salida;
-      end 
-   end
+   
    
    //state selector
    always @(*) begin
@@ -127,30 +123,41 @@ module state_machine(
 		 next_state=ST_STOP;
 	      end
 	   end
+	   
 	   ST_FDS: begin
 	      if (VALID==0) begin
 		 next_state=ST_FDS;
-	      end else begin
+	      end 
+	      else begin
 		 if (address_fetch_done==1) begin
 		    next_state=ST_CACDR;
-		 end else begin
+		 end 
+		 else begin
 		    next_state=ST_FDS;
 		 end
 		 
 	      end
 
-	   end
+	   end // case: ST_FDS
+	   
 	   ST_CACDR: begin
 	      if (TRAN==1) begin 
 		 next_state = ST_TFR_START;
-	      end else begin
+	      end 
+	      else begin
 		 if (END==1) begin
 		    next_state = ST_STOP;
-		 end else begin
+		 end 
+		 else begin
 		    next_state = ST_FDS_START;
 		 end
-	      end 
-	   end 
+		 
+	      end
+ 
+	   end // else: !if(RESET)
+	   
+	   
+	   
 	   ST_TFR: begin
 	     
 	      if (TFC==0) begin
@@ -159,13 +166,15 @@ module state_machine(
 		 if (END==1 | STOP==1) begin
 		    next_state= ST_STOP;
 		 end else begin
-		    next_state = ST_FDS;
+		    next_state = ST_FDS_START;
 		 end
 	      end 
 	   end // always @ (*)
+	   
 	   ST_FDS_START: begin
 	      next_state=ST_FDS;
 	   end
+	   
 	   ST_TFR_START:begin
 	      next_state=ST_TFR;
 	   end
@@ -175,7 +184,9 @@ module state_machine(
 	   end
 	 endcase // case (state)
       end // else: !if(RESET)
-   end // always @ (posedge CLK)
+      
+   end // always @ (*)
+   
    
    //definicion de las salidas (entradas a bloques funcionales)
    always @(*) begin
@@ -193,6 +204,8 @@ module state_machine(
 	   start_transfer=0;
 	   counter=0;
 	   address_descriptor=0;
+	   next_ram_address=0;
+	   
 	   
 	end
 	ST_FDS: begin
@@ -226,13 +239,18 @@ module state_machine(
 	   end
 	   else begin
 	      //next_ram_address=ram_address+4;
-	      next_ram_address=ram_address+12; //address descriptor has 96 bits
-	      
+	      next_ram_address=address+12; //address descriptor has 96 bits   
 	   end
 	   
 	end
 	ST_TFR: begin
+	   start_transfer=0;
+	   
 	   //read write flags
+	   if (start_transfer==1)begin
+	      zero=1;
+	   end
+	   
 	   ram_read=ram_read_transfer;
 	   ram_write=ram_write_transfer;
 	   fifo_read=fifo_read_transfer;
@@ -242,7 +260,7 @@ module state_machine(
 	   
 	   //Actually transfer the data.
 	   begin_fetch=0;
-	   start_transfer=0;
+	   //start_transfer=0;
 	   ram_address=ram_address_transfer;
 	   
 	   //TODO fifo full, fifo empty
@@ -323,7 +341,17 @@ module state_machine(
 		     .fifo_empty(fifo_empty),
 		     .CLK(CLK));
    
-   
+   //Parte secuencial
+   always @(posedge CLK)begin
+      if (RESET) begin
+	 state=ST_STOP;
+	 //salidas nulas
+      end
+      else begin
+	 state<=next_state;
+	 //salida<=next_salida;
+      end 
+   end
 
 
 endmodule // state_machine
