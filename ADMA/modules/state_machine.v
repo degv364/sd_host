@@ -27,19 +27,29 @@ module state_machine(
 		     output 	   fifo_read,
 		     output 	   start_transfer
 		     );
+
    
-   wire [95:0] 	address_descriptor;
+
+
+
+   
+   
+   wire [95:0] 	fetch_address_descriptor;
+   reg [95:0] 	address_descriptor;
+   
    wire 	RESET;
    wire 	CLK;
    wire 	STOP;
    
-   reg [3:0] 	state;
+   reg [5:0] 	state;
 
    //One hot
-   parameter ST_STOP = 4'b0001;
-   parameter ST_FDS  = 4'b0010;
-   parameter ST_CACDR= 4'b0100;
-   parameter ST_TFR  = 4'b1000;
+   parameter ST_STOP = 6'b000001;
+   parameter ST_FDS_START= 6'b010000;
+   parameter ST_FDS  = 6'b000010;
+   parameter ST_CACDR= 6'b000100;
+   parameter ST_TFR_START= 6'b100000;
+   parameter ST_TFR  = 6'b001000;
 
    //command related variables
    wire [63:0] 	address;
@@ -57,7 +67,8 @@ module state_machine(
    assign INT     = address_descriptor[2];
    assign END     = address_descriptor[1];
    assign VALID   = address_descriptor[0];
-   
+
+   //TODO: program NOP, RSV states
    assign NOP     = (~ACT2) & (~ACT1);
    assign RSV     = (~ACT2) & (ACT1);
    assign TRAN    = (ACT2) & (~ACT1);
@@ -78,33 +89,26 @@ module state_machine(
    
    //internal variables
    wire 		TFC; //transfer data complete flag
-   reg [3:0] 		next_state;
-   wire [63:0] 		ram_fetch_address;
+   reg [5:0] 		next_state;
+   reg [63:0] 		ram_fetch_address;
    wire 		address_fetch_done;
    reg 			begin_fetch;
-   reg 		next_ram_address;
+   reg [63:0] 		next_ram_address;
    reg 		start_transfer;
    wire [63:0]	ram_address_transfer;
    wire [63:0] 	ram_address_fetch;
    
    reg [63:0] 	ram_address;
    
+   reg [32:0] 	counter;//counter for triggering signals
+   wire 	start_confirmation;
+   
    
 
    reg 		zero=0;
    
 
-   //Parte secuencial
-   always @(posedge CLK)begin
-      if (RESET) begin
-	 state=ST_STOP;
-	 //salidas nulas
-      end
-      else begin
-	 state<=next_state;
-	 //salida<=next_salida;
-      end 
-   end
+   
    
    //state selector
    always @(*) begin
@@ -114,35 +118,46 @@ module state_machine(
 	 case (state)
 	   ST_STOP: begin 
 	      if (command_reg_write==1 | command_reg_continue==1) begin
-		 next_state=ST_FDS;
+		 next_state=ST_FDS_START;
 	      end else begin
 		 next_state=ST_STOP;
 	      end
 	   end
+	   
 	   ST_FDS: begin
 	      if (VALID==0) begin
 		 next_state=ST_FDS;
-	      end else begin
+	      end 
+	      else begin
 		 if (address_fetch_done==1) begin
 		    next_state=ST_CACDR;
-		 end else begin
+		 end 
+		 else begin
 		    next_state=ST_FDS;
 		 end
 		 
 	      end
 
-	   end
+	   end // case: ST_FDS
+	   
 	   ST_CACDR: begin
 	      if (TRAN==1) begin 
-		 next_state = ST_TFR;
-	      end else begin
+		 next_state = ST_TFR_START;
+	      end 
+	      else begin
 		 if (END==1) begin
 		    next_state = ST_STOP;
-		 end else begin
-		    next_state = ST_FDS;
+		 end 
+		 else begin
+		    next_state = ST_FDS_START;
 		 end
-	      end 
-	   end 
+		 
+	      end
+ 
+	   end // else: !if(RESET)
+	   
+	   
+	   
 	   ST_TFR: begin
 	     
 	      if (TFC==0) begin
@@ -151,16 +166,27 @@ module state_machine(
 		 if (END==1 | STOP==1) begin
 		    next_state= ST_STOP;
 		 end else begin
-		    next_state = ST_FDS;
+		    next_state = ST_FDS_START;
 		 end
 	      end 
-	   end 
+	   end // always @ (*)
+	   
+	   ST_FDS_START: begin
+	      next_state=ST_FDS;
+	   end
+	   
+	   ST_TFR_START:begin
+	      next_state=ST_TFR;
+	   end
+	   
 	   default: begin
 	      next_state=ST_STOP;
 	   end
 	 endcase // case (state)
       end // else: !if(RESET)
-   end // always @ (posedge CLK)
+      
+   end // always @ (*)
+   
    
    //definicion de las salidas (entradas a bloques funcionales)
    always @(*) begin
@@ -173,17 +199,22 @@ module state_machine(
 	   ram_write=0;
 	   fifo_read=0;
 	   fifo_write=0;
-	   //ram_fetch_address=starting_address;
+	   ram_fetch_address=starting_address;
 	   begin_fetch=0;
 	   start_transfer=0;
+	   counter=0;
+	   address_descriptor=0;
+	   next_ram_address=0;
 	   
-	   	   
 	   
 	end
 	ST_FDS: begin
 	   //Load address descriptor from memory
 	   //requires 3 cycles to complete
-	   begin_fetch=1; //habilitar submodulo fetch
+	   begin_fetch=0;
+	   
+	   //begin_fetch=1;//Add new start confirmation
+	   
 	   start_transfer=0;
 	   
 	   ram_write=0;
@@ -191,6 +222,7 @@ module state_machine(
 	   fifo_read=0;
 	   fifo_write=0;
 	   ram_address=ram_address_fetch;
+	   address_descriptor=fetch_address_descriptor;
 	   
 	   
 	end
@@ -198,6 +230,7 @@ module state_machine(
 	   //change reading address to fetch next cycle
 	   begin_fetch=0;
 	   start_transfer=0;
+	   address_descriptor=address_descriptor;
 	   
 	   ram_address=next_ram_address;
 	   if (LINK==1) begin
@@ -205,26 +238,66 @@ module state_machine(
 	      next_ram_address=address;
 	   end
 	   else begin
-	      next_ram_address=ram_address+4;
+	      //next_ram_address=ram_address+4;
+	      next_ram_address=address+12; //address descriptor has 96 bits   
 	   end
 	   
 	end
 	ST_TFR: begin
+	   start_transfer=0;
+	   
 	   //read write flags
+	   if (start_transfer==1)begin
+	      zero=1;
+	   end
+	   
 	   ram_read=ram_read_transfer;
 	   ram_write=ram_write_transfer;
 	   fifo_read=fifo_read_transfer;
 	   fifo_write=fifo_write_transfer;
+	   address_descriptor=address_descriptor;
+	   
 	   
 	   //Actually transfer the data.
 	   begin_fetch=0;
-	   start_transfer=1;
+	   //start_transfer=0;
 	   ram_address=ram_address_transfer;
 	   
 	   //TODO fifo full, fifo empty
 	   
 	   
-	end
+	end // case: ST_TFR
+	ST_FDS_START: begin
+	   begin_fetch=1;
+	   address_descriptor=fetch_address_descriptor;
+	   
+	   
+	   //begin_fetch=1;//Add new start confirmation
+	   
+	   start_transfer=0;
+	   
+	   ram_write=0;
+	   ram_read=1; //habilitar lectura de ram
+	   fifo_read=0;
+	   fifo_write=0;
+	   ram_address=ram_address_fetch;
+	end // case: ST_FDS_START
+	ST_TFR_START: begin
+	   //read write flags
+	   ram_read=ram_read_transfer;
+	   ram_write=ram_write_transfer;
+	   fifo_read=fifo_read_transfer;
+	   fifo_write=fifo_write_transfer;
+	   address_descriptor=address_descriptor;
+	   
+	   
+	   //Actually transfer the data.
+	   begin_fetch=0;
+	   start_transfer=1;
+	   ram_address=ram_address_transfer;
+	end // case: ST_TFR_START
+	
+	   
 	default: begin
 	   //ST_STOP
 	   //TFC=zero; //this is handled by transfer
@@ -233,7 +306,7 @@ module state_machine(
 	   ram_write=0;
 	   fifo_read=0;
 	   fifo_write=0;
-	   //ram_fetch_address=starting_address;
+	   ram_fetch_address=starting_address;
 	   begin_fetch=0;
 	   start_transfer=0;
 	end
@@ -244,9 +317,10 @@ module state_machine(
    fetch fetch(.start((begin_fetch & CLK)), //this signal is a trigger not an enable
 	       .address(ram_fetch_address),
 	       .address_fetch_done(address_fetch_done),
-	       .address_descriptor(address_descriptor),
+	       .address_descriptor(fetch_address_descriptor),
 	       .ram_data(data_from_ram),
 	       .address_to_fetch(ram_address_fetch),
+	       .start_confirmation(start_confirmation),
 	       .CLK(CLK));
 
    transfer transfer(.start((start_transfer & CLK)),
@@ -267,7 +341,17 @@ module state_machine(
 		     .fifo_empty(fifo_empty),
 		     .CLK(CLK));
    
-   
+   //Parte secuencial
+   always @(posedge CLK)begin
+      if (RESET) begin
+	 state=ST_STOP;
+	 //salidas nulas
+      end
+      else begin
+	 state<=next_state;
+	 //salida<=next_salida;
+      end 
+   end
 
 
 endmodule // state_machine

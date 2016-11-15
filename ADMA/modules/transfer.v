@@ -18,6 +18,21 @@ module transfer(input start,
 		input 	      fifo_full,
 		input 	      CLK
 		);
+   wire 		      CLK; //just to make this module aware of clk
+   reg 			      not_half_clk;
+   reg 			      half_clk;
+   // always @(posedge CLK)begin
+   //    if (start==1)begin
+   // 	 half_clk=start;
+   //    end
+   //    else begin
+   // 	 half_clk+=1;
+   //    end
+   // end
+   
+   
+   
+   
 
    parameter IDLE=      5'b00001;
    parameter FIFO_RAM=  5'b00010;
@@ -50,7 +65,7 @@ module transfer(input start,
 
    //secuential part
    always @(posedge CLK) begin
-      state=next_state;
+      state=next_state;   
    end
 
    //next state logic
@@ -126,6 +141,8 @@ module transfer(input start,
    //logic for outputs
 
    always @(*) begin
+      not_half_clk=!half_clk; //just to include CLK as update signal here
+      
       case (state)
 	IDLE: begin
 	   ram_read=1;
@@ -135,7 +152,7 @@ module transfer(input start,
 	   data_to_ram=0;
 	   data_to_fifo=0;
 	   ram_address=address_init;
-	   //TFC=0; //TODO: check if this is necesary 
+	   TFC=1; //TODO: check if this is necesary 
 	end
 	FIFO_RAM: begin
 	   ram_read=0;
@@ -179,6 +196,8 @@ module transfer(input start,
 	   data_to_fifo=0;
 	   data_to_ram=data_to_ram;
 	   ram_address=ram_address;
+	   TFC=0;
+	   
 	   
        	end
 	
@@ -190,6 +209,8 @@ module transfer(input start,
 	   data_to_fifo=data_to_fifo;
 	   data_to_ram=0;
 	   ram_address=ram_address;
+	   TFC=0;
+	   
 	   
 	end
 	
@@ -205,6 +226,15 @@ module transfer(input start,
 	end
       endcase // case (state)
    end // always @ (*)
+
+   always @(posedge CLK)begin
+      if (state==IDLE)begin
+	 half_clk=start;
+      end
+      else begin
+	 half_clk+=1;
+      end
+   end
       
 endmodule // transfer
 
