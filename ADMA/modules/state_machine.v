@@ -106,6 +106,23 @@ module state_machine(
    
 
    reg 		zero=0;
+
+   
+   //Parte secuencial
+   always @(posedge CLK)begin
+      if (RESET) begin
+	 state=ST_STOP;
+	 ram_address=0;
+	 
+	 //salidas nulas
+      end
+      else begin
+	 state<=next_state;
+	 //ram_address<=next_ram_address;
+	 
+	 //salida<=next_salida;
+      end 
+   end
    
 
    
@@ -190,6 +207,7 @@ module state_machine(
    
    //definicion de las salidas (entradas a bloques funcionales)
    always @(*) begin
+      //next_ram_address=0;///avoid infferered latches
       case (state)
 	ST_STOP: begin
 	   //STOP DMA
@@ -239,7 +257,7 @@ module state_machine(
 	   end
 	   else begin
 	      //next_ram_address=ram_address+4;
-	      next_ram_address=address+12; //address descriptor has 96 bits   
+	      next_ram_address=ram_address+12; //address descriptor has 96 bits   
 	   end
 	   
 	end
@@ -280,7 +298,11 @@ module state_machine(
 	   ram_read=1; //habilitar lectura de ram
 	   fifo_read=0;
 	   fifo_write=0;
-	   ram_address=ram_address_fetch;
+	   ram_address=next_ram_address;///MAY change
+	   ram_fetch_address=next_ram_address;//May change
+	   
+	   
+	   //ram_address=ram_address_fetch;
 	end // case: ST_FDS_START
 	ST_TFR_START: begin
 	   //read write flags
@@ -341,17 +363,6 @@ module state_machine(
 		     .fifo_empty(fifo_empty),
 		     .CLK(CLK));
    
-   //Parte secuencial
-   always @(posedge CLK)begin
-      if (RESET) begin
-	 state=ST_STOP;
-	 //salidas nulas
-      end
-      else begin
-	 state<=next_state;
-	 //salida<=next_salida;
-      end 
-   end
 
 
 endmodule // state_machine
