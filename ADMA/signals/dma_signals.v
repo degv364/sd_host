@@ -27,7 +27,7 @@ module dma_signal(output 	RESET,
       # 0 starting_address=0;
       
       # 2 command_reg_write=1; //this will trigger dma
-      # 40 direction=0;
+      # 30 direction=0;
       # 60 STOP=1;
       
       # 5 $finish;
