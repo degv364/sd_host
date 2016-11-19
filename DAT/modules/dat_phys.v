@@ -13,9 +13,8 @@
 //TODO: Check for FIFOs full/empty cases
 //TODO: Start/End Sequence
 //TODO: Read transaction
-//TODO: DAT Control flags synchronization
-//TODO: Sel_offset counter should be updated in sequential logic
-
+//TODO: Start/End sequence between multiple blocks
+//TODO?: DAT Control flags synchronization (Maybe req/ack and double FF)
 
 module DAT_phys (
 		 input 			      sd_clk,
@@ -86,7 +85,7 @@ module DAT_phys (
 	 rx_buf_wr_enb 	     <= 0;
 	 rx_buf_din_out      <= 0;	
 	 tf_finished 	     <= 0;
-	 DAT_dout 	     <= 0;
+	 DAT_dout 	     <= 1;
 
 	 //State regs reset values
 	 state 		     <= IDLE;
@@ -116,7 +115,7 @@ module DAT_phys (
 	 read_flag_reg 	     <= read_flag;
 
 	 //Synchronic outputs update
-	 DAT_dout <= nxt_DAT_dout;
+	 DAT_dout 	     <= nxt_DAT_dout;
       end
    end
 
@@ -127,7 +126,7 @@ module DAT_phys (
       rx_buf_wr_enb 	       = 0;
       rx_buf_din_out 	       = 0;
       tf_finished 	       = 0;
-      nxt_DAT_dout 	       = 0; //Check correct default values
+      nxt_DAT_dout 	       = DAT_dout;
       
       //Default internal state regs values
       nxt_state 	       = state;
@@ -152,6 +151,7 @@ module DAT_phys (
 		  nxt_sel_offset 	   = 0;		  
 		  nxt_curr_block_cnt 	   = block_cnt;
 		  nxt_curr_block_sz 	   = block_sz;
+		  nxt_DAT_dout 		   = 0; //Start sequence bits
 	       end
 	       else begin
 		  if(read_flag && !write_flag) begin
@@ -175,15 +175,6 @@ module DAT_phys (
 	       end
 	       else begin
 		  nxt_new_block = 0;
-
-		  /*
-		  if(sel_offset == 0) begin //Get new data from Tx FIFO
-		   nxt_curr_tx_buf_dout_in = tx_buf_dout_in;
-		  end
-		  else begin
-		   nxt_curr_tx_buf_dout_in = curr_tx_buf_dout_in;
-		  end
-		   */
 		   
 		  if(sel_offset < `FIFO_WIDTH/4) begin
 		     nxt_DAT_dout  = curr_tx_buf_dout_in[(`FIFO_WIDTH-1-(sel_offset<<2))-:4];
@@ -195,10 +186,10 @@ module DAT_phys (
 		     end
 		     else begin  //sel_offset == (`FIFO_WIDTH/4)-1)
 			//Need to tranfer more blocks
-			nxt_sel_offset 	= 0; 
-			nxt_curr_tx_buf_dout_in = tx_buf_dout_in;
+			nxt_sel_offset 		 = 0; 
+			nxt_curr_tx_buf_dout_in  = tx_buf_dout_in;
 			//Prepare to request data from Tx FIFO
-			tx_buf_rd_enb 	= (curr_block_cnt-1 > 0) ? 1 : 0;
+			tx_buf_rd_enb 		 = (curr_block_cnt-1 > 0) ? 1 : 0;
 		     end
 		  end
 		  else begin //Default unexpected case

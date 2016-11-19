@@ -6,7 +6,8 @@
 
 `timescale 1ns/10ps
 
-//TODO: Timeout check
+//TODO?: Timeout check
+
 module DAT_control (
 		    input  host_clk, 
 		    input  rst_L,
@@ -26,7 +27,7 @@ module DAT_control (
    
    parameter SIZE = 5;
    reg [SIZE-1:0] 	   state;
-   reg [SIZE-1:0] 	   next_state;
+   reg [SIZE-1:0] 	   nxt_state;
    
    //FSM States
    parameter IDLE = 5'b00001;
@@ -43,58 +44,59 @@ module DAT_control (
 	 dat_rd_flag 	<= 0;
       end	
       else
-	 state <= next_state;
+	 state <= nxt_state;
    end
 
    //Next state, outputs logic
-   always @(posedge host_clk or state) begin
+   always @(*) begin
+      //always @(posedge host_clk or state) begin
       //Default output values
-      dat_wr_flag = 0;	
+      dat_wr_flag = 0;
       dat_rd_flag = 0;
       
       case (state)
 	 IDLE: begin
 	    if(tx_data_init && !rx_data_init) begin
-	       next_state = WRITE_START;
+	       nxt_state = WRITE_START;
 	    end
 	    else begin
 	       if(rx_data_init && !tx_data_init) begin
-		  next_state = READ_START;
+		  nxt_state = READ_START;
 	       end
 	       else
-		  next_state = IDLE;
+		  nxt_state = IDLE;
 	    end
 	 end 
    
 	 WRITE_START: begin
 	    if(!tx_buf_empty && !dat_phys_busy) begin
-	       next_state = WRITE_TRANSFER;
+	       nxt_state = WRITE_TRANSFER;
 	       dat_wr_flag = 1;
 	       //TODO: Set Write Transfer Active bit (Present State Register)
 	    end
 	    else
-	       next_state = WRITE_START;
+	       nxt_state = WRITE_START;
 	 end	
 
 	 READ_START: begin
 	    if(!rx_buf_full && !dat_phys_busy) begin
-	       next_state = READ_TRANSFER;
+	       nxt_state = READ_TRANSFER;
 	       dat_rd_flag = 1;
 	       //TODO: Set Read Transfer Active bit (Present State Register)
 	    end
 	    else
-	       next_state = READ_START;
+	       nxt_state = READ_START;
 	 end
 
 	 READ_TRANSFER: begin
 	    if(!tf_finished) begin
 	       dat_rd_flag = !rx_buf_full;
-	       next_state = READ_TRANSFER;
+	       nxt_state = READ_TRANSFER;
 	    end	
 	    else begin
 	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
 	       //TODO: Clear Read Transfer Active bit (Present State Register)
-	       next_state = IDLE;
+	       nxt_state = IDLE;
 	    end
 	    
 	 end
@@ -102,18 +104,18 @@ module DAT_control (
 	 WRITE_TRANSFER: begin
 	    if(!tf_finished) begin
 	       dat_wr_flag = !tx_buf_empty;
-	       next_state = WRITE_TRANSFER;
+	       nxt_state = WRITE_TRANSFER;
 	    end	
 	    else begin
 	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
 	       //TODO: Clear Write Transfer Active bit (Present State Register)
-	       next_state = IDLE;
+	       nxt_state = IDLE;
 	    end
 	    
 	 end
  
 	 default: begin
-	    next_state = IDLE;
+	    nxt_state = IDLE;
 	 end
       endcase // case (state)
    end  
