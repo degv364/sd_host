@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////
+// Module: transfer
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
+
 //Modulo que realiza la transferencia de datos
 	       
 module transfer(input start,

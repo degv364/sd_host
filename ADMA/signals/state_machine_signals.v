@@ -1,8 +1,9 @@
 ////////////////////////////////////////////////////////
-// Module: dma_signals 
+// Module: state_machine_signals
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
+
 
 
 //modulo para las senales de prueba para el dma

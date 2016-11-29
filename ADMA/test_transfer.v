@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////
+// Module: test_transfer 
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
 `include "modules/transfer.v"
 `include "signals/transfer_signals.v"
 `include "modules/ram.v"
