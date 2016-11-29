@@ -45,6 +45,7 @@ module dat_tb;
    wire [`FIFO_WIDTH-1:0] rx_fifo_dout;
    
    wire [3:0] 		  DAT_dout;
+   wire 		  DAT_dout_oe;
    wire [3:0] 		  DAT_din;
    
    DAT_tester dat_tester0 (.tx_buf_full(tx_fifo_full),
@@ -86,6 +87,7 @@ module dat_tb;
 		       .rx_buf_wr_enb(rx_fifo_write_en),
 		       .rx_buf_din_out(rx_fifo_din),
 		       .DAT_dout(DAT_dout),
+		       .DAT_dout_oe(DAT_dout_oe),
 		       .dat_phys_busy(dat_phys_busy),
 		       .tf_finished(tf_finished),
 		       .sdc_busy_L(sd_card_busy)
