@@ -8,13 +8,13 @@
 
 //modulo para las senales de prueba para el dma
 
-module dma_signal(output 	RESET,
-		  output 	STOP,
-		  output 	CLK,
-		  output 	command_reg_write,
-		  output 	command_reg_continue,
-		  output 	direction,
-		  output [63:0] starting_address);
+module state_machine_signal(output 	RESET,
+			    output 	  STOP,
+			    output 	  CLK,
+			    output 	  command_reg_write,
+			    output 	  command_reg_continue,
+			    output 	  direction,
+			    output [63:0] starting_address);
    
    
    reg 		 RESET=1;
@@ -29,8 +29,8 @@ module dma_signal(output 	RESET,
    always #1 CLK = !CLK;
       
    initial begin
-      $dumpfile ("test_dma.vcd");
-      $dumpvars (0, test_dma);
+      $dumpfile ("test_state_machine.vcd");
+      $dumpvars (0, test_state_machine);
       # 2 RESET =0;
       # 0 starting_address=0;
       
@@ -41,5 +41,6 @@ module dma_signal(output 	RESET,
       # 5 $finish;
    end
 
+   
 endmodule // signal_32
 

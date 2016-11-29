@@ -5,14 +5,14 @@
 ////////////////////////////////////////////////////////
 
 
-//testbench para DMA
+//testbench para state_machine
 `include "modules/state_machine.v"
 `include "modules/ram.v"
 `include "modules/simple_fifo.v"
-`include "signals/dma_signals.v"
+`include "signals/state_machine_signals.v"
 
 
-module test_dma;
+module test_state_machine;
 
    //wire [96:0] address_descriptor;
    wire RESET;
@@ -40,7 +40,7 @@ module test_dma;
    
    
 
-   state_machine dma(.starting_address(starting_address),
+   state_machine state_machine(.starting_address(starting_address),
 		     .RESET(RESET),
 		     .STOP(STOP),
 		     .CLK(CLK),
@@ -60,7 +60,7 @@ module test_dma;
 		     .fifo_read(fifo_read),
 		     .fifo_write(fifo_write));
 
-   dma_signal dma_signal(.starting_address(starting_address),
+   state_machine_signal state_machine_signal(.starting_address(starting_address),
 			 .RESET(RESET),
 			 .STOP(STOP),
 			 .CLK(CLK),
