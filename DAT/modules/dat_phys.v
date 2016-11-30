@@ -47,7 +47,7 @@ module DAT_phys (
    //Asynchronic output regs
    reg 					      tx_buf_rd_enb;
    reg 					      rx_buf_wr_enb;
-   reg [`FIFO_WIDTH-1:0] 		      rx_buf_din_out;
+   //reg [`FIFO_WIDTH-1:0] 		      rx_buf_din_out;
    reg [3:0] 				      DAT_dout;
    reg 					      DAT_dout_oe;
    reg 					      tf_finished;
@@ -62,6 +62,7 @@ module DAT_phys (
    reg [`BLOCK_CNT_WIDTH-1:0] 		      curr_block_cnt;
    reg [`BLOCK_SZ_WIDTH-1:0] 		      curr_block_sz;
    reg [`FIFO_WIDTH-1:0] 		      curr_tx_buf_dout_in;
+   reg [`FIFO_WIDTH-1:0] 		      curr_rx_buf_din_out;
    reg 					      new_block;
    reg 					      end_block;
    reg 					      DAT_din_reg; //TODO: Check when implementing READ
@@ -77,13 +78,16 @@ module DAT_phys (
    reg [`BLOCK_CNT_WIDTH-1:0] 		      nxt_curr_block_cnt;
    reg [`BLOCK_SZ_WIDTH-1:0] 		      nxt_curr_block_sz;
    reg [`FIFO_WIDTH-1:0] 		      nxt_curr_tx_buf_dout_in;
+   reg [`FIFO_WIDTH-1:0] 		      nxt_curr_rx_buf_din_out;
    reg 					      nxt_new_block;
    reg 					      nxt_end_block;
    reg [1:0] 				      nxt_end_blk_write_cnt;
 
    
-   assign sdc_busy_L = !DAT_din[0];
-   assign dat_phys_busy = (state != IDLE);
+   assign sdc_busy_L  = !DAT_din[0];
+   assign dat_phys_busy  = (state != IDLE);
+   assign rx_buf_din_out  = curr_rx_buf_din_out;
+
    
    //Update state logic
    always @ (posedge sd_clk or !rst_L) begin
@@ -92,7 +96,7 @@ module DAT_phys (
 	 //Output reset values
 	 tx_buf_rd_enb 	     <= 0;
 	 rx_buf_wr_enb 	     <= 0;
-	 rx_buf_din_out      <= 0;
+	 //rx_buf_din_out      <= 0;
 	 tf_finished 	     <= 0;
 	 DAT_dout 	     <= 0;
 	 DAT_dout_oe 	     <= 0;
@@ -103,6 +107,7 @@ module DAT_phys (
 	 curr_block_sz 	     <= 0;
 	 sel_offset 	     <= 0;
 	 curr_tx_buf_dout_in <= 0;
+	 curr_rx_buf_din_out <= 0;
 	 new_block 	     <= 0;
 	 end_block 	     <= 0;
 	 end_blk_write_cnt   <= 0;
@@ -121,6 +126,7 @@ module DAT_phys (
 	 curr_block_cnt      <= nxt_curr_block_cnt;
 	 curr_block_sz 	     <= nxt_curr_block_sz;
 	 curr_tx_buf_dout_in <= nxt_curr_tx_buf_dout_in;
+	 curr_rx_buf_din_out <= nxt_curr_rx_buf_din_out;
 	 new_block 	     <= nxt_new_block;
 	 end_block 	     <= nxt_end_block;
 	 end_blk_write_cnt   <= nxt_end_blk_write_cnt;
@@ -142,7 +148,7 @@ module DAT_phys (
       //Default output values
       tx_buf_rd_enb 	       = 0;
       rx_buf_wr_enb 	       = 0;
-      rx_buf_din_out 	       = 0;
+      //rx_buf_din_out 	       = 0;
       tf_finished 	       = 0;
       nxt_DAT_dout 	       = DAT_dout;
       nxt_DAT_dout_oe 	       = DAT_dout_oe;
@@ -153,6 +159,7 @@ module DAT_phys (
       nxt_curr_block_cnt       = curr_block_cnt;
       nxt_curr_block_sz        = curr_block_sz;
       nxt_curr_tx_buf_dout_in  = curr_tx_buf_dout_in;
+      nxt_curr_rx_buf_din_out  = curr_rx_buf_din_out;
       nxt_new_block 	       = new_block;
       nxt_end_block 	       = end_block;
       nxt_end_blk_write_cnt    = end_blk_write_cnt;
@@ -176,6 +183,7 @@ module DAT_phys (
 	       else begin
 		  if(read_flag && !write_flag) begin
 		     nxt_state 		 = READ_BLOCK;
+		     nxt_new_block 	 = 1;
 		     nxt_sel_offset 	 = 0;		  
 		     nxt_curr_block_cnt  = multiple_reg ? block_cnt : 1;
 		     nxt_curr_block_sz 	 = block_sz;
@@ -186,6 +194,7 @@ module DAT_phys (
 	       end
 	    end
 	 end
+
 	 WRITE_BLOCK: begin
 	    if(new_block && sdc_busy_L) begin
 	       nxt_state      = WRITE_BLOCK;
@@ -219,7 +228,7 @@ module DAT_phys (
 		     nxt_DAT_dout_oe 	      = 0; //Disable DAT output
 		  end
 	       end
-	       //----------CRC and End Sequence---------------------
+	       //----------CRC and End Sequence---------------
 	       else begin
 		  if(end_blk_write_cnt > 1) begin
 		     nxt_end_blk_write_cnt  = end_blk_write_cnt-1;
@@ -259,10 +268,10 @@ module DAT_phys (
 	    nxt_curr_tx_buf_dout_in = curr_tx_buf_dout_in;	    
 	    
 	    if(curr_block_sz == 4) begin //Finished to send current block
-	       nxt_state = WRITE_BLOCK; //Go to End Sequence
-	       nxt_end_blk_write_cnt = 3; //(CRC_seq_length = 2) + (END_seq_length = 1)
-	       nxt_curr_block_cnt = curr_block_cnt-1;
-	       nxt_end_block = 1;
+	       nxt_state 	      = WRITE_BLOCK; //Go to End Sequence
+	       nxt_end_blk_write_cnt  = 3; //(CRC_seq_length = 2) + (END_seq_length = 1)
+	       nxt_curr_block_cnt     = curr_block_cnt-1;
+	       nxt_end_block 	      = 1;
 	    end
 	    else begin
 	       if(sel_offset < `FIFO_WIDTH/4-1) begin
@@ -280,11 +289,77 @@ module DAT_phys (
 	 end
 
 	 READ_BLOCK: begin
-	    nxt_state = IDLE;
+	    if(new_block && DAT_din!=4'b0000) begin //Start Sequence not received yet
+	       nxt_state      = READ_BLOCK;
+	       nxt_new_block  = 1; //Retry new block Read operation
+	    end
+	    else begin
+	       //----------Start or Normal Sequence----------
+	       if(!end_block) begin
+		  if(read_flag) begin
+		     nxt_state 	= READ_SERIAL;
+		     if(new_block) begin  //new block (Start Sequence)
+			nxt_new_block 		 = 0;
+			nxt_curr_rx_buf_din_out  = 0;
+			nxt_curr_block_sz 	 = curr_block_sz-4;
+		     end
+		     else begin  //not a new block (Normal Sequence)
+			//First 4 bit data group
+			nxt_curr_rx_buf_din_out  = {{(`FIFO_WIDTH-4){1'b0}}, DAT_din} << (`FIFO_WIDTH-4);
+		     end
+		  end
+		  else begin //Rx FIFO full
+		     nxt_state 		      = READ_BLOCK;
+		     nxt_curr_rx_buf_din_out  = curr_rx_buf_din_out;
+		  end
+	       end
+	       //----------CRC and End Sequence---------------
+	       else begin
+		  if(DAT_din!=4'b1111) begin //End sequence not received yet
+		     nxt_state 	    = READ_BLOCK;
+		     nxt_end_block  = 1;
+		     //Simulate reading CRC sequence
+		  end
+		  else begin
+		     nxt_end_block  = 0;
+		     if(curr_block_cnt > 0) begin //Need to read more blocks
+			//Go to READ_BLOCK to read a new block
+			nxt_state 	   = READ_BLOCK; //Go to Start Sequence 
+			nxt_new_block 	   = 1;
+			nxt_curr_block_sz  = block_sz;
+		     end
+		     else begin //Transfer finished
+			nxt_state 	 = IDLE;
+			tf_finished 	 = 1;
+		     end
+		  end
+	       end
+	    end
 	 end
 
 	 READ_SERIAL: begin
-	    nxt_state = IDLE;
+	    nxt_curr_rx_buf_din_out = curr_rx_buf_din_out | ({{(`FIFO_WIDTH-4){1'b0}}, DAT_din} << (`FIFO_WIDTH-4-(sel_offset << 2)));
+	    nxt_sel_offset = (sel_offset < `FIFO_WIDTH/4-1) ? sel_offset+1 : 0;
+	    
+	    if(curr_block_sz == 4) begin //Finished to receive current block
+	       nxt_state 	   = READ_BLOCK;
+	       nxt_curr_block_cnt  = curr_block_cnt-1;
+	       nxt_end_block 	   = 1;
+	       //nxt_rx_buf_wr_enb   = 1;
+	    end
+	    else begin
+	       if(sel_offset < `FIFO_WIDTH/4-1) begin
+		  nxt_state = READ_SERIAL;
+	       end
+	       else begin		  
+		  if (sel_offset == `FIFO_WIDTH/4-1) begin
+		     nxt_state 	= READ_BLOCK;
+		  end
+		  else begin //Default unexpected state
+		     nxt_state = IDLE;
+		  end
+	       end	
+	    end
 	 end
 	 
 	 default:
