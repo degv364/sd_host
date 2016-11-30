@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////
+// Module: transfer_signals
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
 //Module for transfer signals
 
 module transfer_signal(output start,

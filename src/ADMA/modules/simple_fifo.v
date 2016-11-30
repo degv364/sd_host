@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////
+// Module: simple_fifo
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
+
 //simple fifo
 //este modulo esta hacho para comunicarse con el DMA durante pruebas internas
 //se puede leer o escribir, y tiene banderas para lleno y vacio.

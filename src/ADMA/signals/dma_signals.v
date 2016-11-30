@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////
+// Module: dma_signals 
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
 //modulo para las senales de prueba para el dma
 
 module dma_signal(output 	RESET,

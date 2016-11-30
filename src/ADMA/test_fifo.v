@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////
+// Module: test_fifo
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
 `include "signals/fifo_signals.v"
 `include "modules/simple_fifo.v"
 

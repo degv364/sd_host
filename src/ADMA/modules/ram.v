@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////
+// Module: ram.v
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
 //Este archivo es la simulacion de una RAM.
 //no es parte de la implementacion de SD host
 //Pero es necesario para el testbench.
