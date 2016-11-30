@@ -11,7 +11,6 @@
 
 module dat_tb;
 
-
    wire HOST_clk;
    wire SD_clk;
    wire RST_L;   
@@ -30,6 +29,7 @@ module dat_tb;
    wire tf_finished;
    wire dat_write_flag;
    wire dat_read_flag;
+   wire multiple_blk_flag;
 
    wire rx_fifo_read_en;
    wire tx_fifo_write_en;
@@ -72,7 +72,8 @@ module dat_tb;
 			     .tf_finished(tf_finished),
 			     .dat_phys_busy(dat_phys_busy),
 			     .dat_wr_flag(dat_write_flag),
-			     .dat_rd_flag(dat_read_flag)
+			     .dat_rd_flag(dat_read_flag),
+			     .multiple(multiple_blk_flag)
 			     );
 
    DAT_phys dat_phys0 (.sd_clk(SD_clk),
@@ -83,6 +84,7 @@ module dat_tb;
 		       .block_cnt(block_count),
 		       .write_flag(dat_write_flag),
 		       .read_flag(dat_read_flag),
+		       .multiple(multiple_blk_flag),
 		       .tx_buf_rd_enb(tx_fifo_read_en),
 		       .rx_buf_wr_enb(rx_fifo_write_en),
 		       .rx_buf_din_out(rx_fifo_din),
@@ -113,7 +115,7 @@ module dat_tb;
    initial begin
       $dumpfile("dat_test.vcd");
       $dumpvars(0,dat_tb);
-      #(500) $finish;
+      #(2000) $finish;
    end
 
    initial begin 

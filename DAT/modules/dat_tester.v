@@ -38,7 +38,7 @@ module DAT_tester(
       rx_data_init    = 1'b0;
       rx_buf_rd_host  = 1'b0;
       tx_buf_wr_host  = 1'b0;
-      block_cnt       = 2;
+      block_cnt       = 9;
       block_sz 	      = 64;
       DAT_din[3:1]    = 3'b000;
       tx_buf_din_out  = 0;
