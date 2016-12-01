@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////
 // File: sd_host_tester
-// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio,
-// Daniel Piedra Perez, Esteban Zamora Alvarado
+// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio, Daniel Piedra Perez, Esteban Zamora Alvarado
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
