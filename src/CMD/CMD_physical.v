@@ -12,7 +12,7 @@ module CMD_physical (
 	
 	output REQ_out,
 	output ACK_out,
-	output [37:0] cmd_response,
+	output [47:0] cmd_response,
 	output cmd_to_sd,
 	output timeout_error,
 	output physical_inactive,
@@ -35,7 +35,7 @@ module CMD_physical (
 	//outputs
 	reg REQ_out, ACK_out, physical_inactive, timeout_error, cmd_to_sd_oe; 
 	wire cmd_to_sd;
-	reg [37:0] cmd_response;
+	reg [47:0] cmd_response;
 	
 	
 	//other regs
@@ -224,9 +224,8 @@ module CMD_physical (
 				start_counting = 1'b0;
 				physical_inactive = 0;
 				start_listening = 1;
-				cmd_response[37:32] = parallel_received[45:40];
-				cmd_response[31:0] = parallel_received [39:8];
-				
+				cmd_response = parallel_received;
+								
 				
 			end
 			
