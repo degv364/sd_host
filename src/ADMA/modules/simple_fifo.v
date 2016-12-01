@@ -4,7 +4,7 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-
+`include "defines.v"
 
 //simple fifo
 //este modulo esta hacho para comunicarse con el DMA durante pruebas internas

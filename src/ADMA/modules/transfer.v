@@ -3,11 +3,12 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-
+`include "defines.v"
 
 
 //Modulo que realiza la transferencia de datos
-	       
+//FIXME: timeout termination
+//FIXME: Length indicates cant of bytes 	       
 module transfer(input start,
 		input 	      direction,
 		output 	      TFC,

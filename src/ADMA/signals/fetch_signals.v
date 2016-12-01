@@ -3,7 +3,7 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-
+`include "defines.v"
 
 
 module fetch_signal(output CLK,
@@ -17,7 +17,7 @@ module fetch_signal(output CLK,
    always #1 CLK=!CLK;
 
    initial begin
-      $dumpfile ("test_fetch.vcd");
+      $dumpfile ("ADMA/test_fetch.vcd");
       $dumpvars (0, test_fetch);
       # 0 start = 0;
       

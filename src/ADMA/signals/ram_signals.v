@@ -4,7 +4,7 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-
+`include "defines.v"
 
 module ram_signal(address, write, read, data_out, CLK);
 
@@ -24,7 +24,7 @@ module ram_signal(address, write, read, data_out, CLK);
    reg 		 CLK=1;
       
    initial begin
-      $dumpfile ("test_ram.vcd");
+      $dumpfile ("ADMA/test_ram.vcd");
       $dumpvars (0, test_ram);
       //conteo de 1 en 1
       # 2 address =address+4;

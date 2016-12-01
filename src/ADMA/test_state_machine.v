@@ -3,13 +3,13 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-
+`include "defines.v"
 
 //testbench para state_machine
-`include "modules/state_machine.v"
-`include "modules/ram.v"
-`include "modules/simple_fifo.v"
-`include "signals/state_machine_signals.v"
+`include "ADMA/modules/state_machine.v"
+`include "ADMA/modules/ram.v"
+`include "ADMA/modules/simple_fifo.v"
+`include "ADMA/signals/state_machine_signals.v"
 
 
 module test_state_machine;

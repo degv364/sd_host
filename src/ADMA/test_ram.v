@@ -5,9 +5,9 @@
 ////////////////////////////////////////////////////////
 
 
-`include "modules/ram.v"
-`include "signals/ram_signals.v"
-
+`include "ADMA/modules/ram.v"
+`include "ADMA/signals/ram_signals.v"
+`include "defines.v"
 
 module test_ram;
    wire CLK, write, read;
