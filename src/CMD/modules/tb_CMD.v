@@ -1,4 +1,4 @@
-`include "CMD.v"
+`include "modules/CMD.v"
 
 module gm_CMD (
 	output reset, 
