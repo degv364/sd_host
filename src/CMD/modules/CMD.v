@@ -1,5 +1,5 @@
-`include "CMD_physical.v"
-`include "CMD_master.v"
+`include "modules/CMD_physical.v"
+`include "modules/CMD_master.v"
 
 
 `ifndef CMD
