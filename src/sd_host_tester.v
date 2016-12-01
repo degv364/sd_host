@@ -16,7 +16,7 @@ module sd_host_tester(
 		      output reg       host_clk,
 		      output reg       sd_clk,
 		      output reg       rst_L,
-		      output reg [3:0] DAT_din,
+		      output reg [3:0] DAT_din
 		      );
 
    initial begin
