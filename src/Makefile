@@ -1,7 +1,6 @@
 #////////////////////////////////////////////////////////
 #// File: makefile
-#// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio,
-#// Daniel Piedra Perez, Esteban Zamora Alvarado
+#// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio, Daniel Piedra Perez, Esteban Zamora Alvarado
 #// Project: SD Host Controller
 #////////////////////////////////////////////////////////
 
@@ -12,11 +11,11 @@ SIM := vvp
 VIEW := gtkwave
 
 BINARY := sd_host_test
-TEST_BENCH := sd_host_tb.v
+TEST_BENCH := SD_HOST/sd_host_tb.v
 
-INC_DIRS := DAT/modules CMD
+INC_DIRS := DAT/modules CMD SD_HOST
 MOD_DIRS := DAT/modules CMD/modules ADMA/modules
-GTKW_DIR := gtkw
+SIM_DIR := sim
 
 INC_PARAMS := $(foreach d, $(INC_DIRS), -I$d)
 MODULES := $(foreach d, $(MOD_DIRS), $(wildcard $(d)/*.v))
@@ -28,17 +27,17 @@ FLAGS := $(INC_PARAMS) -Ttyp
 all: run
 
 run: $(BINARY).vcd
-ifneq ("$(wildcard $(GTKW_DIR)/$(BINARY).gtkw)","")
-	$(VIEW) $(GTKW_DIR)/$(BINARY).gtkw
+ifneq ("$(wildcard $(SIM_DIR)/$(BINARY).gtkw)","")
+	$(VIEW) $(SIM_DIR)/$(BINARY).gtkw
 else
-	$(VIEW) $(BINARY).vcd
+	$(VIEW) $(SIM_DIR)/$(BINARY).vcd
 endif
 
-$(BINARY).o: $(MODULES)
+$(SIM_DIR)/$(BINARY).x: $(MODULES)
 	$(CC) $(FLAGS) -o $@ $(TEST_BENCH)
 
-$(BINARY).vcd: $(BINARY).o
-	$(SIM) $< -l $(BINARY).txt
+$(BINARY).vcd: $(SIM_DIR)/$(BINARY).x
+	$(SIM) $< -l $(SIM_DIR)/$(BINARY).txt
 
 clean:
-	rm -f *.o *.vcd *.txt 
+	rm -f $(SIM_DIR)/*.x $(SIM_DIR)/*.vcd $(SIM_DIR)/*.txt 

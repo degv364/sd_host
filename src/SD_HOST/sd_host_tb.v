@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////
 // File: sd_host_tb (Testbench)
-// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio,
-// Daniel Piedra Perez, Esteban Zamora Alvarado
+// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio, Daniel Piedra Perez, Esteban Zamora Alvarado
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
@@ -19,7 +18,7 @@ module sd_host_tb;
    sd_host sd_host0 ();
 
    initial begin
-      $dumpfile("sd_host_test.vcd");
+      $dumpfile("sim/sd_host_test.vcd");
       $dumpvars(0,sd_host_tb);
       #(2000) $finish;
    end
