@@ -1,49 +1,63 @@
-module selector(
-output [WIDTH-1 : 0] rd_data,	// Salida, de  WIDTH bits	
-input acknowledge,	// acknowledge (1- Dato Confiable, 0 - Dato no confiable )
-input busy,
-input  [WIDTH-1 : 0] wr_data,	// Entrada, de WIDTH bits
-input req,	// clock
-input wr_valid,	// Devuelve a cero
-input register,	// Bandera de Escritura (1 - Estoy escribiendo, 0 - Está libre )
+module cpu_com(
+output[WIDTH-1 : 0] rd_data_32,
+
+output [WIDTH/2 -1: 0] rd_data_16,
+
+output [WIDTH-4 -1: 0] rd_data_8,
+
+output acknowledge,
+
+input [WIDTH-1 : 0] wr_data_32,
+
+input [WIDTH/2 -1: 0] wr_data_16,
+
+input [WIDTH/2 -1: 0] wr_data_8,
+
+input [4096:0] addrs,
+input wr_data,
+
+input req,
+input wr_valid,
+
+input clk
 );
+reg rd_
 
-parameter WIDTH = 8;
 
-reg busy = 0;
-reg [WIDTH-1 : 0] rd_data;
-reg acknowledge = 0;
+req = 0;
 
-reg [WIDTH-1 :0] mask = 16'h00;
-always @(*)begin
-	if(req & wr_valid)begin
-		acknowledge = 0;
+always @(*)
+	if(req != 0) begin
 		busy = 1;
-		mask = 8'hXX;
 	end
-	if(req & ~wr_valid) begin
+	else begin
 		busy = 0;
-		acknowledge = 1;
-		mask = 8'hFF;
 	end
-end
 
-always @(posedge clk)begin
+	if(busy == 0) begin
+		acknowledge = 1;
+	end
 
-	if (reset == 1)begin
-		rd_data <= 0;		
-	end	
+always @(posedge clk)
+	if(req == 1)begin
+		
+		if(wr_valid == 1) begin
+			case (addrs)
+			16'h04				
+				
+			endcase
+		end
+
+		else begin
+			case (addrs)
+
+			endcase 
+		end
+	
+	end
+	
 
 	else begin
-		if(acknowledge == 0)begin
-			rd_data <=  8'hXX;
-			end
 	
-		else begin
-			rd_data  <= mask & wr_data;
-		end
 	end
-end
-
 endmodule
-
