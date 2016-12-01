@@ -30,9 +30,9 @@ module sd_host(input CLK,
 	       input 	     CLK_card,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
-	       input [3:0]   data_from_card
+	       input [3:0]   data_from_card,
 	       output [31:0] data_to_ram,
-	       output [63:0] ram_address 
+	       output [63:0] ram_address,
 	       output 	     command_to_card,
 	       output [3:0]  data_to_card
 	       );
