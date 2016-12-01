@@ -14,7 +14,7 @@ module CMD_master(
 	input physical_inactive,
 	input [31:0] cmd_arg,
 	input [5:0] cmd_index, 
-	input [37:0] cmd_response,
+	input [47:0] cmd_response,
 	input timeout_error_from_physical,
 
 	output cmd_busy,
@@ -22,8 +22,7 @@ module CMD_master(
 	output REQ_out,
 	output ACK_out,
 	output timeout_error,
-	output [31:0]response_arg,
-	output [5:0]response_index,
+	output [31:0]response_status,
 	output [37:0]cmd_to_physical
 	);
 
@@ -37,13 +36,12 @@ module CMD_master(
 	wire reset, CLK_host, new_cmd, ACK_in, REQ_in;
 	wire [31:0] cmd_arg;
 	wire [5:0] cmd_index; 
-	wire [37:0] cmd_response;
+	wire [47:0] cmd_response;
 	
 	
 	//outputs
 	reg cmd_busy, cmd_complete,cmd_index_error,REQ_out,ACK_out,timeout_error;
-	reg [31:0]response_arg;
-	reg [5:0]response_index;
+	reg [31:0]response_status;
 	reg [37:0]cmd_to_physical;
 	
 	//other wires
@@ -115,8 +113,7 @@ module CMD_master(
 		REQ_out = REQ_out;
 		ACK_out = ACK_out;
 		timeout_error = timeout_error;
-		response_arg = response_arg;
-		response_index = response_index;
+		response_status = response_status;
 		cmd_to_physical = cmd_to_physical;
 		start_counting = start_counting;
 		execute_complete = execute_complete;
@@ -129,8 +126,7 @@ module CMD_master(
 				REQ_out = 0;
 				ACK_out = 0;
 				timeout_error = 0;
-				response_arg = 32'h0000_0000;
-				response_index = 6'b000000;
+				response_status = 32'h0000_0000;
 				cmd_to_physical = 38'h0000_0000;
 				start_counting =0;
 				execute_complete =0;
@@ -166,8 +162,7 @@ module CMD_master(
 			end
 			
 			ST_FINISHING: begin
-				response_index = cmd_response [37:32];
-				response_arg = cmd_response [31:0];
+				response_status = cmd_response [39:8];
 				ACK_out = 0;
 				if (timeout_error == 1) begin
 					timeout_error = 1;
