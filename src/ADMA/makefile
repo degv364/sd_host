@@ -1,4 +1,4 @@
-all: ram fifo dma
+all: ram fifo state_machine
 
 ram:
 	iverilog -o test_ram.x test_ram.v
@@ -24,6 +24,10 @@ state_machine:
 	iverilog -o test_state_machine.x test_state_machine.v
 	./test_state_machine.x
 	gtkwave test_state_machine.vcd
+
+dma:
+	iverilog -o test_dma.x test_dma.v
+	./test_dma.x
 
 synth_fetch:
 	yosys yosys/fetch.ys

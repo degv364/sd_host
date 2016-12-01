@@ -4,7 +4,7 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-
+`include "defines.v"
 
 //modulo para las senales de prueba para el dma
 
@@ -29,7 +29,7 @@ module state_machine_signal(output 	RESET,
    always #1 CLK = !CLK;
       
    initial begin
-      $dumpfile ("test_state_machine.vcd");
+      $dumpfile ("ADMA/test_state_machine.vcd");
       $dumpvars (0, test_state_machine);
       # 2 RESET =0;
       # 0 starting_address=0;

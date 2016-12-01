@@ -3,11 +3,11 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
+`include "defines.v"
 
-
-`include "modules/fetch.v"
-`include "signals/fetch_signals.v"
-`include "modules/ram.v"
+`include "ADMA/modules/fetch.v"
+`include "ADMA/signals/fetch_signals.v"
+`include "ADMA/modules/ram.v"
 
 module test_fetch;
    

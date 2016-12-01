@@ -3,7 +3,7 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-
+`include "defines.v"
 
 //Module for transfer signals
 
@@ -21,7 +21,7 @@ module transfer_signal(output start,
    
 
    initial begin
-      $dumpfile ("test_transfer.vcd");
+      $dumpfile ("ADMA/test_transfer.vcd");
       $dumpvars (0, test_transfer);
       # 0 length = 6;
       # 0 address_init=0;

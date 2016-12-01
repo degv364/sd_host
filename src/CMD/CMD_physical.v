@@ -8,14 +8,15 @@ module CMD_physical (
 	input [37:0] cmd_index_arg,
 	input REQ_in,
 	input ACK_in,
-	input timeout_error,
 	input cmd_from_sd,
 	
 	output REQ_out,
 	output ACK_out,
 	output [37:0] cmd_response,
 	output cmd_to_sd,
-	output physical_inactive
+	output timeout_error,
+	output physical_inactive,
+	output cmd_to_sd_oe
 	
 );
 
@@ -28,11 +29,11 @@ module CMD_physical (
 	parameter ST_RETURN_RESPONSE = 6'b100000;
 
 	//inputs
-	wire reset, CLK_SD_card, new_cmd, REQ_in, ACK_in, timeout_error, cmd_from_sd;
+	wire reset, CLK_SD_card, new_cmd, REQ_in, ACK_in, cmd_from_sd;
 	wire [37:0] cmd_index_arg;
 	
 	//outputs
-	reg REQ_out, ACK_out, physical_inactive; 
+	reg REQ_out, ACK_out, physical_inactive, timeout_error, cmd_to_sd_oe; 
 	wire cmd_to_sd;
 	reg [37:0] cmd_response;
 	
@@ -50,13 +51,14 @@ module CMD_physical (
 	wire [47:0] parallel_to_send;
 	wire [47:0] parallel_received;
 	wire finished_64_cycles;
+	wire [5:0] parallel_to_serial_counter;
 	
 	assign parallel_to_send = cmd_to_send;
 	
 	
 	
 	//other blocks
-	parallel_to_serial parallel_to_serial_1 (.CLK(CLK_SD_card), .start_sending(start_sending), .parallel_in(parallel_to_send), .finished(send_finished), .serial_out(cmd_to_sd));
+	parallel_to_serial parallel_to_serial_1 (.CLK(CLK_SD_card), .start_sending(start_sending), .parallel_in(parallel_to_send), .finished(send_finished), .serial_out(cmd_to_sd), .counter(parallel_to_serial_counter));
 	
 	serial_to_parallel serial_to_parallel_1 (.CLK(CLK_SD_card), .start_listening(start_listening), .serial_in(cmd_from_sd), .finished(listening_finished), .parallel_out(parallel_received));
 	
@@ -65,7 +67,7 @@ module CMD_physical (
 	
 	//FF's and next state block
 	always @ (posedge CLK_SD_card) begin
-		if (reset || timeout_error) begin
+		if (reset) begin
 				current_st <= ST_INACTIVE;
 		end
 		else begin
@@ -105,7 +107,11 @@ module CMD_physical (
 		
 			ST_WAITING_RESPONSE: begin
 				if (finished_64_cycles == 1) begin
-						current_st <= ST_RECEIVING_RESPONSE;
+						current_st <= ST_INACTIVE;
+				end
+				else if (cmd_from_sd == 0) begin
+					current_st <= ST_RECEIVING_RESPONSE;
+				
 				end
 				else begin
 						current_st <= current_st;
@@ -143,6 +149,17 @@ module CMD_physical (
 	//Combinational logic
 	
 	always @(*) begin
+	
+		REQ_out = REQ_out;
+		ACK_out = ACK_out;
+		cmd_response = cmd_response;
+		start_sending = start_sending;
+		start_listening = start_listening;
+		cmd_to_send = cmd_to_send;
+		start_counting = start_counting;
+		physical_inactive = physical_inactive;
+		cmd_to_sd_oe = cmd_to_sd_oe;
+		timeout_error = timeout_error;
 			
 		case(current_st)
 				
@@ -155,6 +172,8 @@ module CMD_physical (
 				cmd_to_send = 0;
 				start_counting = 0;
 				physical_inactive = 1;
+				cmd_to_sd_oe = 0;
+				timeout_error = 0;
 				
 			end
 			
@@ -164,7 +183,7 @@ module CMD_physical (
 					cmd_to_send [47:46] = 2'b01; 
 					cmd_to_send [45:40] = cmd_index_arg [37:32];
 					cmd_to_send [39:8] = cmd_index_arg [31:0];
-					cmd_to_send [7:1] = 6'b101_010;
+					cmd_to_send [7:1] = 7'b0101_010;
 					cmd_to_send [0:0] = 1'b1;
 					
 					ACK_out = 1'b1;
@@ -183,13 +202,14 @@ module CMD_physical (
 				ACK_out = 1'b0;
 				physical_inactive = 0;
 				start_sending = 1;
+				
 			
 			end
 			
 			ST_WAITING_RESPONSE: begin
 				start_sending = 0;
 				physical_inactive = 0;
-				if (finished_64_cycles == 1) begin
+				if (cmd_from_sd == 0) begin
 					start_counting = 1'b0;
 					start_listening = 1'b1;
 				end
@@ -201,6 +221,7 @@ module CMD_physical (
 			end
 			
 			ST_RECEIVING_RESPONSE: begin
+				start_counting = 1'b0;
 				physical_inactive = 0;
 				start_listening = 1;
 				cmd_response[37:32] = parallel_received[45:40];
@@ -213,15 +234,29 @@ module CMD_physical (
 				physical_inactive = 0;
 				start_listening = 0;
 				REQ_out = 1'b1;
-				//cmd_response[37:32] = parallel_received[45:40];
-				//cmd_response[31:0] = parallel_received [39:8];
-			
+							
 			
 			end
 			
 		endcase
+		
+		
+		
+		
+		
+		
+		
+		
+		if (parallel_to_serial_counter == 6'b000_000) begin
+			cmd_to_sd_oe = 0;
+		end
+		else begin
+			cmd_to_sd_oe = 1;
+		end
 	
 	end
+	
+	
 
 
 endmodule
@@ -239,7 +274,8 @@ module parallel_to_serial (
 	input [parallel_width-1:0] parallel_in,
 	
 	output finished,
-	output [serial_width-1:0] serial_out
+	output [serial_width-1:0] serial_out,
+	output [counter_size-1:0] counter
 
 );
 

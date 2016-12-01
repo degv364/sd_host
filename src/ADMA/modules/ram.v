@@ -10,6 +10,8 @@
 //Pero es necesario para el testbench.
 //Lee y escribe en la direccion determinada.
 
+`include "defines.v"
+
 //`define GENERAL
 `define DMA
 
