@@ -1,0 +1,17 @@
+Esta es la seccion de DMA.
+Se implementa como ADMA1.
+
+En la raiz se encuentran los testbenchs necesarios para probar cada uno de los modulos.
+
+En /modules/ se encuentrans los modulos
+En /signals/ se encuentran lso archivos que generan las entradas para las pruebas.
+
+En todos los casos el nombre del archivo indica el modulo que es.
+
+Si desea probar el modulo <module>, utilice el sigiente comando:
+
+make <module>
+
+Para limpiar el directorio:
+
+make clean
