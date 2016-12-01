@@ -37,7 +37,7 @@ module dma_signal(output 	RESET,
    always #1 CLK = !CLK;
       
    initial begin
-      $dumpfile ("ADMA/test_dma.vcd");
+      $dumpfile ("test_dma.vcd");
       $dumpvars (0, test_dma);
       //------STOP=0---------------
       # 0 transfer_mode_register_in[0]=1;

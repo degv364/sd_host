@@ -1,7 +1,7 @@
 all: ram fifo state_machine
 
 ram:
-	iverilog -o test_ram.x test_ram.v
+	iverilog -o test_ram.x test_ram.v -I ..
 	./test_ram.x
 	gtkwave test_ram.vcd
 

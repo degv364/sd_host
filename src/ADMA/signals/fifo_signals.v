@@ -24,7 +24,7 @@ module fifo_signal(data_out, write, read, CLK);
    reg 		 CLK=0;
       
    initial begin
-      $dumpfile ("ADMA/test_fifo.vcd");
+      $dumpfile ("test_fifo.vcd");
       $dumpvars (0, test_fifo);
       //write data
       # 1 data_out=data_out+1;

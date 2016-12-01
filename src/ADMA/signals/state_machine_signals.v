@@ -29,7 +29,7 @@ module state_machine_signal(output 	RESET,
    always #1 CLK = !CLK;
       
    initial begin
-      $dumpfile ("ADMA/test_state_machine.vcd");
+      $dumpfile ("test_state_machine.vcd");
       $dumpvars (0, test_state_machine);
       # 2 RESET =0;
       # 0 starting_address=0;
