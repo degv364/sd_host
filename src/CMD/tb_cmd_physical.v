@@ -5,14 +5,15 @@ module gm_cmd_physical (
 	output [37:0] cmd_index_arg,
 	output REQ_in,
 	output ACK_in,
-	output timeout_error,
 	output cmd_from_sd,
 	
 	input REQ_out,
 	input ACK_out,
 	input [37:0] cmd_response,
 	input cmd_to_sd,
-	input physical_inactive
+	input timeout_error,
+	input physical_inactive,
+	input cmd_to_sd_oe
 	
 );
 
@@ -22,13 +23,12 @@ module gm_cmd_physical (
 	reg [37:0] cmd_index_arg = 38'b001110_1010_1010_1010_1010_1010_1010_1010_1010;
 	reg REQ_in = 0;
 	reg ACK_in = 0;
-	reg timeout_error = 0;
 	reg cmd_from_sd = 0;
 
 
 	//Read response
 	reg block_start_listening = 0;
-	wire block_finished = 0;
+	wire block_finished;
 	wire [47:0] block_parallel_out;
 	initial begin
 		$dumpfile("simulations/test_cmd_physical.vcd");
@@ -71,15 +71,16 @@ module tb_cmd_physical;
 	wire ACK_in;
 	wire timeout_error;
 	wire cmd_from_sd;
-	
+		
 	wire REQ_out;
 	wire ACK_out;
 	wire [37:0] cmd_response;
 	wire cmd_to_sd;
 	wire physical_inactive;
+	wire cmd_to_sd_oe;
 
-	gm_cmd_physical gm_cmd_physical_1 (.reset(reset), .CLK_SD_card(CLK_SD_card), .new_cmd(new_cmd), .cmd_index_arg(cmd_index_arg), .REQ_in(REQ_in), .ACK_in(ACK_in), .timeout_error(timeout_error), .cmd_from_sd(cmd_from_sd), .REQ_out(REQ_out), .ACK_out(ACK_out), .cmd_response(cmd_response), .cmd_to_sd(cmd_to_sd), .physical_inactive(physical_inactive));	
+	gm_cmd_physical gm_cmd_physical_1 (.reset(reset), .CLK_SD_card(CLK_SD_card), .new_cmd(new_cmd), .cmd_index_arg(cmd_index_arg), .REQ_in(REQ_in), .ACK_in(ACK_in), .timeout_error(timeout_error), .cmd_from_sd(cmd_from_sd), .REQ_out(REQ_out), .ACK_out(ACK_out), .cmd_response(cmd_response), .cmd_to_sd(cmd_to_sd), .physical_inactive(physical_inactive),.cmd_to_sd_oe(cmd_to_sd_oe));	
 	
-	CMD_physical CMD_physical_1 (.reset(reset), .CLK_SD_card(CLK_SD_card), .new_cmd(new_cmd), .cmd_index_arg(cmd_index_arg), .REQ_in(REQ_in), .ACK_in(ACK_in), .timeout_error(timeout_error), .cmd_from_sd(cmd_from_sd), .REQ_out(REQ_out), .ACK_out(ACK_out), .cmd_response(cmd_response), .cmd_to_sd(cmd_to_sd), .physical_inactive(physical_inactive) );
+	CMD_physical CMD_physical_1 (.reset(reset), .CLK_SD_card(CLK_SD_card), .new_cmd(new_cmd), .cmd_index_arg(cmd_index_arg), .REQ_in(REQ_in), .ACK_in(ACK_in), .timeout_error(timeout_error), .cmd_from_sd(cmd_from_sd), .REQ_out(REQ_out), .ACK_out(ACK_out), .cmd_response(cmd_response), .cmd_to_sd(cmd_to_sd), .physical_inactive(physical_inactive), .cmd_to_sd_oe(cmd_to_sd_oe) );
 	
 endmodule

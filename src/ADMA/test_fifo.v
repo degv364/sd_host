@@ -5,8 +5,8 @@
 ////////////////////////////////////////////////////////
 
 
-`include "signals/fifo_signals.v"
-`include "modules/simple_fifo.v"
+`include "ADMA/signals/fifo_signals.v"
+`include "ADMA/modules/simple_fifo.v"
 
 module test_fifo;
 

@@ -1,12 +1,17 @@
 ////////////////////////////////////////////////////////
-// Module: data_control
+// Module: DAT_control
 // Author: Esteban Zamora A
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
 `timescale 1ns/10ps
 
-//TODO?: Timeout check
+//FIXME: Read Transfer Mode Register
+//FIXME: Read Block Count Register
+//FIXME: Read Block Size Register
+//FIXME: Write Present State Register
+//FIXME: Write Normal Interrupt Status Register
+//FIXME?: Timeout check
 
 module DAT_control (
 		    input  host_clk, 
@@ -18,7 +23,8 @@ module DAT_control (
 		    input  tf_finished,
 		    input  dat_phys_busy,
 		    output dat_wr_flag,
-		    output dat_rd_flag
+		    output dat_rd_flag,
+		    output multiple
 		    );
    //Regs
    //Outputs
@@ -35,13 +41,16 @@ module DAT_control (
    parameter READ_START = 5'b00100;
    parameter READ_TRANSFER  = 5'b01000;
    parameter WRITE_TRANSFER  = 5'b10000;
+
+
+   assign multiple  = 1; //FIXME: Instead read Transfer Mode Register
    
    //Update state 
    always @ (posedge host_clk or !rst_L) begin
       if(!rst_L) begin
-	 state 		<= IDLE;
-	 dat_wr_flag 	<= 0;	
-	 dat_rd_flag 	<= 0;
+	 state 	     <= IDLE;
+	 dat_wr_flag <= 0;	
+	 dat_rd_flag <= 0;
       end	
       else
 	 state <= nxt_state;
@@ -49,7 +58,6 @@ module DAT_control (
 
    //Next state, outputs logic
    always @(*) begin
-      //always @(posedge host_clk or state) begin
       //Default output values
       dat_wr_flag = 0;
       dat_rd_flag = 0;
@@ -70,9 +78,9 @@ module DAT_control (
    
 	 WRITE_START: begin
 	    if(!tx_buf_empty && !dat_phys_busy) begin
-	       nxt_state = WRITE_TRANSFER;
-	       dat_wr_flag = 1;
-	       //TODO: Set Write Transfer Active bit (Present State Register)
+	       nxt_state    = WRITE_TRANSFER;
+	       dat_wr_flag  = 1;
+	       //FIXME: Set Write Transfer Active bit (Present State Register)
 	    end
 	    else
 	       nxt_state = WRITE_START;
@@ -82,7 +90,7 @@ module DAT_control (
 	    if(!rx_buf_full && !dat_phys_busy) begin
 	       nxt_state = READ_TRANSFER;
 	       dat_rd_flag = 1;
-	       //TODO: Set Read Transfer Active bit (Present State Register)
+	       //FIXME: Set Read Transfer Active bit (Present State Register)
 	    end
 	    else
 	       nxt_state = READ_START;
@@ -94,8 +102,8 @@ module DAT_control (
 	       nxt_state = READ_TRANSFER;
 	    end	
 	    else begin
-	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
-	       //TODO: Clear Read Transfer Active bit (Present State Register)
+	       //FIXME: Set Transfer Complete bit (Normal Interrupt Register)
+	       //FIXME: Clear Read Transfer Active bit (Present State Register)
 	       nxt_state = IDLE;
 	    end
 	    
@@ -107,8 +115,8 @@ module DAT_control (
 	       nxt_state = WRITE_TRANSFER;
 	    end	
 	    else begin
-	       //TODO: Set Transfer Complete bit (Normal Interrupt Register)
-	       //TODO: Clear Write Transfer Active bit (Present State Register)
+	       //FIXME: Set Transfer Complete bit (Normal Interrupt Register)
+	       //FIXME: Clear Write Transfer Active bit (Present State Register)
 	       nxt_state = IDLE;
 	    end
 	    
@@ -117,6 +125,6 @@ module DAT_control (
 	 default: begin
 	    nxt_state = IDLE;
 	 end
-      endcase // case (state)
+      endcase
    end  
 endmodule

@@ -3,12 +3,12 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
+`include "defines.v"
 
-
-`include "modules/transfer.v"
-`include "signals/transfer_signals.v"
-`include "modules/ram.v"
-`include "modules/simple_fifo.v"
+`include "ADMA/modules/transfer.v"
+`include "ADMA/signals/transfer_signals.v"
+`include "ADMA/modules/ram.v"
+`include "ADMA/modules/simple_fifo.v"
 
 //`define FULL_EMPTY
 

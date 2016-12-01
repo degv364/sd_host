@@ -4,16 +4,15 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-
+`include "defines.v"
 
 //includes
-`include "modules/fetch.v"
-`include "modules/transfer.v"
+`include "ADMA/modules/fetch.v"
+`include "ADMA/modules/transfer.v"
 
 
-//TODO: PASAR esto a separacion de logica combinacional y flipflops
+//FIXME: PASAR esto a separacion de logica combinacional y flipflops
 
-//TODO: tener dos entradas de data, para cada lado, al igual que salidas.
 module state_machine(
 		     input [63:0] starting_address,
 		     input 	   RESET, 

@@ -14,8 +14,8 @@ module CMD_master(
 	input physical_inactive,
 	input [31:0] cmd_arg,
 	input [5:0] cmd_index, 
-	input [15:0]timeout_value,
 	input [37:0] cmd_response,
+	input timeout_error_from_physical,
 
 	output cmd_busy,
 	output cmd_complete,
@@ -37,7 +37,6 @@ module CMD_master(
 	wire reset, CLK_host, new_cmd, ACK_in, REQ_in;
 	wire [31:0] cmd_arg;
 	wire [5:0] cmd_index; 
-	wire [15:0]timeout_value;
 	wire [37:0] cmd_response;
 	
 	
@@ -55,13 +54,13 @@ module CMD_master(
 	reg start_counting;
 	reg execute_complete;
 	
-	//other blocks
-	timeout_counter time_counter_1(CLK_host,timeout_value, start_counting, timeout_error_counter);
+	
+	
 	
 	
 	//FF's and next state block
 	always @(posedge CLK_host) begin
-			if (reset) begin
+			if (reset || physical_inactive) begin
 				current_st <= ST_WAITING_CMD;
 			end
 			else begin
@@ -88,7 +87,7 @@ module CMD_master(
 				end
 				
 				ST_WAITING_RESPONSE: begin
-					if((physical_inactive == 1) || (execute_complete == 1) ) begin
+					if( execute_complete == 1 ) begin
 						current_st <= ST_FINISHING;
 					end
 					else begin
@@ -150,9 +149,18 @@ module CMD_master(
 			ST_WAITING_RESPONSE: begin
 				start_counting = 1;
 				
-				if (REQ_in == 1) begin
+				if (REQ_in == 1 ) begin
 					ACK_out = 1;
 					execute_complete =1;
+				end
+				else if (timeout_error_from_physical == 1) begin
+					timeout_error = 1;
+					execute_complete = 1;
+				end
+				else begin
+					ACK_out = 0;
+					execute_complete =0;
+					timeout_error = 0;
 				end
 			
 			end
@@ -161,8 +169,9 @@ module CMD_master(
 				response_index = cmd_response [37:32];
 				response_arg = cmd_response [31:0];
 				ACK_out = 0;
-				if (timeout_error_counter == 1) begin
+				if (timeout_error == 1) begin
 					timeout_error = 1;
+					cmd_complete = 0;
 				end
 				else begin
 					timeout_error = 0;
@@ -186,35 +195,4 @@ endmodule
 
 //////                     Other modules                             ///////
 
-`ifndef TIMEOUT_COUNTER
-`define TIMEOUT_COUNTER
 
-module timeout_counter(clk,max_timeout_value, start_count, timeout_error);
-	input clk, start_count;
-	input [15:0] max_timeout_value;
-	output timeout_error;
-	
-	reg [15:0] time_counter = 16'b0000_0000_0000_0000;
-	reg timeout_error = 0;
-	
-	always @(posedge clk) begin
-		if(start_count) begin
-			if(time_counter < max_timeout_value)begin
-				time_counter <= time_counter + 1;
-				timeout_error = 0;
-				
-			end
-			else begin
-				timeout_error = 1;
-			end
-		end
-		else begin
-			time_counter = 16'b0000_0000_0000_0000;
-		end
-		
-	end
-	
-
-endmodule
-
-`endif
