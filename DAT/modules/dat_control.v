@@ -58,7 +58,6 @@ module DAT_control (
 
    //Next state, outputs logic
    always @(*) begin
-      //always @(posedge host_clk or state) begin
       //Default output values
       dat_wr_flag = 0;
       dat_rd_flag = 0;
@@ -126,6 +125,6 @@ module DAT_control (
 	 default: begin
 	    nxt_state = IDLE;
 	 end
-      endcase // case (state)
+      endcase
    end  
 endmodule
