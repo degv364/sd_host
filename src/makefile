@@ -28,6 +28,7 @@ dma_state_machine:
 dma_dma:
 	iverilog -o ADMA/test_dma.x ADMA/test_dma.v
 	ADMA/./test_dma.x
+	gtkwave ADMA/test_dma.vcd
 
 dma_synth_fetch:
 	yosys ADMA/yosys/fetch.ys
