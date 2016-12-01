@@ -10,8 +10,7 @@
 `include "ADMA/modules/dma.v"
 `include "CMD/CMD_TLB.v"
 `include "buffer/buffer_wraper.v"
-`include "DAT/modules/dat_phys.v"
-`include "DAT/modules/dat_control.v"
+`include "DAT/modules/DAT.v"
 //FIXME: find the appropiate include for registers
 
 
