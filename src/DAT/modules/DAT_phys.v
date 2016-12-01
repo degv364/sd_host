@@ -8,7 +8,6 @@
 
 `timescale 1ns/10ps
 
-//TODO: Read transaction
 //TODO: DAT Control flags synchronization (Req/Ack)
 
 module DAT_phys (
@@ -170,7 +169,6 @@ module DAT_phys (
 	       if(write_flag && !read_flag) begin
 		  nxt_state 		   = NEW_WRITE;
 		  nxt_new_block 	   = 1;
-		  tx_buf_rd_enb 	   = 1; //Request data from Tx FIFO
 		  nxt_curr_tx_buf_dout_in  = tx_buf_dout_in;
 		  nxt_sel_offset 	   = 0;		  
 		  nxt_curr_block_cnt 	   = multiple_reg ? block_cnt : 1;
@@ -190,7 +188,7 @@ module DAT_phys (
 	       end
 	    end
 	 end
-
+//------------------------------ WRITE Transaction ----------------------------
 	 NEW_WRITE: begin
 	    if(new_block && sdc_busy_L) begin
 	       nxt_state      = NEW_WRITE;
@@ -280,7 +278,7 @@ module DAT_phys (
 	       end		  
 	    end
 	 end
-
+//------------------------------ READ Transaction -----------------------------
 	 NEW_READ: begin
 	    if(new_block && DAT_din!=4'b0000) begin //Start Sequence not received yet
 	       nxt_state      = NEW_READ;
