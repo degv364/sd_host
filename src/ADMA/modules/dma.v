@@ -4,24 +4,16 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-
-
-//includes
 `include "defines.v"
 `include "ADMA/modules/state_machine.v"
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
 
-//TODO: tener dos entradas de data, para cada lado, al igual que salidas.
-
-//FIXME: register-> BLOCK Gap Control. to generate STOP dma command, this will stop SDclock. or command continue
-//FIXME: register -> Advanced DMA System Adress register 0x058
-//FIXME: register -> Command register
 //FIXME: register -> Block size
 //FIXME: maybe register-> Block count register
 //                        verify length=block size*block count
-//FIXME: register-> Transfer mode register. 0 to "block count enable" if block count is to big also, determine direction
+
 //FIXME: register -> error status
 
 

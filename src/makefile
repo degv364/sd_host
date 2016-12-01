@@ -1,5 +1,7 @@
 all: dma_dma
 
+all_dma: dma_ram dma_fifo dma_fetch dma_transfer dma_state_machine dma_dma
+
 dma_ram:
 	iverilog -o ADMA/test_ram.x ADMA/test_ram.v
 	ADMA/./test_ram.x
