@@ -6,10 +6,11 @@
 
 
 //testbench para DMA
-`include "modules/dma.v"
-`include "modules/ram.v"
-`include "modules/simple_fifo.v"
-`include "signals/dma_signals.v"
+`include "ADMA/modules/dma.v"
+`include "ADMA/modules/ram.v"
+//`include "ADMA/modules/simple_fifo.v"
+`include "ADMA/signals/dma_signals.v"
+`include "buffer/buffer_wrapper.v"
 
 
 module test_dma;
@@ -96,7 +97,7 @@ module test_dma;
 				 .rx_buf_din(dat_data_out),//dat
 				 .tx_buf_din(data_dma_to_fifo),//dma
 				 .rx_buf_dout(data_fifo_to_dma),//dma
-				 .tx_buf_dout(data_dat_in),//dat
+				 .tx_buf_dout(dat_data_in),//dat
 				 .tx_buf_empty(dat_empty),//dat
 				 .tx_buf_full(fifo_full),//dma
 				 .rx_buf_empty(fifo_empty),//dma
@@ -123,13 +124,13 @@ module test_dma;
 	   .data_out(data_ram_to_dma), 
 	   .CLK(CLK));
 
-   simple_fifo simple_fifo(.data_in(data_dma_to_fifo), 
-			   .data_out(data_fifo_to_dma), 
-			   .write(fifo_write), 
-			   .read(fifo_read), 
-			   .full(fifo_full), 
-			   .empty(fifo_empty), 
-			   .CLK(CLK));
+   // simple_fifo simple_fifo(.data_in(data_dma_to_fifo), 
+   // 			   .data_out(data_fifo_to_dma), 
+   // 			   .write(fifo_write), 
+   // 			   .read(fifo_read), 
+   // 			   .full(fifo_full), 
+   // 			   .empty(fifo_empty), 
+   // 			   .CLK(CLK));
 
 
 endmodule // test_dma

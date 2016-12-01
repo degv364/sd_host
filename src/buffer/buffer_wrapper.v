@@ -4,8 +4,8 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "../defines.v"
-`include "generic_fifo_dc_gray.v"
+`include "defines.v"
+`include "buffer/generic_fifo_dc_gray.v"
 
 `timescale 1ns/10ps
 
