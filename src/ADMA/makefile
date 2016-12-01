@@ -20,10 +20,10 @@ transfer:
 	./test_transfer.x
 	gtkwave test_transfer.vcd gtks/transfer.gtkw
 
-dma:
-	iverilog -o test_dma.x test_DMA.v
-	./test_dma.x
-	gtkwave test_dma.vcd
+state_machine:
+	iverilog -o test_state_machine.x test_state_machine.v
+	./test_state_machine.x
+	gtkwave test_state_machine.vcd
 
 synth_fetch:
 	yosys yosys/fetch.ys

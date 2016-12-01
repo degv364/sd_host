@@ -4,7 +4,7 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "../defines.v"
+`include "../../defines.v"
 
 `timescale 1ns/10ps
 

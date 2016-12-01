@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////
+// Module: state_machine
+// Author: Daniel Garcia Vaglio
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+
+
 //includes
 `include "modules/fetch.v"
 `include "modules/transfer.v"
