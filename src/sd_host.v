@@ -10,19 +10,29 @@
 `include "ADMA/modules/dma.v"
 `include "CMD/CMD_TLB.v"
 `include "buffer/buffer_wraper.v"
+
+`include "DAT/modules/dat_phys.v"
+`include "DAT/modules/dat_control.v"
+`include "REG/regs.v"
+
 `include "DAT/modules/DAT.v"
+
 //FIXME: find the appropiate include for registers
 
 
 
 module sd_host(input CLK,
+
+	       input RESET,
+	       input CLK_card);
+
 	       input 	     RESET,
 	       input 	     CLK_card,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
 	       output [31:0] data_to_ram,
-	       output [63:0] ram_address, 
+	       output [63:0] ram_address,
 	       output 	     command_to_card,
 	       output [3:0]  data_to_card
 	       );
@@ -35,18 +45,16 @@ module sd_host(input CLK,
 
    //logic for DAT------------------------------------------------------
 
-   //logic for fifo------------------------------------------------------
-
-   
+   //logic for fifo------------------------------------------------------   
 
 
    dma dma();
-   
+
 
    //REGS
 
    //Zamo
-   wire [31:0] PSR_wr:
+   wire [31:0] PSR_wr;
    wire [31:0] PSR_rd;
    reg_32 Present_State_Register(.clk(clk),.reset(RESET),.wr_data(PSR_wr),.rd_data(PSR_rd));
 
@@ -103,7 +111,6 @@ module sd_host(input CLK,
    reg_16 Response1_Register(.clk(clk),.reset(RESET),.wr_data(BGCR_wr),.rd_data(BGCR_rd));
 
 
-   
 endmodule // sd_host
 
 
