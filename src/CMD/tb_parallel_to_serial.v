@@ -5,7 +5,8 @@ module gm_parallel_to_serial(
 	output [47:0] parallel_in,
 	
 	input finished,
-	input serial_out
+	input serial_out,
+	input [5:0] counter
 
 	
 	);
@@ -43,9 +44,10 @@ module tb_parallel_to_serial;
 	wire [47:0] parallel_in;
 	wire finished;
 	wire serial_out;
+	wire [5:0] counter;
 	
-	gm_parallel_to_serial test (CLK, start_sending, parallel_in, finished, serial_out);
-	parallel_to_serial dut (CLK, start_sending, parallel_in, finished, serial_out);
+	gm_parallel_to_serial test (CLK, start_sending, parallel_in, finished, serial_out,counter);
+	parallel_to_serial dut (CLK, start_sending, parallel_in, finished, serial_out,counter);
 	
 	
 
