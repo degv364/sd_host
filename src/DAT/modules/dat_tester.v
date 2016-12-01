@@ -24,11 +24,11 @@ module DAT_tester(
 		  output reg [`FIFO_WIDTH-1:0] 	    tx_buf_din_out
 		  );
 
-   reg sdc_busy_L  = 1'b0;
-   
-   always @(*) DAT_din[0] <= ~sdc_busy_L;
+   //reg sdc_busy_L  = 1'b0;
+   //always @(*) DAT_din[0] <= ~sdc_busy_L;
 
    integer i;
+   integer j;
    
    initial begin
       host_clk 	      = 1'b1;
@@ -38,14 +38,16 @@ module DAT_tester(
       rx_data_init    = 1'b0;
       rx_buf_rd_host  = 1'b0;
       tx_buf_wr_host  = 1'b0;
-      block_cnt       = 2;
+      block_cnt       = 4;
       block_sz 	      = 64;
-      DAT_din[3:1]    = 3'b000;
+      DAT_din 	      = 4'b1111;
       tx_buf_din_out  = 0;
       
       #2 rst_L 	      = 1'b0;
       #2 rst_L 	      = 1'b1;
 
+      //---- Write Transaction ----
+      
       #2 for (i=0; i<=15; i=i+1) begin //Fill 16 32-bit blocks into Tx Buffer
 	 #2 tx_buf_din_out  = `FIFO_WIDTH'h1234ABCD+i;
 	 tx_buf_wr_host = 1; 
@@ -54,10 +56,24 @@ module DAT_tester(
       
       #2 tx_data_init 	 = 1;
       rx_data_init 	 = 0;
-      
       #2 tx_data_init 	 = 0;
-    
+
+      //---- Read Transaction ----
       
+      #700 rx_data_init  = 1;
+      tx_data_init 	 = 0;
+      #8 rx_data_init 	 = 0;
+
+      //SD Card sending data
+      #(10*8) for(i=0; i<block_cnt; i=i+1) begin
+	 #(10*8) DAT_din <= 4'h0; //Start Sequence
+	 for(j=0; j<block_sz/4; j=j+1) begin //Data
+	    #(8) DAT_din  <= 4'h1+j;
+	 end
+	 #(8) DAT_din  <= 4'hC; //CRC Sequence
+	 #(8) DAT_din  <= 4'hC;
+	 #(8) DAT_din  <= 4'hF; //End Sequence
+      end
    end
 
    always #(1) host_clk  = !host_clk;

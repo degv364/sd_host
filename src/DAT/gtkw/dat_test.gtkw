@@ -1,17 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Tue Nov 29 07:14:46 2016
+[*] Thu Dec  1 05:33:04 2016
 [*]
-[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/dat_test.vcd"
-[dumpfile_mtime] "Tue Nov 29 07:14:07 2016"
-[dumpfile_size] 20437
-[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/DAT/gtkw/dat_test.gtkw"
-[timestart] 35850
+[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/DAT/dat_test.vcd"
+[dumpfile_mtime] "Thu Dec  1 05:17:04 2016"
+[dumpfile_size] 65916
+[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/DAT/gtkw/dat_test.gtkw"
+[timestart] 0
 [size] 1918 1026
 [pos] -1 -1
-*-13.000000 107910 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.000000 1761900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] dat_tb.
-[sst_width] 243
+[treeopen] dat_tb.dat0.
+[sst_width] 287
 [signals_width] 296
 [sst_expanded] 1
 [sst_vpaned_height] 303
@@ -21,10 +22,11 @@
 dat_tb.dat_tester0.host_clk
 dat_tb.dat_tester0.sd_clk
 dat_tb.dat_tester0.rst_L
+@22
 dat_tb.dat_tester0.DAT_din[3:0]
+@24
 dat_tb.dat_tester0.rx_data_init
 dat_tb.dat_tester0.tx_data_init
-dat_tb.dat_tester0.sdc_busy_L
 @22
 dat_tb.dat_tester0.tx_buf_din_out[31:0]
 @24
@@ -34,13 +36,14 @@ dat_tb.dat_tester0.tx_buf_wr_host
 -
 -DAT_control
 @24
-dat_tb.dat_control0.dat_phys_busy
-dat_tb.dat_control0.dat_rd_flag
-dat_tb.dat_control0.dat_wr_flag
+dat_tb.dat0.dat_control0.state[4:0]
 @28
-dat_tb.dat_control0.state[4:0]
-@24
-dat_tb.dat_control0.tf_finished
+dat_tb.dat0.dat_control0.rx_data_init
+dat_tb.dat0.dat_control0.tx_data_init
+dat_tb.dat0.dat_control0.dat_rd_flag
+dat_tb.dat0.dat_control0.dat_wr_flag
+dat_tb.dat0.dat_control0.dat_phys_busy
+dat_tb.dat0.dat_control0.tf_finished
 @200
 -
 -RX_TX_Buffer
@@ -48,35 +51,33 @@ dat_tb.dat_control0.tf_finished
 dat_tb.rx_tx_fifo0.rx_buf_dout[31:0]
 dat_tb.rx_tx_fifo0.tx_buf_dout[31:0]
 @28
+dat_tb.rx_tx_fifo0.rx_buf_full
 dat_tb.dat_tester0.rx_buf_empty
-@24
-dat_tb.dat_control0.rx_buf_full
-dat_tb.dat_control0.tx_buf_empty
-@28
 dat_tb.dat_tester0.tx_buf_full
+dat_tb.rx_tx_fifo0.tx_buf_empty
 @200
 -
 -DAT_phys
-@22
-dat_tb.dat_phys0.state[3:0]
-@28
-dat_tb.dat_phys0.tx_buf_rd_enb
-dat_tb.dat_phys0.rx_buf_wr_enb
 @24
-dat_tb.dat_phys0.curr_block_cnt[15:0]
-dat_tb.dat_phys0.nxt_curr_block_sz[8:0]
-dat_tb.dat_phys0.curr_block_sz[8:0]
-@28
-dat_tb.dat_phys0.nxt_new_block
-dat_tb.dat_phys0.new_block
+dat_tb.dat0.dat_phys0.state[6:0]
+dat_tb.dat0.dat_phys0.curr_block_cnt[15:0]
+dat_tb.dat0.dat_phys0.curr_block_sz[8:0]
 @22
-dat_tb.dat_phys0.nxt_sel_offset[7:0]
-dat_tb.dat_phys0.sel_offset[7:0]
-dat_tb.dat_phys0.nxt_curr_tx_buf_dout_in[31:0]
-dat_tb.dat_phys0.curr_tx_buf_dout_in[31:0]
-dat_tb.dat_phys0.nxt_DAT_dout[3:0]
-dat_tb.dat_phys0.DAT_dout[3:0]
+dat_tb.dat0.dat_phys0.sel_offset[7:0]
 @28
-dat_tb.dat_phys0.DAT_dout_oe
+dat_tb.dat0.dat_phys0.new_block
+dat_tb.dat0.dat_phys0.tx_buf_rd_enb
+@22
+dat_tb.dat0.dat_phys0.nxt_curr_tx_buf_dout_in[31:0]
+dat_tb.dat0.dat_phys0.curr_tx_buf_dout_in[31:0]
+dat_tb.dat0.dat_phys0.nxt_DAT_dout[3:0]
+dat_tb.dat0.dat_phys0.DAT_dout[3:0]
+@28
+dat_tb.dat0.dat_phys0.DAT_dout_oe
+dat_tb.dat0.dat_phys0.rx_buf_wr_enb
+@22
+dat_tb.dat0.dat_phys0.nxt_curr_rx_buf_din_out[31:0]
+dat_tb.dat0.dat_phys0.curr_rx_buf_din_out[31:0]
+dat_tb.dat0.dat_phys0.DAT_din[3:0]
 [pattern_trace] 1
 [pattern_trace] 0
