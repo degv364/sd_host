@@ -11,27 +11,24 @@
 `include "CMD/modules/CMD.v"
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
-
 `include "REG/regs.v"
 
-//FIXME: find the appropiate include for registers
 
-
-
-module sd_host(input CLK,
+module sd_host(input         CLK,
 	       input 	     RESET,
 	       input 	     CLK_card,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
-	       input         cmd_from_sd,
+	       input 	     cmd_from_sd,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
 	       output 	     ram_write_enable,
 	       output 	     cmd_to_card,
-	       output       cmd_to_card_oe,
-	       output [3:0]  data_to_card
+	       output 	     cmd_to_card_oe,
+	       output [3:0]  data_to_card,
+	       output 	     data_to_card_oe
 	       );
 
    wire 		     buffer_dma_full;
@@ -51,6 +48,8 @@ module sd_host(input CLK,
    wire [31:0] 		     data_dat_to_buffer;
    wire 		     buffer_dat_empty;
    wire 		     buffer_dat_full;
+
+   wire 		     sd_card_busy;
    
    wire [31:0] 		     PSR_wr;
    wire [31:0] 		     PSR_rd;
@@ -131,17 +130,49 @@ module sd_host(input CLK,
    
    //logic for CMD-------------------------------------------------------
 
-	wire [31:0] cmd_arg;
-	assign cmd_arg = {A1R_rd,A0R_rd};
-	wire [31:0] response_status;
-	assign response_status = {R1R_rd, R0R_rd};
+   wire [31:0] 		     cmd_arg;
+   assign cmd_arg = {A1R_rd,A0R_rd};
+   wire [31:0] 		     response_status;
+   assign response_status = {R1R_rd, R0R_rd};
 	
-	CMD CMD_0 (.reset(RESET), .CLK_host(CLK), .new_cmd(CR_rd[15]), .cmd_arg(cmd_arg), .cmd_index(CR_rd[13:8]), .cmd_from_sd(cmd_from_card), .CLK_SD_card(CLK_card), .cmd_busy(cmd_busy), .cmd_complete(NISR_wr[0]), .timeout_error(timeout_error), .response_status(response_status), .cmd_to_sd(cmd_to_card), .cmd_to_sd_oe(cmd_to_card_oe) );
+   CMD CMD_0 (.reset(RESET), 
+	      .CLK_host(CLK), 
+	      .new_cmd(CR_rd[15]), 
+	      .cmd_arg(cmd_arg), 
+	      .cmd_index(CR_rd[13:8]), 
+	      .cmd_from_sd(cmd_from_card), 
+	      .CLK_SD_card(CLK_card), 
+	      .cmd_busy(cmd_busy), 
+	      .cmd_complete(NISR_wr[0]), 
+	      .timeout_error(NISR_wr[0]), 
+	      .response_status(response_status), 
+	      .cmd_to_sd(cmd_to_card), 
+	      .cmd_to_sd_oe(cmd_to_card_oe) 
+	      );
 	
-
 
    //logic for DAT------------------------------------------------------
 
+   DAT DAT_0 (.host_clk(CLK),
+	      .sd_clk(CLK_card),
+	      .rst_L(not_reset),
+	      .tx_data_init(), //FIXME: Adapt to cmd_complete signal
+	      .rx_data_init(),
+	      .tx_buf_empty(buffer_dat_empty),
+	      .rx_buf_full(buffer_dat_full),
+	      .tx_buf_dout_in(data_buffer_to_dat),
+	      .DAT_din(data_from_card),
+	      .block_sz(),
+	      .block_cnt(),
+	      .tx_buf_rd_enb(buffer_dat_read),
+	      .rx_buf_wr_enb(buffer_dat_write),
+	      .rx_buf_din_out(data_dat_to_buffer),
+	      .DAT_dout(data_to_card),
+	      .DAT_dout_oe(data_to_card_oe),
+	      .sdc_busy_L(sd_card_busy)
+	      );
+
+   
    //logic for fifo------------------------------------------------------      
    
    buffer_wrapper buffer_wrapper(.host_clk(CLK_card),
