@@ -138,8 +138,8 @@ module sd_host(input CLK,
 				 .rst_L(not_reset),
 				 .rx_buf_rd_host(buffer_dma_read),//dma
 				 .tx_buf_wr_host(buffer_dma_write),//dma
-				 .rx_buf_wr_dat(buffer_dat_read),//dat
-				 .tx_buf_rd_dat(buffer_dat_write),//dat
+				 .rx_buf_wr_dat(buffer_dat_write),//dat
+				 .tx_buf_rd_dat(buffer_dat_read),//dat
 				 .rx_buf_din(data_dat_to_buffer),//dat
 				 .tx_buf_din(data_dma_to_buffer),//dma
 				 .rx_buf_dout(data_buffer_to_dma),//dma
