@@ -15,7 +15,7 @@
 //                        verify length=block size*block count
 
 //FIXME: register -> error status
-
+//FIXME: register ->command to start
 
 module dma(	   
 	   input 	 RESET, //driver
@@ -48,7 +48,7 @@ module dma(
    wire [63:0] 		 starting_address;
    wire 		 stop;
    
-   wire 		 command_reg_write;
+   reg 			 command_reg_write;
    wire 		 command_reg_continue;
    wire 		 direction;
    reg [15:0] 		 error_adma_register;
@@ -63,12 +63,16 @@ module dma(
    assign command_reg_continue=block_gap_control_register[1];
 
    assign direction=~transfer_mode_register_in[4]; 
-   assign command_reg_write=command_register[7] & ~command_register[6];
+   //assign command_reg_write=command_register[7] & ~command_register[6];
+   
    assign stop=block_gap_control_register[0] | ~transfer_mode_register_in[0];
    
    
    //FIXME: LOGIC to generate errors
    //FIXME: logic to change state machine inputs according to block count and block size
+   always @(command_register[15:8]) begin
+      command_reg_write=1;
+   end
    
    
    state_machine state_machine(.starting_address(starting_address),

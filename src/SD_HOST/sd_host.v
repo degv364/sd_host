@@ -13,7 +13,7 @@
 `include "buffer/buffer_wrapper.v"
 
 `include "REG/regs.v"
-
+`include "start_detect.v"
 //FIXME: find the appropiate include for registers
 
 
@@ -24,11 +24,12 @@ module sd_host(input CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
+	       input 	     cmd_from_card,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
 	       output 	     ram_write_enable,
-	       output 	     command_to_card,
+	       output 	     cmd_to_card,
 	       output [3:0]  data_to_card
 	       );
 
@@ -76,8 +77,12 @@ module sd_host(input CLK,
    wire [15:0] 		     R0R_rd;
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
+   wire 		     start_flag;
+   
    
    assign not_reset=~RESET;
+
+   
 
    //------------REG---------------------------------------------------------------------
    //dat
@@ -149,6 +154,13 @@ module sd_host(input CLK,
 				 .rx_buf_empty(buffer_dma_empty),//dma
 				 .rx_buf_full(buffer_dat_full)//dat
 				 );
+
+   //-----------START_FLAG------------------------------------------
+   start_detect start_detect(.clk(CLK),
+			     .reset(RESET),
+			     .command_register(CR_rd[15:9]),
+			     .start_flag(start_flag));
+   
    
 endmodule // sd_host
 
