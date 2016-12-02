@@ -113,6 +113,7 @@ module sd_host(input CLK,
    	   .adma_address_register_2(ADMASAR_rd[47:32]),
    	   .adma_address_register_3(ADMASAR_rd[63:48]),
    	   .command_register(CR_rd),
+	   .start_flag(start_flag),
    	   .block_gap_control_register(BGCR_rd),
    	   .block_size_register(BSR_rd),
    	   .block_count_register(BCR_rd),
@@ -168,7 +169,7 @@ module sd_host(input CLK,
    //-----------START_FLAG------------------------------------------
    start_detect start_detect(.clk(CLK),
 			     .reset(RESET),
-			     .command_register(CR_rd[15:9]),
+			     .command_register(CR_rd[15:10]),
 			     .start_flag(start_flag));
    
    
