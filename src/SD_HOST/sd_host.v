@@ -14,8 +14,6 @@
 
 `include "REG/regs.v"
 `include "start_detect.v"
-//FIXME: find the appropiate include for registers
-
 
 
 module sd_host(input CLK,
