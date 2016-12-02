@@ -8,7 +8,7 @@
 `include "defines.v"
 
 `include "ADMA/modules/dma.v"
-//`include "CMD/CMD_TLB.v"
+`include "CMD/modules/CMD.v"
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
 
@@ -24,11 +24,13 @@ module sd_host(input CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
+	       input         cmd_from_sd,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
 	       output 	     ram_write_enable,
-	       output 	     command_to_card,
+	       output 	     cmd_to_card,
+	       output       cmd_to_card_oe,
 	       output [3:0]  data_to_card
 	       );
 
@@ -128,6 +130,15 @@ module sd_host(input CLK,
    	   );
    
    //logic for CMD-------------------------------------------------------
+
+	wire [31:0] cmd_arg;
+	assign cmd_arg = {A1R_rd,A0R_rd};
+	wire [31:0] response_status;
+	assign response_status = {R1R_rd, R0R_rd};
+	
+	CMD CMD_0 (.reset(RESET), .CLK_host(CLK), .new_cmd(CR_rd[15]), .cmd_arg(cmd_arg), .cmd_index(CR_rd[13:8]), .cmd_from_sd(cmd_from_card), .CLK_SD_card(CLK_card), .cmd_busy(cmd_busy), .cmd_complete(NISR_wr[0]), .timeout_error(timeout_error), .response_status(response_status), .cmd_to_sd(cmd_to_card), .cmd_to_sd_oe(cmd_to_card_oe) );
+	
+
 
    //logic for DAT------------------------------------------------------
 
