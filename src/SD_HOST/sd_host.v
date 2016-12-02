@@ -24,6 +24,10 @@ module sd_host(input CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
+	       input [12:0]  addrs,
+	       input [31:0]  wr_data,
+
+	       output [31:0] rd_data,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
