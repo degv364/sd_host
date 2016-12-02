@@ -21,7 +21,7 @@ module transfer_signal(output start,
    
 
    initial begin
-      $dumpfile ("ADMA/test_transfer.vcd");
+      $dumpfile ("test_transfer.vcd");
       $dumpvars (0, test_transfer);
       # 0 length = 6;
       # 0 address_init=0;

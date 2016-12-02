@@ -1,0 +1,18 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Thu Dec  1 22:33:34 2016
+[*]
+[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.vcd"
+[dumpfile_mtime] "Thu Dec  1 22:33:09 2016"
+[dumpfile_size] 4160
+[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*0.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 243
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 152
+[pattern_trace] 1
+[pattern_trace] 0

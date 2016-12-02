@@ -1,3 +1,4 @@
+`include "modules/CMD_physical.v"
 module gm_cmd_physical (
 	output reset,
 	output CLK_SD_card,
@@ -9,7 +10,7 @@ module gm_cmd_physical (
 	
 	input REQ_out,
 	input ACK_out,
-	input [37:0] cmd_response,
+	input [47:0] cmd_response,
 	input cmd_to_sd,
 	input timeout_error,
 	input physical_inactive,
@@ -74,7 +75,7 @@ module tb_cmd_physical;
 		
 	wire REQ_out;
 	wire ACK_out;
-	wire [37:0] cmd_response;
+	wire [47:0] cmd_response;
 	wire cmd_to_sd;
 	wire physical_inactive;
 	wire cmd_to_sd_oe;

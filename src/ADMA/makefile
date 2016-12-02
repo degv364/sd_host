@@ -1,40 +1,41 @@
-all: ram fifo state_machine
+#este makefile es solo para pruebas del dma
 
-ram:
-	iverilog -o test_ram.x test_ram.v
+
+dma_ram:
+	iverilog -o test_ram.x test_ram.v -I ..
 	./test_ram.x
 	gtkwave test_ram.vcd
 
-fifo:
-	iverilog -o test_fifo.x test_fifo.v
+dma_fifo:
+	iverilog -o test_fifo.x test_fifo.v -I ..
 	./test_fifo.x
 	gtkwave test_fifo.vcd
 
-fetch:
-	iverilog -o test_fetch.x test_fetch.v
+dma_fetch:
+	iverilog -o test_fetch.x test_fetch.v -I ..
 	./test_fetch.x
 	gtkwave test_fetch.vcd gtks/fetch.gtkw &
 
-transfer:
-	iverilog -o test_transfer.x test_transfer.v
+dma_transfer:
+	iverilog -o test_transfer.x test_transfer.v -I ..
 	./test_transfer.x
 	gtkwave test_transfer.vcd gtks/transfer.gtkw
 
-state_machine:
-	iverilog -o test_state_machine.x test_state_machine.v
+dma_state_machine:
+	iverilog -o test_state_machine.x test_state_machine.v -I ..
 	./test_state_machine.x
 	gtkwave test_state_machine.vcd
 
-dma:
-	iverilog -o test_dma.x test_dma.v
+dma_dma:
+	iverilog -o test_dma.x test_dma.v -I ..
 	./test_dma.x
+	gtkwave test_dma.vcd
 
-synth_fetch:
+dma_synth_fetch:
 	yosys yosys/fetch.ys
 
-synth_transfer:
+dma_synth_transfer:
 	yosys yosys/transfer.ys
 
-
 clean:
-	rm  *.vcd *.x
+	rm -rf *.x *.vcd
