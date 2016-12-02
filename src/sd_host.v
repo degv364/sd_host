@@ -21,12 +21,7 @@
 
 
 
-module sd_host(input CLK,
-
-	       input RESET,
-	       input CLK_card);
-
-	       input 	     RESET,
+module sd_host(input 	     RESET,
 	       input 	     CLK_card,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
