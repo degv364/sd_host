@@ -12,6 +12,7 @@
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
 `include "REG/regs.v"
+`include "start_detect.v"
 
 
 module sd_host(input         CLK,
@@ -20,7 +21,7 @@ module sd_host(input         CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
-	       input 	     cmd_from_sd,
+	       input 	     cmd_from_card,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
@@ -77,8 +78,11 @@ module sd_host(input         CLK,
    wire [15:0] 		     R0R_rd;
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
+   wire 		     start_flag;
+   
    
    assign not_reset=~RESET;
+   
 
    //------------REG---------------------------------------------------------------------
    //dat
@@ -108,6 +112,7 @@ module sd_host(input         CLK,
    	   .adma_address_register_2(ADMASAR_rd[47:32]),
    	   .adma_address_register_3(ADMASAR_rd[63:48]),
    	   .command_register(CR_rd),
+	   .start_flag(start_flag),
    	   .block_gap_control_register(BGCR_rd),
    	   .block_size_register(BSR_rd),
    	   .block_count_register(BCR_rd),
@@ -191,6 +196,13 @@ module sd_host(input         CLK,
 				 .rx_buf_empty(buffer_dma_empty),//dma
 				 .rx_buf_full(buffer_dat_full)//dat
 				 );
+
+   //-----------START_FLAG------------------------------------------
+   start_detect start_detect(.clk(CLK),
+			     .reset(RESET),
+			     .command_register(CR_rd[15:10]),
+			     .start_flag(start_flag));
+   
    
 endmodule // sd_host
 
