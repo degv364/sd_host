@@ -165,17 +165,28 @@ module sd_host(input         CLK,
 
    //logic for DAT------------------------------------------------------
 
+   wire [2:0] 		     DAT_PSR_wr_enb;
+   //FIXME: Change to corresponding wr_enb flags (bits 9,8,1)
+   assign DAT_PSR_wr_enb = {1'b0,1'b0,1'b0}; 
+   
    DAT DAT_0 (.host_clk(CLK),
 	      .sd_clk(CLK_card),
 	      .rst_L(not_reset),
-	      .tx_data_init(), //FIXME: Adapt to cmd_complete signal
-	      .rx_data_init(),
+	      .resp_recv(resp_recv),
 	      .tx_buf_empty(buffer_dat_empty),
 	      .rx_buf_full(buffer_dat_full),
 	      .tx_buf_dout_in(data_buffer_to_dat),
 	      .DAT_din(data_from_card),
-	      .block_sz(),
-	      .block_cnt(),
+	      .block_sz_reg(BSR_rd[11:0]),
+	      .block_cnt_reg(BCR_wr),
+	      .multiple_blk_reg(TMR_rd[5]),
+	      .tf_direction_reg(TMR_rd[4]),
+	      .wr_tf_active_reg(PSR_wr[8]),
+	      .rd_tf_active_reg(PSR_wr[9]),
+	      .cmd_inhibit_dat_reg(PSR_wr[1]),
+	      .PSR_wr_enb(DAT_PSR_wr_enb),
+	      .tf_complete_reg(NISR_wr[1]),
+	      .NISR_wr_enb(), //FIXME: Set to corresponding wr_enb flag (bit 1)
 	      .tx_buf_rd_enb(buffer_dat_read),
 	      .rx_buf_wr_enb(buffer_dat_write),
 	      .rx_buf_din_out(data_dat_to_buffer),
