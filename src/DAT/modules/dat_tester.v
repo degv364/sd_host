@@ -45,7 +45,7 @@ module DAT_tester(
       tf_direction_reg 	= 0; //Write
       
       #2 rst_L 		= 1'b0;
-      #2 rst_L 		= 1'b1;
+      #10 rst_L 	= 1'b1;
 
       //---- Write Transaction ----
 

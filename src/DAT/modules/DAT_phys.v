@@ -86,15 +86,12 @@ module DAT_phys (
    assign dat_phys_busy  = (state != IDLE);   
    
    //Update state logic
-   always @ (posedge sd_clk or !rst_L) begin
+   always @ (posedge sd_clk) begin
       if(!rst_L) begin
 	 
 	 //Output reset values
-	 tx_buf_rd_enb 	     <= 0;
-	 tf_finished 	     <= 0;
 	 DAT_dout 	     <= 0;
 	 DAT_dout_oe 	     <= 0;
-
 	 
 	 //State regs reset values
 	 state 		     <= IDLE;
@@ -112,8 +109,7 @@ module DAT_phys (
 	 write_flag_reg      <= 0;
 	 read_flag_reg 	     <= 0;
 	 multiple_reg 	     <= 0;
-
-      end	
+      end
       else begin
 	 //Next state logic related update
 	 state 		     <= nxt_state;

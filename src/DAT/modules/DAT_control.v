@@ -49,23 +49,17 @@ module DAT_control (
    parameter READ_TRANSFER  = 5'b01000;
    parameter WRITE_TRANSFER  = 5'b10000;
 
+   wire 		   wr_valid;
+   wire 		   rd_valid;
 
    assign wr_valid  = !tx_buf_empty && !dat_phys_busy;
    assign rd_valid = !rx_buf_full && !dat_phys_busy;
-   
+
    
    //Update state 
-   always @ (posedge host_clk or !rst_L) begin
+   always @ (posedge host_clk) begin
       if(!rst_L) begin
-	 state 		     <= IDLE;
-	 dat_wr_flag 	     <= 0;	
-	 dat_rd_flag 	     <= 0;
-	 wr_tf_active_reg    <= 0;
-	 rd_tf_active_reg    <= 0;
-	 tf_complete_reg     <= 0;
-	 cmd_inhibit_dat_reg <= 0;
-	 PSR_wr_enb 	     <= 0;
-	 NISR_wr_enb 	     <= 0;
+	 state <= IDLE;
       end	
       else
 	 state <= nxt_state;

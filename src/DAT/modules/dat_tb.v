@@ -6,6 +6,9 @@
 `include "../../defines.v"
 `include "dat_tester.v"
 `include "DAT.v"
+//`include "synth_DAT.v"
+//`include "../../yosys_libs/cmos_cells.v"
+
 `include "buffer_wrapper.v"
 
 module dat_tb;
