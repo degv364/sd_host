@@ -85,6 +85,8 @@ module sd_host(input         CLK,
    wire [15:0] 		     R0R_rd;
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
+   wire [15:0]				  EISR_wr;
+   wire [15:0]				  EISR_rd;
    wire 		     start_flag;
    
    
@@ -108,6 +110,7 @@ module sd_host(input         CLK,
    reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd)    );
    reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd)    );
    reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd)    );
+   reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd)   );
 
    //logic for ADMA------------------------------------------------------
    
@@ -156,7 +159,7 @@ module sd_host(input         CLK,
 	      .CLK_SD_card(CLK_card), 
 	      .cmd_busy(PSR_wr[0]),
 	      .cmd_complete(NISR_wr[0]), 
-	      .timeout_error(NISR_wr[0]), 
+	      .timeout_error(EISR_wr[0]),
 	      .response_status(response_status), 
 	      .cmd_to_sd(cmd_to_card), 
 	      .cmd_to_sd_oe(cmd_to_card_oe) 
