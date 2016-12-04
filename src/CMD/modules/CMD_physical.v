@@ -150,17 +150,6 @@ module CMD_physical (
 	
 	always @(*) begin
 	
-		REQ_out = REQ_out;
-		ACK_out = ACK_out;
-		cmd_response = cmd_response;
-		start_sending = start_sending;
-		start_listening = start_listening;
-		cmd_to_send = cmd_to_send;
-		start_counting = start_counting;
-		physical_inactive = physical_inactive;
-		cmd_to_sd_oe = cmd_to_sd_oe;
-		timeout_error = timeout_error;
-			
 		case(current_st)
 				
 			ST_INACTIVE: begin
@@ -172,13 +161,21 @@ module CMD_physical (
 				cmd_to_send = 0;
 				start_counting = 0;
 				physical_inactive = 1;
-				cmd_to_sd_oe = 0;
 				timeout_error = 0;
 				
 			end
 			
 			ST_SETUP: begin
+				REQ_out = 0;
+				cmd_response = 0;
+				start_sending = 0;
+				start_listening = 0;
+				start_counting = 0;
 				physical_inactive = 0;
+				timeout_error = 0;
+				
+				
+				
 				if (REQ_in == 1) begin
 					cmd_to_send [47:46] = 2'b01; 
 					cmd_to_send [45:40] = cmd_index_arg [37:32];
@@ -199,43 +196,97 @@ module CMD_physical (
 			end
 			
 			ST_SENDING: begin
-				ACK_out = 1'b0;
-				physical_inactive = 0;
+				REQ_out = 0;
+				ACK_out = 0;
+				cmd_response = 0;
 				start_sending = 1;
+				start_listening = 0;
+				cmd_to_send [47:46] = 2'b01; 
+				cmd_to_send [45:40] = cmd_index_arg [37:32];
+				cmd_to_send [39:8] = cmd_index_arg [31:0];
+				cmd_to_send [7:1] = 7'b0101_010;
+				cmd_to_send [0:0] = 1'b1;
+				start_counting = 0;
+				physical_inactive = 0;
+				timeout_error = 0;
+				
 				
 			
 			end
 			
 			ST_WAITING_RESPONSE: begin
+				REQ_out = 0;
+				ACK_out = 0;
+				cmd_response = 0;
 				start_sending = 0;
+				cmd_to_send = 0;
 				physical_inactive = 0;
+				timeout_error = 0;
+				
+				
 				if (cmd_from_sd == 0) begin
 					start_counting = 1'b0;
 					start_listening = 1'b1;
 				end
 				else begin
 					start_counting = 1'b1;
+					start_listening = 0;
+					if (finished_64_cycles == 1) begin
+						timeout_error = 1;
+					end
+					else begin
+						timeout_error = 0;
+					end
 					
 				end
 			
 			end
 			
 			ST_RECEIVING_RESPONSE: begin
+				REQ_out = 0;
+				ACK_out = 0;
+				cmd_response = parallel_received;
+				start_sending = 0;
+				start_listening = 1;
+				cmd_to_send = 0;
 				start_counting = 1'b0;
 				physical_inactive = 0;
-				start_listening = 1;
-				cmd_response = parallel_received;
+				timeout_error = 0;
+				
+				
 								
 				
 			end
 			
 			ST_RETURN_RESPONSE: begin
-				physical_inactive = 0;
-				start_listening = 0;
 				REQ_out = 1'b1;
+				ACK_out = 0;
+				cmd_response = parallel_received;
+				start_sending = 0;
+				start_listening = 0;
+				cmd_to_send = 0;
+				start_counting = 1;
+				physical_inactive = 0;
+				timeout_error = 0;
+				
+				
 							
 			
 			end
+			
+			default: begin
+				REQ_out = 0;
+				ACK_out = 0;
+				cmd_response = 0;
+				start_sending = 0;
+				start_listening = 0;
+				cmd_to_send = 0;
+				start_counting = 0;
+				physical_inactive = 1;
+				timeout_error = 0;
+			
+			end
+			
 			
 		endcase
 		
