@@ -156,7 +156,7 @@ module sd_host(input         CLK,
 	      .CLK_SD_card(CLK_card), 
 	      .cmd_busy(PSR_wr[0]),
 	      .cmd_complete(NISR_wr[0]), 
-	      .timeout_error(NISR_wr[0]), 
+	      .timeout_error(timeout_error), //FIXME: falta el registro error interrupt status
 	      .response_status(response_status), 
 	      .cmd_to_sd(cmd_to_card), 
 	      .cmd_to_sd_oe(cmd_to_card_oe) 

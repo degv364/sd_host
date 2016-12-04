@@ -1,0 +1,10 @@
+read_verilog modules/CMD.v
+read_verilog -lib ../yosys_libs/cmos_cells.v
+
+
+proc; memory; opt; techmap; opt;
+
+dfflibmap -liberty ../yosys_libs/cmos_cells.lib
+#abc -liberty ../yosys_libs/cmos_cells.lib;;
+clean
+write_verilog yosys/synth_CMD.v

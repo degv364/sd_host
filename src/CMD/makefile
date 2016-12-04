@@ -10,5 +10,9 @@ cmd:
 	iverilog -o simulations/dsn5.x modules/tb_CMD.v
 	vvp simulations/dsn5.x
 	
+	
+synth:
+	yosys yosys/cmd.ys
+	
 clean:
-	rm -f simulations/*.x simulations/*.vcd
+	rm -f simulations/*.x simulations/*.vcd yosys/synth_CMD.v
