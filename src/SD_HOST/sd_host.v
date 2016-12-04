@@ -85,8 +85,6 @@ module sd_host(input         CLK,
    wire [15:0] 		     R0R_rd;
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
-   wire [15:0]				  EISR_wr;
-   wire [15:0]				  EISR_rd;
    wire 		     start_flag;
    
    
