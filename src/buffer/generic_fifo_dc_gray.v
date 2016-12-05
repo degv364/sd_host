@@ -58,7 +58,7 @@
 //
 //
 
-`include "buffer/generic_dpram.v"
+`include "generic_dpram.v"
 
 //`include "timescale.v"
 
