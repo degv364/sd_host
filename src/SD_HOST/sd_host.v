@@ -102,6 +102,10 @@ module sd_host(input         CLK,
    assign not_reset=~RESET;
    assign request=1;//FIXME: Esto es mientras, hasta que se arregle el modulo
    assign CR_En=16'hFFFF; //FIXME: esto es mientras se hace pruebas, luego debe haber un Enable de verdad.
+   ///FIXME: mientras sirven los registros con la compu.
+   assign ADMASAR_En=64'hFFFF_FFFF_FFFF_FFFF;
+   assign ADMASAR_wr=0;
+   
    
    //--------------------------------------------------REG-------------------------------
    cpu_reg_communication CPU_reg (.rd_data(reg_rd_data), 
