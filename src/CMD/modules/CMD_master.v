@@ -23,7 +23,11 @@ module CMD_master(
 	output ACK_out,
 	output timeout_error,
 	output [31:0]response_status,
-	output [37:0]cmd_to_physical
+	output [37:0]cmd_to_physical,
+	output cmd_busy_en,
+	output cmd_complete_en,
+	output timeout_error_en,
+	output [31:0] response_status_en
 	);
 
 	//States (one-hot)
@@ -43,6 +47,10 @@ module CMD_master(
 	reg cmd_busy, cmd_complete,REQ_out,ACK_out,timeout_error;
 	reg [31:0]response_status;
 	reg [37:0]cmd_to_physical;
+	reg cmd_busy_en;
+	reg cmd_complete_en;
+	reg timeout_error_en;
+	reg [31:0] response_status_en;
 	
 	//other wires
 	
@@ -116,6 +124,11 @@ module CMD_master(
 				response_status = 32'h0000_0000;
 				cmd_to_physical = 38'h0000_0000;
 				execute_complete =0;
+				
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
 					
 			end
 		
@@ -129,6 +142,11 @@ module CMD_master(
 				cmd_to_physical[37:32] = cmd_index;
 				cmd_to_physical[31:0] = cmd_arg;
 				execute_complete =0;
+				
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
 			
 							
 			end
@@ -141,7 +159,10 @@ module CMD_master(
 				cmd_to_physical[37:32] = cmd_index;
 				cmd_to_physical[31:0] = cmd_arg;
 				
-			
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
 				
 				
 				if (REQ_in == 1 ) begin
@@ -172,6 +193,12 @@ module CMD_master(
 				cmd_to_physical[31:0] = cmd_arg;
 				execute_complete =0;
 				
+				cmd_busy_en = 16'b0000_0000_0000_0001;
+				cmd_complete_en = 16'b0000_0000_0000_0001;
+				timeout_error_en = 16'b0000_0000_0000_0001;
+				response_status_en = 32'hFFFF_FFFF;
+				
+				
 				if (timeout_error == 1) begin
 					timeout_error = 1;
 					cmd_complete = 0;
@@ -194,7 +221,11 @@ module CMD_master(
 				cmd_to_physical = 38'h0000_0000;
 				execute_complete =0;
 			
-			
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
+				
 			end
 			
 	

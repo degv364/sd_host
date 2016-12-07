@@ -156,6 +156,8 @@ module sd_host(input         CLK,
    assign cmd_arg = {A1R_rd,A0R_rd};
    wire [31:0] 		     response_status;
    assign response_status = {R1R_rd, R0R_rd};
+   wire [31:0]					response_status_en;
+   assign response_status_en = {R1R_En, R0R_En} ;
 	
    CMD CMD_0 (.reset(RESET), 
 	      .CLK_host(CLK), 
@@ -169,7 +171,11 @@ module sd_host(input         CLK,
 	      .timeout_error(EISR_wr[0]),
 	      .response_status(response_status), 
 	      .cmd_to_sd(cmd_to_card), 
-	      .cmd_to_sd_oe(cmd_to_card_oe) 
+	      .cmd_to_sd_oe(cmd_to_card_oe),
+	      .cmd_busy_en(PSR_En[0]),
+	      .cmd_complete_en(NISR_En[0]),
+	      .timeout_error_en(EISR_En[0]),
+	      .response_status_en(response_status_en)
 	      );
 	
 
