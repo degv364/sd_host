@@ -14,14 +14,6 @@ parameter WIDTH = 64;
 
 reg [WIDTH-1 : 0] rd_data;
 
-
-always @(*)begin
-
-	if(reset == 1)begin
-		rd_data <= 0;
-	end
-end
-
 always @(posedge clk)begin
 
 	if (reset == 1)begin
@@ -50,12 +42,6 @@ parameter WIDTH = 32;
 
 reg [WIDTH-1 : 0] rd_data;
 
-always @(*)begin
-
-	if(reset == 1)begin
-		rd_data <= 0;
-	end
-end
 
 always @(posedge clk)begin
 
@@ -85,12 +71,6 @@ parameter WIDTH = 16;
 
 reg [WIDTH-1 : 0] rd_data;
 
-always @(*)begin
-
-	if(reset == 1)begin
-		rd_data <= 0;
-	end
-end
 
 always @(posedge clk)begin
 
@@ -121,12 +101,7 @@ parameter WIDTH = 8;
 
 reg [WIDTH-1 : 0] rd_data;
 
-always @(*)begin
 
-	if(reset == 1)begin
-		rd_data <= 0;
-	end
-end
 
 always @(posedge clk)begin
 
