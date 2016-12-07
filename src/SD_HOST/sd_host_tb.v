@@ -4,6 +4,8 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
+`define SD_HOST_COMPLETE
+
 `include "sd_host.v"
 `include "ADMA/modules/ram.v"
 `include "sd_host_tester.v"
@@ -30,9 +32,10 @@ module sd_host_tb;
    wire        data_to_card_oe;
    wire [3:0]  data_from_card;
    
-   wire [31:0]       wr_data;
-   wire [31:0] 	     rd_data;
-   wire [12:0] 	     address;
+   wire [31:0]       reg_wr_data;
+   wire [31:0] 	   reg_rd_data;
+   wire [11:0] 	   reg_address;
+   wire					reg_wr_data_en;
    
    
    assign RST_L=~RESET;
@@ -40,7 +43,10 @@ module sd_host_tb;
    sd_host_tester sdh_tester0 (.CLK(HOST_clk),
 			       .CLK_card(SD_clk),
 			       .RESET(RESET),
-			       .data_from_card(data_from_card)
+			       .data_from_card(data_from_card),
+			       .reg_wr_data(reg_wr_data),
+		     		 .reg_wr_en(reg_wr_data_en),
+		     	    .reg_address(reg_address)
 			       );
    
    sd_host sd_host0 (.CLK(HOST_clk),
@@ -49,10 +55,7 @@ module sd_host_tb;
 		     .STOP(STOP),
 		     .data_from_ram(data_ram_host),
 		     .data_from_card(data_from_card),
-		     .addrs(address),
-		     .wr_data(wr_data),
 		     .cmd_from_card(cmd_from_card),
-		     .rd_data(rd_data),
 		     .data_to_ram(data_host_ram),
 		     .ram_address(ram_address),
 		     .ram_read_enable(ram_read_enable),
@@ -60,7 +63,10 @@ module sd_host_tb;
 		     .cmd_to_card(cmd_to_card),
 		     .cmd_to_card_oe(cmd_to_card_oe),
 		     .data_to_card(data_to_card),
-		     .data_to_card_oe(data_to_card_oe)
+		     .data_to_card_oe(data_to_card_oe),
+		     .reg_wr_data(reg_wr_data),
+		     .reg_wr_en(reg_wr_data_en),
+		     .reg_address(reg_address)
 		     );
    
    ram ram(.CLK(HOST_clk),

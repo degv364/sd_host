@@ -37,7 +37,7 @@ input [31:0] in_054h,
 
 //
 
-input [12:0] addrs,
+input [11:0] addrs,
 input req,
 input wr_valid,
 input clk

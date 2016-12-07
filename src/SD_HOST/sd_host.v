@@ -12,6 +12,7 @@
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
 `include "REG/regs.v"
+`include "REG/cpu_communication.v"
 `include "start_detect.v"
 
 
@@ -21,10 +22,11 @@ module sd_host(input         CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
-	       input [12:0]  addrs,
-	       input [31:0]  wr_data,
+	       input [11:0]  reg_address,
+	       input [31:0]  reg_wr_data,
 	       input 	     cmd_from_card,
-	       output [31:0] rd_data,
+	       input        reg_wr_en,
+	       output [31:0] reg_rd_data,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
@@ -99,6 +101,16 @@ module sd_host(input         CLK,
    
    assign not_reset=~RESET;
    
+   //--------------------------------------------------REG-------------------------------
+   cpu_reg_communication CPU_reg 			 (.rd_data(reg_rd_data), 
+   														.wr_data(reg_wr_data), 
+   														.addrs(reg_address),
+   														.wr_valid(reg_wr_en),
+   														.out_00Eh(CR_wr)
+   														);
+   
+   
+   
 
    //------------REG---------------------------------------------------------------------
    //dat
@@ -161,7 +173,7 @@ module sd_host(input         CLK,
 	
    CMD CMD_0 (.reset(RESET), 
 	      .CLK_host(CLK), 
-	      .new_cmd(CR_rd[15]), 
+	      .new_cmd(start_flag), 
 	      .cmd_arg(cmd_arg), 
 	      .cmd_index(CR_rd[13:8]), 
 	      .cmd_from_sd(cmd_from_card), 
