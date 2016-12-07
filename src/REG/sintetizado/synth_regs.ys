@@ -1,0 +1,28 @@
+#Listo
+read_verilog regs.v
+
+# elaborate design hierarchy
+hierarchy 
+
+proc
+
+#simplificaciones
+opt
+
+techmap; opt
+
+#FF
+dfflibmap -liberty cmos_cells.lib
+
+#Librería de celdas estándar
+abc -liberty cmos_cells.lib
+opt
+
+#mostrar diagrama
+#show -lib cmos_cells.v .v
+
+
+
+#Crea el archivo ya convertido a estructural.
+write_verilog reg_sintetizado.v
+

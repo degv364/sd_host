@@ -15,7 +15,7 @@ always #5 clk = ~ clk;
 reg reset = 1;
 
 initial begin
-	#  4 reset = 0;
+	#  8 reset = 0;
 	#1000 $finish;
 end 
 endmodule

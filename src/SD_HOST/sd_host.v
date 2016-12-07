@@ -11,8 +11,8 @@
 `include "CMD/modules/CMD.v"
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
-`include "REG/regs.v"
 `include "REG/cpu_communication.v"
+`include "REG/modules/regs.v"
 `include "start_detect.v"
 
 
