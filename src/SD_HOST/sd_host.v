@@ -11,7 +11,7 @@
 `include "CMD/modules/CMD.v"
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"
-`include "REG/cpu_communication.v"
+`include "REG/modules/cpu_communication.v"
 `include "REG/modules/regs.v"
 `include "start_detect.v"
 
@@ -100,36 +100,36 @@ module sd_host(input         CLK,
 
    
    assign not_reset=~RESET;
+   assign request=1;//FIXME: Esto es mientras, hasta que se arregle el modulo
+   assign CR_En=16'hFFFF; //FIXME: esto es mientras se hace pruebas, luego debe haber un Enable de verdad.
    
    //--------------------------------------------------REG-------------------------------
-   cpu_reg_communication CPU_reg 			 (.rd_data(reg_rd_data), 
-   														.wr_data(reg_wr_data), 
-   														.addrs(reg_address),
-   														.wr_valid(reg_wr_en),
-   														.out_00Eh(CR_wr)
-   														);
-   
-   
-   
+   cpu_reg_communication CPU_reg (.rd_data(reg_rd_data), 
+   				  .wr_data(reg_wr_data),
+				  .req(request),
+   				  .addrs(reg_address),
+   				  .wr_valid(reg_wr_en),
+   				  .out_00Eh(CR_wr)
+   				  );
 
    //------------REG---------------------------------------------------------------------
    //dat
-   reg_32 Present_State_Register           (.clk(CLK),.reset(RESET),.wr_data(PSR_wr),    .rd_data(PSR_rd),  .enb(PSR_En)    );   
-   reg_16 Normal_Interrupt_Status_Register (.clk(CLK),.reset(RESET),.wr_data(NISR_wr),   .rd_data(NISR_rd), .enb(NISR_En)  );
-   reg_16 Transfer_Mode_Register           (.clk(CLK),.reset(RESET),.wr_data(TMR_wr),    .rd_data(TMR_rd),  .enb(TMR_En)  ); 
-   reg_16 Block_Count_Register             (.clk(CLK),.reset(RESET),.wr_data(BCR_wr),    .rd_data(BCR_rd),  .enb(BCR_En) );
-   reg_16 Block_Size_Register              (.clk(CLK),.reset(RESET),.wr_data(BSR_wr),    .rd_data(BSR_rd),  .enb(BSR_En)  );
+   reg_32 Present_State_Register           (.clk(CLK),.reset(RESET),.wr_data(PSR_wr),    .rd_data(PSR_rd),    .enb(PSR_En)    );   
+   reg_16 Normal_Interrupt_Status_Register (.clk(CLK),.reset(RESET),.wr_data(NISR_wr),   .rd_data(NISR_rd),   .enb(NISR_En)  );
+   reg_16 Transfer_Mode_Register           (.clk(CLK),.reset(RESET),.wr_data(TMR_wr),    .rd_data(TMR_rd),    .enb(TMR_En)  ); 
+   reg_16 Block_Count_Register             (.clk(CLK),.reset(RESET),.wr_data(BCR_wr),    .rd_data(BCR_rd),    .enb(BCR_En) );
+   reg_16 Block_Size_Register              (.clk(CLK),.reset(RESET),.wr_data(BSR_wr),    .rd_data(BSR_rd),    .enb(BSR_En)  );
    //dma   
-   reg_64 ADMA_System_Address_Register     (.clk(CLK),.reset(RESET),.wr_data(ADMASAR_wr),.rd_data(ADMASAR_rd), .enb(ADMASAR_En));
-   reg_16 Error_ADMA_Status                (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd), .enb(EISR_En)   );
-   reg_16 Command_Register                 (.clk(CLK),.reset(RESET),.wr_data(CR_wr),     .rd_data(CR_rd) ,  .enb(CR_En) );
-   reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd), .enb(BGCR_En)   );
+   reg_64 ADMA_System_Address_Register     (.clk(CLK),.reset(RESET),.wr_data(ADMASAR_wr),.rd_data(ADMASAR_rd),.enb(ADMASAR_En));
+   reg_16 Error_ADMA_Status                (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd),   .enb(EISR_En)   );
+   reg_16 Command_Register                 (.clk(CLK),.reset(RESET),.wr_data(CR_wr),     .rd_data(CR_rd) ,    .enb(CR_En) );
+   reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd),   .enb(BGCR_En)   );
    //cmd
-   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd), .enb(A0R_En) );
-   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd), .enb(A1R_En)    );
-   reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd), .enb(R0R_En)   );
-   reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd), .enb(R1R_En) );
-   reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd), .enb(EISR_En)   );
+   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd),    .enb(A0R_En) );
+   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd),    .enb(A1R_En)    );
+   reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd),    .enb(R0R_En)   );
+   reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd),    .enb(R1R_En) );
+   reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd),   .enb(EISR_En)   );
 
    //logic for ADMA------------------------------------------------------
    
