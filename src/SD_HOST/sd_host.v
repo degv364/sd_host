@@ -21,14 +21,10 @@ module sd_host(input         CLK,
 	       input 	     STOP, //core signal to stop transfer with ram
 	       input [31:0]  data_from_ram, 
 	       input [3:0]   data_from_card,
-
 	       input [12:0]  addrs,
 	       input [31:0]  wr_data,
-
-	       output [31:0] rd_data,
-
 	       input 	     cmd_from_card,
-
+	       output [31:0] rd_data,
 	       output [31:0] data_to_ram,
 	       output [63:0] ram_address,
 	       output 	     ram_read_enable,
@@ -56,7 +52,6 @@ module sd_host(input         CLK,
    wire [31:0] 		     data_dat_to_buffer;
    wire 		     buffer_dat_empty;
    wire 		     buffer_dat_full;
-
    wire 		     sd_card_busy;
    
    wire [31:0] 		     PSR_wr;
@@ -86,7 +81,7 @@ module sd_host(input         CLK,
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
    wire 		     start_flag;
-// Enables de los registros
+   // Enables de los registros
    wire [31:0] 		     PSR_En;
    wire [15:0] 		     NISR_En;
    wire [15:0] 		     TMR_En;
@@ -119,7 +114,7 @@ module sd_host(input         CLK,
    reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd), .enb(BGCR_En)   );
    //cmd
    reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd), .enb(A0R_En) );
-   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd), .enb(A01_En)    );
+   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd), .enb(A1R_En)    );
    reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd), .enb(R0R_En)   );
    reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd), .enb(R1R_En) );
    reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd), .enb(EISR_En)   );
@@ -161,6 +156,8 @@ module sd_host(input         CLK,
    assign cmd_arg = {A1R_rd,A0R_rd};
    wire [31:0] 		     response_status;
    assign response_status = {R1R_rd, R0R_rd};
+   wire [31:0]					response_status_en;
+   assign response_status_en = {R1R_En, R0R_En} ;
 	
    CMD CMD_0 (.reset(RESET), 
 	      .CLK_host(CLK), 
@@ -174,15 +171,18 @@ module sd_host(input         CLK,
 	      .timeout_error(EISR_wr[0]),
 	      .response_status(response_status), 
 	      .cmd_to_sd(cmd_to_card), 
-	      .cmd_to_sd_oe(cmd_to_card_oe) 
+	      .cmd_to_sd_oe(cmd_to_card_oe),
+	      .cmd_busy_en(PSR_En[0]),
+	      .cmd_complete_en(NISR_En[0]),
+	      .timeout_error_en(EISR_En[0]),
+	      .response_status_en(response_status_en)
 	      );
 	
 
    //logic for DAT------------------------------------------------------
 
    wire [2:0] 		     DAT_PSR_wr_enb;
-   //FIXME: Change to corresponding wr_enb flags (bits 9,8,1)
-   assign DAT_PSR_wr_enb = {1'b0,1'b0,1'b0}; 
+   assign DAT_PSR_wr_enb = {PSR_En[9], PSR_En[8], PSR_En[1]}; 
    
    DAT DAT_0 (.host_clk(CLK),
 	      .sd_clk(CLK_card),
@@ -201,7 +201,7 @@ module sd_host(input         CLK,
 	      .cmd_inhibit_dat_reg(PSR_wr[1]),
 	      .PSR_wr_enb(DAT_PSR_wr_enb),
 	      .tf_complete_reg(NISR_wr[1]),
-	      .NISR_wr_enb(), //FIXME: Set to corresponding wr_enb flag (bit 1)
+	      .NISR_wr_enb(NISR_En[1]),
 	      .tx_buf_rd_enb(buffer_dat_read),
 	      .rx_buf_wr_enb(buffer_dat_write),
 	      .rx_buf_din_out(data_dat_to_buffer),

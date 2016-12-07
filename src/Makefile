@@ -13,8 +13,8 @@ VIEW := gtkwave
 BINARY := sd_host_test
 TEST_BENCH := SD_HOST/sd_host_tb.v
 
-INC_DIRS := DAT/modules CMD SD_HOST
-MOD_DIRS := DAT/modules CMD/modules ADMA/modules
+INC_DIRS := DAT/modules CMD SD_HOST buffer
+MOD_DIRS := DAT/modules CMD/modules ADMA/modules SD_HOST
 SIM_DIR := sim
 
 INC_PARAMS := $(foreach d, $(INC_DIRS), -I$d)
