@@ -1,22 +1,24 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Mon Dec  5 03:31:19 2016
+[*] Wed Dec  7 16:23:39 2016
 [*]
-[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.vcd"
-[dumpfile_mtime] "Mon Dec  5 03:28:23 2016"
-[dumpfile_size] 47669
-[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.gtkw"
-[timestart] 0
-[size] 1920 1027
-[pos] -451 -192
-*-12.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host/src/sim/sd_host_test.vcd"
+[dumpfile_mtime] "Wed Dec  7 16:23:15 2016"
+[dumpfile_size] 89564
+[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host/src/sim/sd_host_test.gtkw"
+[timestart] 817270
+[size] 1301 716
+[pos] 0 0
+*-13.000000 440000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] sd_host_tb.
 [treeopen] sd_host_tb.sd_host0.
+[treeopen] sd_host_tb.sd_host0.CMD_0.
+[treeopen] sd_host_tb.sd_host0.CMD_0.CMD_physical_1.
 [treeopen] sd_host_tb.sd_host0.DAT_0.
 [sst_width] 243
-[signals_width] 110
+[signals_width] 255
 [sst_expanded] 1
-[sst_vpaned_height] 302
+[sst_vpaned_height] 288
 @28
 sd_host_tb.sd_host0.CLK
 sd_host_tb.sd_host0.CLK_card

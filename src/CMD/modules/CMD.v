@@ -37,6 +37,8 @@ module CMD (
 	wire [31:0] response_status_en;
 	
 	
+	
+	
 	//internal wires
 	wire REQ_master, ACK_master,REQ_physical, ACK_physical, physical_inactive, timeout_error_from_physical, cmd_to_sd_from_physical;
 	wire [47:0] cmd_response; 

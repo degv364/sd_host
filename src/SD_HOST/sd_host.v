@@ -109,7 +109,9 @@ module sd_host(input         CLK,
 				  .req(request),
    				  .addrs(reg_address),
    				  .wr_valid(reg_wr_en),
-   				  .out_00Eh(CR_wr)
+   				  .out_00Eh(CR_wr),
+   				  .out_008h(A0R_wr),
+   				  .out_00Ah(A1R_wr)
    				  );
 
    //------------REG---------------------------------------------------------------------
@@ -125,8 +127,8 @@ module sd_host(input         CLK,
    reg_16 Command_Register                 (.clk(CLK),.reset(RESET),.wr_data(CR_wr),     .rd_data(CR_rd) ,    .enb(CR_En) );
    reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd),   .enb(BGCR_En)   );
    //cmd
-   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd),    .enb(A0R_En) );
-   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd),    .enb(A1R_En)    );
+   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd),    .enb(CR_En) );//FIXME:enable fijo para que funcione
+   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd),    .enb(CR_En) );//FIXME:enable fijo para que funcione
    reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd),    .enb(R0R_En)   );
    reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd),    .enb(R1R_En) );
    reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd),   .enb(EISR_En)   );
@@ -167,9 +169,11 @@ module sd_host(input         CLK,
    wire [31:0] 		     cmd_arg;
    assign cmd_arg = {A1R_rd,A0R_rd};
    wire [31:0] 		     response_status;
-   assign response_status = {R1R_rd, R0R_rd};
+   assign R1R_wr = response_status[31:16]; 
+   assign R0R_wr  = response_status[15:0];
    wire [31:0]					response_status_en;
-   assign response_status_en = {R1R_En, R0R_En} ;
+   assign  R1R_En =        response_status_en[31:16];
+   assign  R0R_En =        response_status_en[15:0];
 	
    CMD CMD_0 (.reset(RESET), 
 	      .CLK_host(CLK), 

@@ -46,7 +46,8 @@ module sd_host_tb;
 			       .data_from_card(data_from_card),
 			       .reg_wr_data(reg_wr_data),
 		     		 .reg_wr_en(reg_wr_data_en),
-		     	    .reg_address(reg_address)
+		     	    .reg_address(reg_address),
+		     	    .cmd_from_sd(cmd_from_sd)
 			       );
    
    sd_host sd_host0 (.CLK(HOST_clk),
@@ -55,7 +56,7 @@ module sd_host_tb;
 		     .STOP(STOP),
 		     .data_from_ram(data_ram_host),
 		     .data_from_card(data_from_card),
-		     .cmd_from_card(cmd_from_card),
+		     .cmd_from_card(cmd_from_sd),
 		     .data_to_ram(data_host_ram),
 		     .ram_address(ram_address),
 		     .ram_read_enable(ram_read_enable),
