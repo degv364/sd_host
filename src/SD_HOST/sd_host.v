@@ -80,7 +80,10 @@ module sd_host(input         CLK,
    wire [15:0] 		     R0R_rd;
    wire [15:0] 		     R1R_wr;
    wire [15:0] 		     R1R_rd;
+   wire [15:0]		     EADMAS_wr;
+   wire [15:0]		     EADMAS_rd;
    wire 		     start_flag;
+
    // Enables de los registros
    wire [31:0] 		     PSR_En;
    wire [15:0] 		     NISR_En;
@@ -109,7 +112,7 @@ module sd_host(input         CLK,
    reg_16 Block_Size_Register              (.clk(CLK),.reset(RESET),.wr_data(BSR_wr),    .rd_data(BSR_rd),  .enb(BSR_En)  );
    //dma   
    reg_64 ADMA_System_Address_Register     (.clk(CLK),.reset(RESET),.wr_data(ADMASAR_wr),.rd_data(ADMASAR_rd), .enb(ADMASAR_En));
-   reg_16 Error_ADMA_Status                (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd), .enb(EISR_En)   );
+   reg_16 Error_ADMA_Status                (.clk(CLK),.reset(RESET),.wr_data(EADMAS_wr),   .rd_data(EADMAS_rd), .enb(EADMAS_En)   );
    reg_16 Command_Register                 (.clk(CLK),.reset(RESET),.wr_data(CR_wr),     .rd_data(CR_rd) ,  .enb(CR_En) );
    reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd), .enb(BGCR_En)   );
    //cmd

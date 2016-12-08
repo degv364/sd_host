@@ -21,6 +21,16 @@ output [31:0] out_010h,
 output [31:0] out_012h,
 output [31:0] out_02Ah,
 output [31:0] out_032A,
+
+output [31:0] en_004h,
+output [31:0] en_006h,
+output [31:0] en_008h,
+output [31:0] en_00Ah,
+output [31:0] en_00Eh,
+output [31:0] en_010h,
+output [31:0] en_012h,
+output [31:0] en_02Ah,
+output [31:0] en_032A,
 //
 input [31:0] in_004h,
 input [31:0] in_006h,
@@ -36,10 +46,11 @@ input [31:0] in_032h,
 input [31:0] in_054h,
 
 //
-input enable,
 input [11:0] addrs,
 input req,
-input [31:0] wr_valid
+input [31:0] wr_valid,
+
+input enable
 );
 
 reg busy = 0;
@@ -58,20 +69,70 @@ reg [31:0] out_02Ah = 0;
 reg [31:0] out_032A = 0;
 
 always @(*)begin
+
 	if(req == 1) begin
 		busy <= 1;
-		if(wr_valid == 1) begin
+		if(wr_valid ~= 0) begin
 			case (addrs)
-				12'h004 : out_004h = wr_data;
-				12'h006 : out_006h = wr_data;
-				12'h008 : out_008h = wr_data;
-				12'h00A : out_00Ah = wr_data;
-				12'h00E : out_00Eh = wr_data;
-				12'h010 : out_010h = wr_data;
-				12'h012 : out_012h = wr_data;
-				12'h02A : out_02Ah = wr_data; 
-				12'h032 : out_032A = wr_data;
-				default : acknowledge = 0;//nada 
+				12'h004 : begin
+					 out_004h = wr_data;
+					 enb = 16'b0000_0000_0000_0001;	
+				end
+				12'h006 : begin
+					out_006h = wr_data;
+					enb = 16'b0000_0000_0000_0010;	
+				end
+				12'h008 : begin
+					out_008h = wr_data;
+					enb = 16'b0000_0000_0000_0100;	
+				end
+				12'h00A : begin
+					out_00Ah = wr_data;
+					enb = 16'b0000_0000_0000_1000;	
+				end
+				12'h00E : begin
+					 out_00Eh = wr_data;
+					 enb = 16'b0000_0000_0001_0000;	
+				end
+				12'h010 : begin 
+					 out_010h = wr_data;
+					 enb = 16'b0000_0000_0010_0000;	
+				end
+				12'h012 : begin
+					 out_012h = wr_data;
+					 enb = 16'b0000_0000_0100_0000;	
+				end
+
+				12'h024 : begin
+					// La compu no escribe en este registro
+					 enb = 16'b0000_0000_1000_0000;	
+				end
+
+				12'h02A : begin
+					 out_02Ah = wr_data; 
+					 enb = 16'b0000_0001_0000_0000;	
+				end
+
+				12'h030 : begin
+					// La compu no escribe en este registro
+					 enb = 16'b0000_0010_0000_0000;	
+				end
+
+				12'h032 : begin
+					 out_032h = wr_data;
+					 enb = 16'b0000_0100_0000_0000;	
+				end
+
+				12'h054 : begin
+					 out_032h = wr_data;
+					 enb = 16'b0000_1000_0000_0000;
+				end
+	
+				default : begin
+					 acknowledge = 0;//nada 
+					 enb = 16'b0000_0000_0000_0000;
+				end
+				
 			endcase
 		end
 	end
@@ -93,6 +154,7 @@ always @(*)begin
 				default : acknowledge = 0; //nada
 				endcase			
 			end
+						
 
 	if(busy == 0) begin
 		acknowledge <= 1;
