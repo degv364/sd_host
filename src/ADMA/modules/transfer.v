@@ -194,7 +194,11 @@ module transfer(input start,
 	   end
 	   else begin
 	      TFC=0;
-	   end 
+	   end
+	   if (fifo_full==1) begin
+	      fifo_write=0;
+	   end
+	   
 	end // case: RAM_FIFO
 	
 	WAIT_READ: begin

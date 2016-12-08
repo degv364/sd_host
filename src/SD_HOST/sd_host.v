@@ -233,8 +233,8 @@ module sd_host(input         CLK,
    
    //logic for fifo------------------------------------------------------      
    
-   buffer_wrapper buffer_wrapper(.host_clk(CLK_card),
-				 .sd_clk(CLK),
+   buffer_wrapper buffer_wrapper(.host_clk(CLK),
+				 .sd_clk(CLK_card),
 				 .rst_L(not_reset),
 				 .rx_buf_rd_host(buffer_dma_read),//dma
 				 .tx_buf_wr_host(buffer_dma_write),//dma
