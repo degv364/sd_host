@@ -107,6 +107,7 @@ module sd_host(input         CLK,
    assign ADMASAR_wr=0;
    assign BCR_En=16'hFFFF;
    assign BSR_En=16'hFFFF;
+   assign TMR_En=16'hFFFF;
    
    
    //--------------------------------------------------REG-------------------------------
@@ -119,7 +120,8 @@ module sd_host(input         CLK,
    				  .out_004h(BSR_wr),
 				  .out_006h(BCR_wr),
 				  .out_008h(A0R_wr),
-   				  .out_00Ah(A1R_wr)
+   				  .out_00Ah(A1R_wr),
+				  .out_00Ch(TMR_wr)
    				  );
 
    //------------REG---------------------------------------------------------------------
