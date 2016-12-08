@@ -45,7 +45,9 @@ module sd_host_tester(
       RESET 	= 1'b1;
       #8 RESET 	= 1'b0;
       
+      
       //CMD
+      #4 //La respuesta funciona si este retraso es de 4 unidades
       #2 reg_address = 12'h008;
       reg_wr_data = 32'h0000_3210;
       #2 reg_address = 12'h00A;
@@ -53,7 +55,7 @@ module sd_host_tester(
       #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
       reg_wr_data = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
       
-      #426 start_sending_response = 1; //empezar a enviar la respuesta del comando
+      #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
       
       
       
