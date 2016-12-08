@@ -105,6 +105,8 @@ module sd_host(input         CLK,
    ///FIXME: mientras sirven los registros con la compu.
    assign ADMASAR_En=64'hFFFF_FFFF_FFFF_FFFF;
    assign ADMASAR_wr=0;
+   assign BCR_En=16'hFFFF;
+   assign BSR_En=16'hFFFF;
    
    
    //--------------------------------------------------REG-------------------------------
@@ -114,7 +116,9 @@ module sd_host(input         CLK,
    				  .addrs(reg_address),
    				  .wr_valid(reg_wr_en),
    				  .out_00Eh(CR_wr),
-   				  .out_008h(A0R_wr),
+   				  .out_004h(BSR_wr),
+				  .out_006h(BCR_wr),
+				  .out_008h(A0R_wr),
    				  .out_00Ah(A1R_wr)
    				  );
 
@@ -123,7 +127,7 @@ module sd_host(input         CLK,
    reg_32 Present_State_Register           (.clk(CLK),.reset(RESET),.wr_data(PSR_wr),    .rd_data(PSR_rd),    .enb(PSR_En)    );   
    reg_16 Normal_Interrupt_Status_Register (.clk(CLK),.reset(RESET),.wr_data(NISR_wr),   .rd_data(NISR_rd),   .enb(NISR_En)  );
    reg_16 Transfer_Mode_Register           (.clk(CLK),.reset(RESET),.wr_data(TMR_wr),    .rd_data(TMR_rd),    .enb(TMR_En)  ); 
-   reg_16 Block_Count_Register             (.clk(CLK),.reset(RESET),.wr_data(BCR_wr),    .rd_data(BCR_rd),    .enb(BCR_En) );
+   reg_16 Block_Count_Register             (.clk(CLK),.reset(RESET),.wr_data(BCR_wr),    .rd_data(BCR_rd),    .enb(BCR_En) );//FIXME:enable fijo para que funcione
    reg_16 Block_Size_Register              (.clk(CLK),.reset(RESET),.wr_data(BSR_wr),    .rd_data(BSR_rd),    .enb(BSR_En)  );
    //dma   
    reg_64 ADMA_System_Address_Register     (.clk(CLK),.reset(RESET),.wr_data(ADMASAR_wr),.rd_data(ADMASAR_rd),.enb(ADMASAR_En));
@@ -175,7 +179,7 @@ module sd_host(input         CLK,
    wire [31:0] 		     response_status;
    assign R1R_wr = response_status[31:16]; 
    assign R0R_wr  = response_status[15:0];
-   wire [31:0]					response_status_en;
+   wire [31:0] 		     response_status_en;
    assign  R1R_En =        response_status_en[31:16];
    assign  R0R_En =        response_status_en[15:0];
 	
@@ -207,7 +211,7 @@ module sd_host(input         CLK,
    DAT DAT_0 (.host_clk(CLK),
 	      .sd_clk(CLK_card),
 	      .rst_L(not_reset),
-	      .resp_recv(resp_recv),
+	      .resp_recv(NISR_wr[0]),
 	      .tx_buf_empty(buffer_dat_empty),
 	      .rx_buf_full(buffer_dat_full),
 	      .tx_buf_dout_in(data_buffer_to_dat),
@@ -233,8 +237,8 @@ module sd_host(input         CLK,
    
    //logic for fifo------------------------------------------------------      
    
-   buffer_wrapper buffer_wrapper(.host_clk(CLK_card),
-				 .sd_clk(CLK),
+   buffer_wrapper buffer_wrapper(.host_clk(CLK),
+				 .sd_clk(CLK_card),
 				 .rst_L(not_reset),
 				 .rx_buf_rd_host(buffer_dma_read),//dma
 				 .tx_buf_wr_host(buffer_dma_write),//dma
