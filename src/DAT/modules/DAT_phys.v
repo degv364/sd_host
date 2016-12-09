@@ -136,7 +136,7 @@ module DAT_phys (
       //Default output values
       tx_buf_rd_enb 	       = 0;
       tf_finished 	       = 0;
-      nxt_DAT_dout 	       = DAT_dout;
+      nxt_DAT_dout 	       = 0;
       nxt_DAT_dout_oe 	       = DAT_dout_oe;
       
       //Default internal state regs values
