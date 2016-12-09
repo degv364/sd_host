@@ -92,12 +92,14 @@ module sd_host_tester(
 
       #6
       #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
-      #8 start_sending_response = 0;
+      
       	 
       cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
       
       //-------------------READ----------------------
       #2200 //FIXME: Set correct timing
+      #8 start_sending_response = 0;
+
       //DAT
       #2 reg_address  = 12'h004; //Block size
       reg_wr_data 	 = BLK_SIZE;
