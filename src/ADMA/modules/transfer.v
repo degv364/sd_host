@@ -187,7 +187,15 @@ module transfer(input start,
 	   fifo_write=1;
 	   data_to_fifo=data_from_ram;
 	   data_to_ram=0;
-	   ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   if (fifo_full==1)begin
+	      ram_address=ram_address;
+	      fifo_write=0;
+	   end
+	   else begin
+	      fifo_write=1;
+	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   end
+	   
 	   if (ram_address==sum_result) begin
 	      //transfer is complete
 	      TFC=1;
@@ -195,10 +203,6 @@ module transfer(input start,
 	   else begin
 	      TFC=0;
 	   end
-	   if (fifo_full==1) begin
-	      fifo_write=0;
-	   end
-	   
 	end // case: RAM_FIFO
 	
 	WAIT_READ: begin
