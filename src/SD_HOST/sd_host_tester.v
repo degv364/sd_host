@@ -16,26 +16,34 @@ module sd_host_tester(
 		      output reg       CLK_card,
 		      output reg       RESET,
 		      output reg [3:0] data_from_card,
-		      output [11:0]    reg_address,
-		      output [31:0]    reg_wr_data,
-		      output 	       reg_wr_en,
-		      output 	       cmd_from_sd
 
+		      output  [31:0]reg_address,
+		      output  [31:0]reg_wr_data,
+		      output        reg_wr_en,
+		      output	    req,
+		      output        cmd_from_sd
+	      
 		      );
 
-   reg [11:0] 			   reg_address = 0;
-   reg [31:0] 			   reg_wr_data = 0;
-   reg 				   reg_wr_en = 1;
-   reg 				   cmd_from_sd = 1;
-   
-   //Para respuesta cmd
-   reg 				   start_sending_response;
-   reg [47:0] 			   cmd_response;
-   wire 			   finished_parallel_to_serial;
-   wire 			   serial_out;
 
-   integer 			   i;
-   integer 			   j;      
+	reg [31:0] reg_address = 0;
+	reg [31:0] reg_wr_data = 0;
+	reg reg_wr_en = 0;
+	reg cmd_from_sd=1;
+	reg req = 0;
+
+	//Para respuesta cmd
+	reg start_sending_response = 0;
+	reg [47:0] cmd_response = 48'h19FA_FADB_DBF3;
+	wire finished_parallel_to_serial;
+	wire serial_out;
+	integer 			   i;
+   	integer 			   j;      
+
+
+   
+
+
    
    parallel_to_serial parallel_to_serial_1 (.CLK(CLK_card), 
 					    .start_sending(start_sending_response), 
@@ -43,6 +51,7 @@ module sd_host_tester(
 					    .finished(finished_parallel_to_serial), 
 					    .serial_out(serial_out) 
 					    );
+
    parameter BLK_SIZE = 32'h0000_0040; //64
    parameter BLK_CNT  = 32'h0000_000A; //10
    
@@ -60,6 +69,8 @@ module sd_host_tester(
       //-------------------WRITE----------------------
       //DAT
       #2 reg_address  = 12'h004; //Block size
+      req = 1;
+      reg_wr_en=1;
       reg_wr_data     = BLK_SIZE;
       #2 reg_address  = 12'h006; //Block count
       reg_wr_data     = BLK_CNT;
@@ -67,21 +78,28 @@ module sd_host_tester(
       reg_wr_data     = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
       
       //CMD
-      #2 reg_address  = 12'h008;
-      reg_wr_data     = 32'h0000_3210;
-      #2 reg_address  = 12'h00A;
-      reg_wr_data     = 32'h0000_7654;
-      #2 reg_address  = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
+
+      #2 reg_address = 12'h008;
+
+      reg_wr_data = 32'h0000_3210;
+      #2 reg_address = 12'h00A;
+      reg_wr_data = 32'h0000_7654;
+      #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
+
+      
+
       reg_wr_data     = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
 
       #6
       #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
-      #8 start_sending_response = 0;
+      
       	 
       cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
       
       //-------------------READ----------------------
       #2200 //FIXME: Set correct timing
+      #8 start_sending_response = 0;
+
       //DAT
       #2 reg_address  = 12'h004; //Block size
       reg_wr_data 	 = BLK_SIZE;
@@ -109,6 +127,7 @@ module sd_host_tester(
 	 #(8) data_from_card  <= 4'hC;
 	 #(8) data_from_card  <= 4'hF; //Secuencia END
       end
+
 
    end
    
