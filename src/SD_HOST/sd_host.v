@@ -8,6 +8,7 @@
 `include "defines.v"
 
 `include "ADMA/modules/dma.v"
+//`include "ADMA/yosys/synth_dma.v"
 `include "CMD/modules/CMD.v"
 `include "DAT/modules/DAT.v"
 `include "buffer/buffer_wrapper.v"

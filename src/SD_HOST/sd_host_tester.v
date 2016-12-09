@@ -68,37 +68,41 @@ module sd_host_tester(
       
       //-------------------WRITE----------------------
       //DAT
-      #2 reg_address  = 12'h004; //Block size
-      req = 1;
-      reg_wr_en=1;
-      reg_wr_data     = BLK_SIZE;
-      #2 reg_address  = 12'h006; //Block count
-      reg_wr_data     = BLK_CNT;
-      #2 reg_address  = 12'h00C; //Transfer mode
-      reg_wr_data     = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
+      // #2 reg_address  = 12'h004; //Block size
+      // req = 1;
+      // reg_wr_en=1;
+      // reg_wr_data     = BLK_SIZE;
+      // #2 reg_address  = 12'h006; //Block count
+      // reg_wr_data     = BLK_CNT;
+      // #2 reg_address  = 12'h00C; //Transfer mode
+      // reg_wr_data     = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
       
-      //CMD
+      // //CMD
 
-      #2 reg_address = 12'h008;
+      // #2 reg_address = 12'h008;
 
-      reg_wr_data = 32'h0000_3210;
-      #2 reg_address = 12'h00A;
-      reg_wr_data = 32'h0000_7654;
-      #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
+      // reg_wr_data = 32'h0000_3210;
+      // #2 reg_address = 12'h00A;
+      // reg_wr_data = 32'h0000_7654;
+      // #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
 
       
 
-      reg_wr_data     = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
+      // reg_wr_data     = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
 
-      #6
-      #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
+      // #6
+      // #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
       
       	 
-      cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
+      // cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
       
       //-------------------READ----------------------
-      #2200 //FIXME: Set correct timing
+      //#2190 //RESET=1;
+      //# 16 //RESET=0;
+      
       #8 start_sending_response = 0;
+      req = 1;
+      reg_wr_en=1;
 
       //DAT
       #2 reg_address  = 12'h004; //Block size
@@ -116,7 +120,9 @@ module sd_host_tester(
       #2 reg_address 	 = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
       reg_wr_data 	 = 32'b0000_0000_0000_0000_0001_0010_0011_0011;
 
+      #436 start_sending_response = 1;
 
+      #504
       //Envío de datos desde el SD Card
       #(10*8) for(i=0; i<BLK_CNT; i=i+1) begin
 	 #(10*8) data_from_card <= 4'h0; //Start Sequence
