@@ -1,21 +1,23 @@
 module cpu_reg_communication(
-output[31:0] rd_data,
-output acknowledge, 
+ output [31:0] rd_data,
+ output        acknowledge, 
 //output [WIDTH/2 -1: 0] rd_data_16,
 
 //output [WIDTH-4 -1: 0] rd_data_8,
 
 //output acknowledge,
-input [31:0] wr_data,
+ input [31:0]  wr_data,
 
 //
 
 
 //
+
 output [31:0] out_004h,
 output [31:0] out_006h,
 output [31:0] out_008h,
 output [31:0] out_00Ah,
+output [31:0] out_00Ch, 
 output [31:0] out_00Eh,
 output [31:0] out_010h,
 output [31:0] out_012h,
@@ -26,35 +28,40 @@ output [31:0] out_032h,
 output [31:0] out_054h,
 
 output [11:0] enb,
-//
-input [31:0] in_004h,
-input [31:0] in_006h,
-input [31:0] in_008h,
-input [31:0] in_00Ah,
-input [31:0] in_00Eh,
-input [31:0] in_010h,
-input [31:0] in_012h,
-input [31:0] in_024h,
-input [31:0] in_02Ah,
-input [31:0] in_030h,
-input [31:0] in_032h,
-input [31:0] in_054h,
 
 //
+ input [31:0]  in_004h,
+ input [31:0]  in_006h,
+ input [31:0]  in_008h,
+ input [31:0]  in_00Ah,
+ input [31:0]  in_00Ch, 
+ input [31:0]  in_00Eh,
+ input [31:0]  in_010h,
+ input [31:0]  in_012h,
+ input [31:0]  in_024h,
+ input [31:0]  in_02Ah,
+ input [31:0]  in_030h,
+ input [31:0]  in_032h,
+ input [31:0]  in_054h,
+
+//
+
 input [11:0] addrs,
 input req,
 input wr_valid
+
 );
 
 reg busy = 0;
 reg acknowledge = 0;
 
-reg [31:0] rd_data;
+   reg [31:0] rd_data;
 
 reg [31:0] out_004h = 0;
 reg [31:0] out_006h = 0;
 reg [31:0] out_008h = 0;
 reg [31:0] out_00Ah = 0;
+reg [31:0] out_00Ch = 0;
 reg [31:0] out_00Eh = 0;
 reg [31:0] out_010h = 0;
 reg [31:0] out_012h = 0;
@@ -88,6 +95,7 @@ out_054h=31'h0000_0000;
 
 
 			case (addrs)
+
 				12'h004 : begin
 					 out_004h = wr_data;
 					 enb = 16'b0000_0000_0000_0001;	
@@ -104,42 +112,47 @@ out_054h=31'h0000_0000;
 					out_00Ah = wr_data;
 					enb = 16'b0000_0000_0000_1000;	
 				end
+
+			   	12'h00C : begin
+					out_00Ch = wr_data;
+					enb = 16'b0000_0000_0001_0000;	
+				end
 				12'h00E : begin
-					 out_00Eh = wr_data;
-					 enb = 16'b0000_0000_0001_0000;	
+					out_00Eh = wr_data;
+					enb = 16'b0000_0000_0010_0000;	
 				end
 				12'h010 : begin 
 					 out_010h = wr_data;
-					 enb = 16'b0000_0000_0010_0000;	
+					 enb = 16'b0000_0000_0100_0000;	
 				end
 				12'h012 : begin
 					 out_012h = wr_data;
-					 enb = 16'b0000_0000_0100_0000;	
+					 enb = 16'b0000_0000_1000_0000;	
 				end
 
 				12'h024 : begin
 					// La compu no escribe en este registro
-					 enb = 16'b0000_0000_1000_0000;	
+					 enb = 16'b0000_0001_0000_0000;	
 				end
 
 				12'h02A : begin
 					 out_02Ah = wr_data; 
-					 enb = 16'b0000_0001_0000_0000;	
+					 enb = 16'b0000_0010_0000_0000;	
 				end
 
 				12'h030 : begin
 					// La compu no escribe en este registro
-					 enb = 16'b0000_0010_0000_0000;	
+					 enb = 16'b0000_0100_0000_0000;	
 				end
 
 				12'h032 : begin
 					 out_032h = wr_data;
-					 enb = 16'b0000_0100_0000_0000;	
+					 enb = 16'b0000_1000_0000_0000;	
 				end
 
 				12'h054 : begin
 					 out_054h = wr_data;
-					 enb = 16'b0000_1000_0000_0000;
+					 enb = 16'b0001_0000_0000_0000;
 				end
 	
 				default : begin
@@ -147,16 +160,19 @@ out_054h=31'h0000_0000;
 					 enb = 16'b0000_0000_0000_0000;
 				end
 				
+
 			endcase
 		end
 	end
 		else begin
 			busy = 0;
 			case (addrs)
+
 				12'h004 : rd_data = in_004h;
 				12'h006 : rd_data = in_006h;
 				12'h008 : rd_data = in_008h;
 				12'h00A : rd_data = in_00Ah;
+			   	12'h00C : rd_data = in_00Ch;
 				12'h00E : rd_data = in_00Eh;
 				12'h010 : rd_data = in_010h;
 				12'h012 : rd_data = in_012h;
@@ -172,6 +188,7 @@ out_054h=31'h0000_0000;
 					  end
 
 				endcase			
+
 			end
 						
 

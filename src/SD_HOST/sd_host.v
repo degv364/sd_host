@@ -109,11 +109,15 @@ module sd_host(input         CLK,
    
    assign not_reset=~RESET;
 
-   //assign request=1;//FIXME: Esto es mientras, hasta que se arregle el modulo
-  //assign CR_En=16'hFFFF; //FIXME: esto es mientras se hace pruebas, luego debe haber un Enable de verdad.
- ///FIXME: mientras sirven los registros con la compu.
+//   assign request=1;//FIXME: Esto es mientras, hasta que se arregle el modulo
+  // assign CR_En=16'hFFFF; //FIXME: esto es mientras se hace pruebas, luego debe haber un Enable de verdad.
+   ///FIXME: mientras sirven los registros con la compu.
    //assign ADMASAR_En=64'hFFFF_FFFF_FFFF_FFFF;
-  // assign ADMASAR_wr=0;
+   //assign ADMASAR_wr=0;
+   //assign BCR_En=16'hFFFF;
+   //assign BSR_En=16'hFFFF;
+   //assign TMR_En=16'hFFFF;
+
    
    
    //--------------------------------------------------REG-------------------------------
@@ -122,6 +126,7 @@ module sd_host(input         CLK,
 				  .req(req),
    				  .addrs(reg_address),
    				  .wr_valid(reg_wr_en),
+
 				  .enb(global_En),
 	
 				  .in_004h(BSR_rd),
@@ -141,6 +146,7 @@ module sd_host(input         CLK,
 				  .out_006h(BCR_wr),
    				  .out_008h(A0R_wr),
    				  .out_00Ah(A1R_wr),
+				  .out_00Ch(TMR_wr),
 				  .out_00Eh(CR_wr),
 				  .out_010h(R0R_wr),
 				  .out_012h(R1R_wr),
@@ -149,6 +155,9 @@ module sd_host(input         CLK,
 				  .out_030h(NISR_wr),
 				  .out_032h(EISR_wr),
 				  .out_054h(ADMASAR_wr)
+
+
+
    				  );
 
    //------------REG---------------------------------------------------------------------
@@ -158,8 +167,11 @@ assign BCR_En[15:0] = {16{global_En[1]}};
 assign A0R_En[15:0] = {16{global_En[2]}};
 assign A1R_En[15:0] = {16{global_En[3]}};
 
-assign CR_En[13:3] = {11{global_En[4]}};
-assign CR_En[1:0] = {2{global_En[4]}};
+assign TMR_En[2:0] = {16{global_En[4]}};
+assign TMR_En[5:4] = {16{global_En[4]}};
+
+assign CR_En[13:3] = {11{global_En[5]}};
+assign CR_En[1:0] = {2{global_En[5]}};
 assign CR_En[2] = 0;
 assign CR_En[15:14] = 0;
 
@@ -178,6 +190,7 @@ assign ADMASAR_En[2] = global_En[11];
    reg_16 Normal_Interrupt_Status_Register (.clk(CLK),.reset(RESET),.wr_data(NISR_wr),   .rd_data(NISR_rd),   .enb(NISR_En)  );
    reg_16 Transfer_Mode_Register           (.clk(CLK),.reset(RESET),.wr_data(TMR_wr),    .rd_data(TMR_rd),    .enb(TMR_En)  ); 
    reg_16 Block_Count_Register             (.clk(CLK),.reset(RESET),.wr_data(BCR_wr),    .rd_data(BCR_rd),    .enb(BCR_En) );
+
    reg_16 Block_Size_Register              (.clk(CLK),.reset(RESET),.wr_data(BSR_wr),    .rd_data(BSR_rd),    .enb(BSR_En)  );
    //dma   
 
@@ -187,8 +200,9 @@ assign ADMASAR_En[2] = global_En[11];
    reg_16 Block_Gap_Control_Register       (.clk(CLK),.reset(RESET),.wr_data(BGCR_wr),   .rd_data(BGCR_rd), .enb(BGCR_En)   );
 
    //cmd
-   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd),    .enb(A0R_En) );//FIXME:enable fijo para que funcione
-   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd),    .enb(A1R_En) );//FIXME:enable fijo para que funcione
+   reg_16 Argument0_Register               (.clk(CLK),.reset(RESET),.wr_data(A0R_wr),    .rd_data(A0R_rd),    .enb(A0R_En) );
+   reg_16 Argument1_Register               (.clk(CLK),.reset(RESET),.wr_data(A1R_wr),    .rd_data(A1R_rd),    .enb(A1R_En) );
+
    reg_16 Response0_Register               (.clk(CLK),.reset(RESET),.wr_data(R0R_wr),    .rd_data(R0R_rd),    .enb(R0R_En)   );
    reg_16 Response1_Register               (.clk(CLK),.reset(RESET),.wr_data(R1R_wr),    .rd_data(R1R_rd),    .enb(R1R_En) );
    reg_16 Error_Interrupt_Status_Register  (.clk(CLK),.reset(RESET),.wr_data(EISR_wr),   .rd_data(EISR_rd),   .enb(EISR_En)   );
@@ -231,7 +245,7 @@ assign ADMASAR_En[2] = global_En[11];
    wire [31:0] 		     response_status;
    assign R1R_wr = response_status[31:16]; 
    assign R0R_wr  = response_status[15:0];
-   wire [31:0]					response_status_en;
+   wire [31:0] 		     response_status_en;
    assign  R1R_En =        response_status_en[31:16];
    assign  R0R_En =        response_status_en[15:0];
 	
@@ -263,7 +277,7 @@ assign ADMASAR_En[2] = global_En[11];
    DAT DAT_0 (.host_clk(CLK),
 	      .sd_clk(CLK_card),
 	      .rst_L(not_reset),
-	      .resp_recv(resp_recv),
+	      .resp_recv(NISR_wr[0]),
 	      .tx_buf_empty(buffer_dat_empty),
 	      .rx_buf_full(buffer_dat_full),
 	      .tx_buf_dout_in(data_buffer_to_dat),
@@ -289,8 +303,8 @@ assign ADMASAR_En[2] = global_En[11];
    
    //logic for fifo------------------------------------------------------      
    
-   buffer_wrapper buffer_wrapper(.host_clk(CLK_card),
-				 .sd_clk(CLK),
+   buffer_wrapper buffer_wrapper(.host_clk(CLK),
+				 .sd_clk(CLK_card),
 				 .rst_L(not_reset),
 				 .rx_buf_rd_host(buffer_dma_read),//dma
 				 .tx_buf_wr_host(buffer_dma_write),//dma

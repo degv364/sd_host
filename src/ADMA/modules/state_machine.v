@@ -323,6 +323,7 @@ module state_machine(
 	   //Actually transfer the data.
 	   begin_fetch=0;
 	   start_transfer=1;
+	   //ram_address=ram_address;
 	   ram_address=ram_address_transfer;
 	end // case: ST_TFR_START
 	
