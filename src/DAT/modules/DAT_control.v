@@ -6,8 +6,6 @@
 
 `timescale 1ns/10ps
 
-//FIXME?: Timeout check
-
 module DAT_control (
 		    input  host_clk, 
 		    input  rst_L,
