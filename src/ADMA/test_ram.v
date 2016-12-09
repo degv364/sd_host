@@ -4,6 +4,7 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
+`define SD_HOST_COMPLETE
 
 `include "ADMA/modules/ram.v"
 `include "ADMA/signals/ram_signals.v"

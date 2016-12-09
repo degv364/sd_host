@@ -19,18 +19,13 @@ output [31:0] out_00Ah,
 output [31:0] out_00Eh,
 output [31:0] out_010h,
 output [31:0] out_012h,
+output [31:0] out_024h, // La compu no escribe en este registro
 output [31:0] out_02Ah,
-output [31:0] out_032A,
+output [31:0] out_030h, // La compu no escribe en este registro
+output [31:0] out_032h,
+output [31:0] out_054h,
 
-output [31:0] en_004h,
-output [31:0] en_006h,
-output [31:0] en_008h,
-output [31:0] en_00Ah,
-output [31:0] en_00Eh,
-output [31:0] en_010h,
-output [31:0] en_012h,
-output [31:0] en_02Ah,
-output [31:0] en_032A,
+output [11:0] enb,
 //
 input [31:0] in_004h,
 input [31:0] in_006h,
@@ -48,9 +43,7 @@ input [31:0] in_054h,
 //
 input [11:0] addrs,
 input req,
-input [31:0] wr_valid,
-
-input enable
+input wr_valid
 );
 
 reg busy = 0;
@@ -65,14 +58,35 @@ reg [31:0] out_00Ah = 0;
 reg [31:0] out_00Eh = 0;
 reg [31:0] out_010h = 0;
 reg [31:0] out_012h = 0;
+reg [31:0] out_024h = 0;
 reg [31:0] out_02Ah = 0;
-reg [31:0] out_032A = 0;
+reg [31:0] out_030h = 0;
+reg [31:0] out_032h = 0;
+reg [31:0] out_054h = 0;
+
+reg [11:0] enb;
 
 always @(*)begin
+enb = 16'b0000_0000_0000_0000;
+
+out_004h=31'h0000_0000;
+out_006h=31'h0000_0000;
+out_008h=31'h0000_0000;
+out_00Ah=31'h0000_0000;
+out_00Eh=31'h0000_0000;
+out_010h=31'h0000_0000;
+out_012h=31'h0000_0000;
+out_024h=31'h0000_0000; // La compu no escribe en este registro
+out_02Ah=31'h0000_0000;
+out_030h=31'h0000_0000; // La compu no escribe en este registro
+out_032h=31'h0000_0000;
+out_054h=31'h0000_0000;
 
 	if(req == 1) begin
-		busy <= 1;
-		if(wr_valid ~= 0) begin
+		busy = 1;
+		if(wr_valid == 1) begin
+
+
 			case (addrs)
 				12'h004 : begin
 					 out_004h = wr_data;
@@ -124,7 +138,7 @@ always @(*)begin
 				end
 
 				12'h054 : begin
-					 out_032h = wr_data;
+					 out_054h = wr_data;
 					 enb = 16'b0000_1000_0000_0000;
 				end
 	
@@ -137,21 +151,26 @@ always @(*)begin
 		end
 	end
 		else begin
-			busy <= 0;
+			busy = 0;
 			case (addrs)
-				11'h004 : rd_data = in_004h;
-				11'h006 : rd_data = in_006h;
-				11'h008 : rd_data = in_008h;
-				11'h00A : rd_data = in_00Ah;
-				11'h00E : rd_data = in_00Eh;
-				11'h010 : rd_data = in_010h;
-				11'h012 : rd_data = in_012h;
-				11'h024 : rd_data = in_024h;
-				11'h02A : rd_data = in_02Ah;
-				11'h030 : rd_data = in_030h;
-				11'h032 : rd_data = in_032h;
-				11'h054 : rd_data = in_054h;
-				default : acknowledge = 0; //nada
+				12'h004 : rd_data = in_004h;
+				12'h006 : rd_data = in_006h;
+				12'h008 : rd_data = in_008h;
+				12'h00A : rd_data = in_00Ah;
+				12'h00E : rd_data = in_00Eh;
+				12'h010 : rd_data = in_010h;
+				12'h012 : rd_data = in_012h;
+				12'h024 : rd_data = in_024h;
+				12'h02A : rd_data = in_02Ah;
+				12'h030 : rd_data = in_030h;
+				12'h032 : rd_data = in_032h;
+				12'h054 : rd_data = in_054h;
+				default : begin 
+						rd_data = 32'h0000; //nada
+					  	acknowledge = 0;
+						enb = 16'b0000_0000_0000_0000;
+					  end
+
 				endcase			
 			end
 						

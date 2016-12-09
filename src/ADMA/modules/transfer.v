@@ -68,7 +68,7 @@ module transfer(input start,
    wire [63:0] 	       length_64;
    wire [63:0] 	       sum_result;
    
-   assign length_64=length<<2; //length in bits, not in bytes
+   assign length_64=length<<0;//<<2; //length in bits, not in bytes
    assign sum_result=address_init+length_64;
    
 
