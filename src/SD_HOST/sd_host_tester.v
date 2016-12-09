@@ -33,7 +33,9 @@ module sd_host_tester(
    reg [47:0] 			   cmd_response = 48'h19FA_FADB_DBF3;
    wire 			   finished_parallel_to_serial;
    wire 			   serial_out;
-      
+
+   integer 			   i;
+   integer 			   j;      
    
    parallel_to_serial parallel_to_serial_1 (.CLK(CLK_card), 
 					    .start_sending(start_sending_response), 
@@ -41,19 +43,22 @@ module sd_host_tester(
 					    .finished(finished_parallel_to_serial), 
 					    .serial_out(serial_out) 
 					    );
-
+   parameter BLK_SIZE = 32'h0000_0040; //64
+   parameter BLK_CNT  = 32'h0000_000A; //10
+   
    initial begin
       CLK 	= 1'b1;
       CLK_card 	= 1'b1;
       RESET 	= 1'b1;
       #8 RESET 	= 1'b0;
       
-
+      //-------------------WRITE TRANSACTION----------------------
+      
       //DAT
       #2 reg_address 		   = 12'h004; //Block size
-      reg_wr_data 		   = 32'h0000_0040; //64 
+      reg_wr_data 		   = BLK_SIZE;
       #2 reg_address 		   = 12'h006; //Block count
-      reg_wr_data 		   = 32'h0000_000A; //10 
+      reg_wr_data 		   = BLK_CNT;
       #2 reg_address 		   = 12'h00C; //Transfer mode
       reg_wr_data 		   = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
       
@@ -65,8 +70,22 @@ module sd_host_tester(
       #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
       reg_wr_data = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
 
-      #6 //FIXME: Testing delay
+      #6
       #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
+
+      
+      //-------------------READ TRANSACTION----------------------
+      #2000 //FIXME: Set correct timing
+      //SD Card sending data
+      #(10*8) for(i=0; i<BLK_CNT; i=i+1) begin
+	 #(10*8) data_from_card <= 4'h0; //Start Sequence
+	 for(j=0; j<BLK_SIZE/4; j=j+1) begin //Data
+	    #(8) data_from_card  <= 4'h1+j;
+	 end
+	 #(8) data_from_card  <= 4'hC; //CRC Sequence
+	 #(8) data_from_card  <= 4'hC;
+	 #(8) data_from_card  <= 4'hF; //End Sequence
+      end
 
    end
    
