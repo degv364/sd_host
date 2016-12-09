@@ -82,7 +82,7 @@ module sd_host_tb;
    initial begin
       $dumpfile("sim/sd_host_test.vcd");
       $dumpvars(0,sd_host_tb);
-      #(2000) $finish;
+      #(4000) $finish;
    end
 
    initial begin 
