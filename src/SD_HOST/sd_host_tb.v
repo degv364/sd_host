@@ -31,11 +31,13 @@ module sd_host_tb;
    wire        data_to_card_oe;
    wire [3:0]  data_from_card;
    
-   wire [31:0] reg_wr_data;
-   wire [31:0] reg_rd_data;
-   wire [11:0] reg_address;
-   wire        reg_wr_data_en;
-   
+
+   wire [31:0]     reg_wr_data;
+   wire [31:0] 	   reg_rd_data;
+   wire [11:0] 	   reg_address;
+   wire		   reg_wr_data_en;
+   wire		   req;
+
    
    assign RST_L=~RESET;
    
@@ -46,6 +48,9 @@ module sd_host_tb;
 			       .reg_wr_data(reg_wr_data),
 		     	       .reg_wr_en(reg_wr_data_en),
 		     	       .reg_address(reg_address),
+
+			       .req(req),
+
 		     	       .cmd_from_sd(cmd_from_sd)
 			       );
    
@@ -66,6 +71,7 @@ module sd_host_tb;
 		     .data_to_card_oe(data_to_card_oe),
 		     .reg_wr_data(reg_wr_data),
 		     .reg_wr_en(reg_wr_data_en),
+		     .req(req),
 		     .reg_address(reg_address)
 		     );
    
