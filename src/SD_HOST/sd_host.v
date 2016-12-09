@@ -181,8 +181,8 @@ assign CR_En[15:14] = 0;
 // assign PSR_En[2] = global_En[7]; En Present State Register la compu no escribe
 //assign BGCR_En[3:0] = {4{global_En[8]}}; Compu no Escribe
 //assign NISR_En[2] = global_En[9]; Compu no Escribe
-assign EISR_En[2] = global_En[10];
-assign ADMASAR_En[2] = global_En[11];
+//assign EISR_En[2] = global_En[10]; Compu no Escribe
+assign ADMASAR_En[31:0] = {31{global_En[13]}}; 
 
 
    //dat
