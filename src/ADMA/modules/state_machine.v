@@ -149,19 +149,24 @@ module state_machine(
 	   end
 	   
 	   ST_FDS: begin
-	      if (VALID==0) begin
-		 next_state=ST_FDS;
-	      end 
+	      if (END==1)begin
+		 next_state=ST_STOP;
+	      end
 	      else begin
-		 if (address_fetch_done==1) begin
-		    next_state=ST_CACDR;
+		 if (VALID==0) begin
+		    next_state=ST_FDS;
 		 end 
 		 else begin
-		    next_state=ST_FDS;
-		 end
+		    if (address_fetch_done==1) begin
+		       next_state=ST_CACDR;
+		    end 
+		    else begin
+		       next_state=ST_FDS;
+		    end
 		 
-	      end
-
+		 end
+	      end 
+	      
 	   end // case: ST_FDS
 	   
 	   ST_CACDR: begin
