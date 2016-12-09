@@ -227,6 +227,10 @@ module transfer(input start,
 	   data_to_ram=0;
 	   ram_address=ram_address;
 	   TFC=0;
+	   if (fifo_full==0) begin
+	      fifo_write=1;   
+	   end
+	   
 	   
 	   
 	end
