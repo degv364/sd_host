@@ -177,7 +177,15 @@ module transfer(input start,
 	   else begin
 	      TFC=0;
 	   end
-	   ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   if (fifo_empty==1) begin
+	      ram_address=ram_address;
+	      fifo_read=0;
+	   end
+	   else begin
+	      fifo_read=1;
+	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   end
+	
 	end // case: FIFO_RAM
 	
 	RAM_FIFO: begin
