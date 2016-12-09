@@ -8,8 +8,6 @@
 
 `timescale 1ns/10ps
 
-//FIXME: DAT Control flags synchronization
-
 module DAT_phys (
 		 input 			      sd_clk,
 		 input 			      rst_L,
@@ -138,14 +136,14 @@ module DAT_phys (
       //Default output values
       tx_buf_rd_enb 	       = 0;
       tf_finished 	       = 0;
-      nxt_DAT_dout 	       = DAT_dout;
+      nxt_DAT_dout 	       = 0;
       nxt_DAT_dout_oe 	       = DAT_dout_oe;
       
       //Default internal state regs values
       nxt_state 	       = state;
       nxt_sel_offset 	       = sel_offset;
-      nxt_curr_block_cnt       = curr_block_cnt;
-      nxt_curr_block_sz        = curr_block_sz;
+      nxt_curr_block_cnt       = 0;//curr_block_cnt;
+      nxt_curr_block_sz        = 0;//curr_block_sz;
       nxt_curr_tx_buf_dout_in  = curr_tx_buf_dout_in;
       nxt_rx_buf_din_out       = rx_buf_din_out;
       nxt_rx_buf_wr_enb        = 0;
@@ -184,6 +182,9 @@ module DAT_phys (
 	 end
 //------------------------------ WRITE Transaction ----------------------------
 	 NEW_WRITE: begin
+	    nxt_curr_block_cnt 	= curr_block_cnt; //FIXME: Check
+	    nxt_curr_block_sz 	= curr_block_sz;  //FIXME: Check
+	     
 	    if(new_block && sdc_busy_L) begin
 	       nxt_state      = NEW_WRITE;
 	       nxt_new_block  = 1; //If sd card is busy retry the write operation
@@ -229,6 +230,7 @@ module DAT_phys (
 	       nxt_curr_block_cnt     = curr_block_cnt-1;
 	    end
 	    else begin
+	       nxt_curr_block_cnt     = curr_block_cnt; //FIXME: Check
 	       if(sel_offset < `FIFO_WIDTH/4-1) begin
 		  nxt_state = SERIAL_WRITE;
 	       end
@@ -244,6 +246,9 @@ module DAT_phys (
 	 end
 
 	 END_BLK_WRITE: begin
+	    nxt_curr_block_cnt 	= curr_block_cnt; //FIXME: Check
+	    nxt_curr_block_sz 	= curr_block_sz;  //FIXME: Check
+
 	    //----------CRC and End Sequence---------------
 	    if(end_blk_write_cnt > 1) begin
 	       nxt_end_blk_write_cnt  = end_blk_write_cnt-1;

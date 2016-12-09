@@ -152,7 +152,7 @@ module sd_host(input         CLK,
 				  .out_012h(R1R_wr),
 				  .out_024h(PST_wr),
 				  .out_02Ah(BGR_wr),
-				  .out_030h(NISR_wr),
+				  //.out_030h(NISR_wr), La compu no esribe aquí
 				  .out_032h(EISR_wr),
 				  .out_054h(ADMASAR_wr)
 
@@ -283,7 +283,7 @@ assign ADMASAR_En[2] = global_En[11];
 	      .tx_buf_dout_in(data_buffer_to_dat),
 	      .DAT_din(data_from_card),
 	      .block_sz_reg(BSR_rd[11:0]),
-	      .block_cnt_reg(BCR_wr),
+	      .block_cnt_reg(BCR_rd),
 	      .multiple_blk_reg(TMR_rd[5]),
 	      .tf_direction_reg(TMR_rd[4]),
 	      .wr_tf_active_reg(PSR_wr[8]),
