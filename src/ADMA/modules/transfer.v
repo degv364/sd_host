@@ -222,6 +222,10 @@ module transfer(input start,
 	   data_to_ram=data_to_ram;
 	   ram_address=ram_address;
 	   TFC=0;
+	   if (fifo_empty==0) begin
+	      fifo_read=1;
+	   end
+	   
 	   
 	   
        	end

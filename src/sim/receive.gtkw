@@ -1,11 +1,11 @@
 [*]
 [*] GTKWave Analyzer v3.3.72 (w)1999-2016 BSI
-[*] Fri Dec  9 10:52:57 2016
+[*] Fri Dec  9 10:53:17 2016
 [*]
 [dumpfile] "/home/daniel/repos/ucr/sd_host/src/sim/sd_host_test.vcd"
 [dumpfile_mtime] "Fri Dec  9 10:49:57 2016"
 [dumpfile_size] 263171
-[savefile] "/home/daniel/repos/ucr/sd_host/src/sim/sd_host_test.gtkw"
+[savefile] "/home/daniel/repos/ucr/sd_host/src/sim/receive.gtkw"
 [timestart] 1189690
 [size] 1301 716
 [pos] 0 0
