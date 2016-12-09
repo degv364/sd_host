@@ -8,6 +8,15 @@
 
 `timescale 1ns/10ps
 
+/*
+Módulo probador para verificar el funcionamiento adecuado del módulo de DAT (DAT_control y DAT_phys)
+
+ -Se simula la escritura al FIFO Tx por parte del DMA para luego leer bloques de 32 bits de este
+ FIFO y transmitir bloques de 4 bits a la tarjeta SD.
+ 
+ -También se simula la escritura de datos por parte de la tarjeta SD para probar las transacciones
+ de lectura.
+*/
 module DAT_tester(
 		  input 			    tx_buf_full,
 		  input 			    rx_buf_empty,

@@ -6,11 +6,12 @@
 `include "../../defines.v"
 `include "dat_tester.v"
 `include "DAT.v"
-//`include "synth_DAT.v"
-//`include "../../yosys_libs/cmos_cells.v"
-
 `include "buffer_wrapper.v"
 
+/*
+Módulo de testbench para verificar el funcionamiento adecuado del bloque de DAT 
+ (DAT_control y DAT_phys)
+ */
 module dat_tb;
 
    wire HOST_clk;
