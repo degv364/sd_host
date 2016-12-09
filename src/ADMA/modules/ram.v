@@ -81,7 +81,7 @@ module ram(input [63:0] address,
    //first address descriptor
      integer i = 0;
      initial begin
-     	info [95:32]=12; //initial address (to read)
+     	info [95:32]=24; //initial address (to read)
      	info [31:16]=80; //length
      	info [15:6]=0;
      	info [5:0]=6'b010001;//tran, valid.
