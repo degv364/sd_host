@@ -65,7 +65,14 @@ que se espera de cada bloque.
 \end{itemize}
 
 \subsection{Esteban Zamora Alvarado}
-
+\begin{itemize}
+\item Planteamiento de la arquitectura de los bloques (submódulos) para el apartado de control y
+comunicación serial con la tarjeta SD.
+\item Asignación preliminar de las entradas y salidas para los submódulos involucrados en el
+  apartado de datos (DAT).
+\item Lectura sobre sincronización de dominios de reloj distintos (CDC), así como sobre buffers
+  asincrónicos para dos frecuencias de reloj.
+\end{itemize}
 \newpage
 %--------------------------------
 \section{Semana 3}
@@ -97,7 +104,14 @@ que se espera de cada bloque.
 \end{itemize}
 
 \subsection{Esteban Zamora Alvarado}
-
+\begin{itemize}
+\item Planteamiento y programación de una versión inicial de las máquinas de estados para los
+  submódulos de control y de comunicación serial con la tarjeta SD.
+\item Escogencia e integración del buffer asincrónico de dos relojes en un módulo para la recepción
+  y transmisión de datos, así como una serie de pruebas para mostrar su funcionamiento.
+\item Programación de los estados de escritura de datos seriales hacia la tarjeta, a partir de los datos
+  del buffer de transmisión. 
+\end{itemize}
 \newpage
 
 %--------------------------------
@@ -130,7 +144,14 @@ que se espera de cada bloque.
 \end{itemize}
 
 \subsection{Esteban Zamora Alvarado}
-
+\begin{itemize}
+\item Programación de los estados de lectura de la tarjeta, para almacenar los datos en el buffer de recepción. 
+\item Corrección de la estructura de la máquina de estados para considerar condiciones de full y
+  empty en los buffers, así como la secuencia de CRC (espacio en la señal), inicio y final de cada bloque.
+\item Implementación de las pruebas para verificar el funcionamiento adecuado de la transmisión de datos
+\item Reordenamiento del código de los módulos en Verilog para corrección de errores de
+  temporización detectados en las pruebas iniciales de los módulos implementados.
+\end{itemize}
 \newpage
 
 %--------------------------------
@@ -158,7 +179,16 @@ que se espera de cada bloque.
 \end{itemize}
 
 \subsection{Esteban Zamora Alvarado}
-
+\begin{itemize}
+\item Ajustes de los bloques de control y comunicación serial con la tarjeta SD para la integración
+  con los demás módulos del SD Host, principalmente las banderas relacionadas con la lectura y
+  escritura de registros.
+\item Implementación de ciertos apartados de las pruebas de funcionamiento del SD Host relacionadas
+  con la transmisión de datos seriales a la tarjeta SD.
+\item Síntesis de los módulos implementados mediante Yosys, y correcciones leves a los mismos para
+  lograr la equivalencia lógica con respecto a los módulos conductuales.
+\item Se realizan ciertos apartados de la presentación del proyecto.
+\end{itemize}
 \newpage
 
 \end{document}
