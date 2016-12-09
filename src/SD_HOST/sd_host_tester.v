@@ -53,6 +53,7 @@ module sd_host_tester(
       RESET 	      = 1'b1;
       cmd_response = 48'h19FA_FADB_DBF3; //Respuesta de CMD para lectura de múltiples bloques
       start_sending_response = 0;
+      data_from_card = 4'b1111; //Línea de datos por defecto en alto
       
       #8 RESET 	      = 1'b0;
       
@@ -80,7 +81,7 @@ module sd_host_tester(
       cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
       
       //-------------------READ----------------------
-      #2000 //FIXME: Set correct timing
+      #2200 //FIXME: Set correct timing
       //DAT
       #2 reg_address  = 12'h004; //Block size
       reg_wr_data 	 = BLK_SIZE;
@@ -98,15 +99,15 @@ module sd_host_tester(
       reg_wr_data 	 = 32'b0000_0000_0000_0000_0001_0010_0011_0011;
 
 
-      //SD Card sending data
+      //Envío de datos desde el SD Card
       #(10*8) for(i=0; i<BLK_CNT; i=i+1) begin
 	 #(10*8) data_from_card <= 4'h0; //Start Sequence
 	 for(j=0; j<BLK_SIZE/4; j=j+1) begin //Data
 	    #(8) data_from_card  <= 4'h1+j;
 	 end
-	 #(8) data_from_card  <= 4'hC; //CRC Sequence
+	 #(8) data_from_card  <= 4'hC; //Secuencia CRC
 	 #(8) data_from_card  <= 4'hC;
-	 #(8) data_from_card  <= 4'hF; //End Sequence
+	 #(8) data_from_card  <= 4'hF; //Secuencia END
       end
 
    end

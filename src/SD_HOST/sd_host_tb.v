@@ -9,7 +9,6 @@
 `include "sd_host.v"
 `include "ADMA/modules/ram.v"
 `include "sd_host_tester.v"
-//FIXME: Add wires and modules ports
 
 module sd_host_tb;
 
