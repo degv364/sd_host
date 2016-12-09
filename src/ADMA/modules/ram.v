@@ -34,10 +34,10 @@ module ram(input [63:0] address,
       //if (address[4:0]==0) begin
       if (address[1:0]==0)begin
 	 if (write==1) begin
-	    info[address_bits+:31]=data_in;
+	    info[address_bits+:32]=data_in;
 	 end
 	 if (read==1) begin
-	    data_out=info[address_bits+:31];
+	    data_out=info[address_bits+:32];
 	 end
       end
    end
