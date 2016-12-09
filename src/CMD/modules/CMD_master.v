@@ -103,8 +103,9 @@ module CMD_master(
 				end
 				
 				ST_FINISHING: begin
+				   if (ACK_in==1) begin
 					current_st <= ST_WAITING_CMD;
-							
+				   end	
 				end
 				
 				default: current_st <= ST_WAITING_CMD;

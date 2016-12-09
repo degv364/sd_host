@@ -13,14 +13,14 @@ VIEW := gtkwave
 BINARY := sd_host_test
 TEST_BENCH := SD_HOST/sd_host_tb.v
 
-INC_DIRS := DAT/modules CMD SD_HOST buffer
+INC_DIRS := DAT/modules CMD SD_HOST buffer ADMA/modules
 MOD_DIRS := DAT/modules CMD/modules ADMA/modules SD_HOST
 SIM_DIR := sim
 
 INC_PARAMS := $(foreach d, $(INC_DIRS), -I$d)
 MODULES := $(foreach d, $(MOD_DIRS), $(wildcard $(d)/*.v))
 
-FLAGS := $(INC_PARAMS) -Ttyp
+FLAGS := $(INC_PARAMS) -Ttyp 
 
 #-------------- Targets -----------------
 
@@ -34,7 +34,7 @@ else
 endif
 
 $(SIM_DIR)/$(BINARY).x: $(MODULES)
-	$(CC) $(FLAGS) -o $@ $(TEST_BENCH)
+	$(CC) $(FLAGS) -o $@ $(TEST_BENCH) yosys_libs/cmos_cells.v
 
 $(BINARY).vcd: $(SIM_DIR)/$(BINARY).x
 	$(SIM) $< -l $(SIM_DIR)/$(BINARY).txt

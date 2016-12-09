@@ -37,5 +37,11 @@ dma_synth_fetch:
 dma_synth_transfer:
 	yosys yosys/transfer.ys
 
+dma_synth_state_machine:
+	yosys yosys/state_machine.ys
+
+
+dma_synth_dma:
+	yosys yosys/dma.ys
 clean:
 	rm -rf *.x *.vcd

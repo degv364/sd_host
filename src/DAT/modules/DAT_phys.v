@@ -279,6 +279,9 @@ module DAT_phys (
 	 end
 //------------------------------ READ Transaction -----------------------------
 	 NEW_READ: begin
+	    nxt_curr_block_cnt 	= curr_block_cnt; //FIXME: Check
+	    nxt_curr_block_sz 	= curr_block_sz;  //FIXME: Check
+
 	    if(new_block && DAT_din!=4'b0000) begin //Start Sequence not received yet
 	       nxt_state      = NEW_READ;
 	       nxt_new_block  = 1; //Retry new block Read operation
@@ -316,6 +319,7 @@ module DAT_phys (
 	       nxt_rx_buf_wr_enb  = 1;
 	    end
 	    else begin
+	       nxt_curr_block_cnt     = curr_block_cnt; //FIXME: Check
 	       if(sel_offset < `FIFO_WIDTH/4-1) begin
 		  nxt_state  = SERIAL_READ;
 	       end
@@ -332,6 +336,9 @@ module DAT_phys (
 	 end
 
 	 END_BLK_READ: begin
+	    nxt_curr_block_cnt 	= curr_block_cnt; //FIXME: Check
+	    nxt_curr_block_sz 	= curr_block_sz;  //FIXME: Check
+
 	    //----------CRC and End Sequence---------------
 	    if(DAT_din!=4'b1111) begin //End sequence not received yet
 	       nxt_state  = END_BLK_READ;

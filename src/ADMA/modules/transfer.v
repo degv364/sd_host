@@ -3,7 +3,7 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-`include "defines.v"
+`include "../../defines.v"
 
 
 //Modulo que realiza la transferencia de datos
@@ -222,6 +222,10 @@ module transfer(input start,
 	   data_to_ram=data_to_ram;
 	   ram_address=ram_address;
 	   TFC=0;
+	   if (fifo_empty==0) begin
+	      fifo_read=1;
+	   end
+	   
 	   
 	   
        	end
@@ -261,7 +265,7 @@ module transfer(input start,
 	 half_clk=start;
       end
       else begin
-	 half_clk+=1;
+	 half_clk=half_clk + 1;
       end
    end
       

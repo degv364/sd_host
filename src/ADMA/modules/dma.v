@@ -4,8 +4,8 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "defines.v"
-`include "ADMA/modules/state_machine.v"
+`include "../../defines.v"
+`include "state_machine.v"
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops

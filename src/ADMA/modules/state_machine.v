@@ -4,11 +4,11 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "defines.v"
+`include "../../defines.v"
 
 //includes
-`include "ADMA/modules/fetch.v"
-`include "ADMA/modules/transfer.v"
+`include "fetch.v"
+`include "transfer.v"
 
 
 //FIXME: PASAR esto a separacion de logica combinacional y flipflops

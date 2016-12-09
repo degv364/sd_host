@@ -86,7 +86,7 @@ module ram(input [63:0] address,
      	info [15:6]=0;
      	info [5:0]=6'b010001;//tran, valid.
      	for(i=127; i<1023; i = i + 32) begin
-   		info [i-:32] = i*52427+3435973836;
+   	   info [i-:32] = 0;// i*52427+3435973836;
    		
    	end
 	info [191:128]=0;
