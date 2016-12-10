@@ -7,10 +7,11 @@
 `include "defines.v"
 
 `timescale 1ns/10ps
-//FIXME: Add correct ports
-//FIXME: Set stimulus signals in initial block
 
-
+/*
+ En este módulo se establecen las señales y registros necesarias para las pruebas 
+ de lectura y escritura de tramas en el SD Host.
+ */
 module sd_host_tester(
 		      output reg       CLK,
 		      output reg       CLK_card,
@@ -67,39 +68,35 @@ module sd_host_tester(
       #8 RESET 	      = 1'b0;
       
       //-------------------WRITE----------------------
+`ifdef WRITE
       //DAT
-      // #2 reg_address  = 12'h004; //Block size
-      // req = 1;
-      // reg_wr_en=1;
-      // reg_wr_data     = BLK_SIZE;
-      // #2 reg_address  = 12'h006; //Block count
-      // reg_wr_data     = BLK_CNT;
-      // #2 reg_address  = 12'h00C; //Transfer mode
-      // reg_wr_data     = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
+      #2 reg_address  = 12'h004; //Block size
+      req = 1;
+      reg_wr_en=1;
+      reg_wr_data     = BLK_SIZE;
+      #2 reg_address  = 12'h006; //Block count
+      reg_wr_data     = BLK_CNT;
+      #2 reg_address  = 12'h00C; //Transfer mode
+      reg_wr_data     = 32'h0000_0023;//2={1:Multiple,0:Write},3={1:Blk_cnt_en,1:DMA_en}
       
-      // //CMD
+      //CMD
+      #2 reg_address = 12'h008;
 
-      // #2 reg_address = 12'h008;
-
-      // reg_wr_data = 32'h0000_3210;
-      // #2 reg_address = 12'h00A;
-      // reg_wr_data = 32'h0000_7654;
-      // #2 reg_address = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
+      reg_wr_data = 32'h0000_3210;
+      #2 reg_address = 12'h00A;
+      reg_wr_data = 32'h0000_7654;
+      #2 reg_address = 12'h00E; //Aqui empieza a funcionar el sd_host pues start_flag se activa
 
       
+      reg_wr_data     = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
 
-      // reg_wr_data     = 32'b0000_0000_0000_0000_0001_1001_0011_0011;
-
-      // #6
-      // #432 start_sending_response = 1; //empezar a enviar la respuesta del comando
+      #6
+      #432 start_sending_response = 1; //Empezar a enviar la respuesta del comando
       
-      	 
-      // cmd_response = 48'h12FA_FADB_DBF3; //respuesta de CMD para lectura de múltiples bloques
+      cmd_response = 48'h12FA_FADB_DBF3; //Respuesta de CMD para lectura de múltiples bloques
       
       //-------------------READ----------------------
-      //#2190 //RESET=1;
-      //# 16 //RESET=0;
-      
+`else
       #8 start_sending_response = 0;
       req = 1;
       reg_wr_en=1;
@@ -117,7 +114,7 @@ module sd_host_tester(
       reg_wr_data 	 = 32'h0000_2140;
       #2 reg_address 	 = 12'h00A;
       reg_wr_data 	 = 32'h0000_8310;
-      #2 reg_address 	 = 12'h00E; //aqui empieza a funcionar el sd_host pues start_flag se activa
+      #2 reg_address 	 = 12'h00E; //Aqui empieza a funcionar el sd_host pues start_flag se activa
       reg_wr_data 	 = 32'b0000_0000_0000_0000_0001_0010_0011_0011;
 
       #436 start_sending_response = 1;
@@ -125,7 +122,7 @@ module sd_host_tester(
       #504
       //Envío de datos desde el SD Card
       #(10*8) for(i=0; i<BLK_CNT; i=i+1) begin
-	 #(10*8) data_from_card <= 4'h0; //Start Sequence
+	 #(10*8) data_from_card <= 4'h0; //Secuencia de inicio
 	 for(j=0; j<BLK_SIZE/4; j=j+1) begin //Data
 	    #(8) data_from_card  <= 4'h1+j;
 	 end
@@ -133,7 +130,7 @@ module sd_host_tester(
 	 #(8) data_from_card  <= 4'hC;
 	 #(8) data_from_card  <= 4'hF; //Secuencia END
       end
-
+`endif
 
    end
    
@@ -147,7 +144,6 @@ module sd_host_tester(
    end
    
    
-
    always #(1) CLK  <= !CLK;
    always #(4) CLK_card <= !CLK_card;
    
