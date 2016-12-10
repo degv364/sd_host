@@ -64,7 +64,7 @@ module dma_signal(output 	RESET,
       //-----STOP=1----------------
       # 60 block_gap_control_register[0]=1;
       
-      # 5 $finish;
+      # 500 $finish;
    end
 
 endmodule // signal_32

@@ -4,14 +4,14 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "../../defines.v"
+`include "defines.v"
 
 //includes
-`include "fetch.v"
-`include "transfer.v"
+`include "ADMA/modules/fetch.v"
+`include "ADMA/modules/transfer.v"
 
 
-//FIXME: PASAR esto a separacion de logica combinacional y flipflops
+
 
 module state_machine(
 		     input [63:0] starting_address,
@@ -214,12 +214,10 @@ module state_machine(
    
    //definicion de las salidas (entradas a bloques funcionales)
    always @(*) begin
-      //next_ram_address=0;///avoid infferered latches
+      
       case (state)
 	ST_STOP: begin
-	   //STOP DMA
-	   //TFC=zero; //this is handled by transfer
-	   //address_descriptor=0;
+	   
 	   ram_read=0;
 	   ram_write=0;
 	   fifo_read=0;
@@ -263,7 +261,7 @@ module state_machine(
 	      next_ram_address=address;
 	   end
 	   else begin
-	      //next_ram_address=ram_address+4;
+	      
 	      next_ram_address=ram_address+12; //address descriptor has 96 bits   
 	   end
 	   
@@ -288,7 +286,7 @@ module state_machine(
 	   //start_transfer=0;
 	   ram_address=ram_address_transfer;
 	   
-	   //TODO fifo full, fifo empty
+	   
 	   
 	   
 	end // case: ST_TFR
@@ -309,7 +307,7 @@ module state_machine(
 	   ram_fetch_address=next_ram_address;//May change
 	   
 	   
-	   //ram_address=ram_address_fetch;
+	   
 	end // case: ST_FDS_START
 	ST_TFR_START: begin
 	   //read write flags
@@ -329,9 +327,7 @@ module state_machine(
 	
 	   
 	default: begin
-	   //ST_STOP
-	   //TFC=zero; //this is handled by transfer
-	   //address_descriptor=0;
+	   
 	   ram_read=0;
 	   ram_write=0;
 	   fifo_read=0;

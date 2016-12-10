@@ -3,7 +3,7 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-`include "../../defines.v"
+`include "defines.v"
 
 
 module fetch (input start,
