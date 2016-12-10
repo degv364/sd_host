@@ -30,4 +30,6 @@ El makefile principal, se encuentra en la raíz de src. Este se utiliza para com
 
    buffer: archivos del buffer. Este archivo es toado del proyecto en opencores del sd host.
 
-   defines.v: aquí se encuentran los defines generales de todo el proyecto. 
+   defines.v: aquí se encuentran los defines generales de todo el proyecto.
+
+SD-card-controller es un proyecto de sd host basado en el proyecto de opencores discutido en clase. No fue realizado por ninguno de los estudiantes involucrados en este proyecto, se agrega como submódulo para tomarlo de ejemplo, pero al fianl, solo se toam como ejemplo el qeu está disponible en open-cores. Este proyecto no se utiliza, para la realización de nuestro sd-host. 
