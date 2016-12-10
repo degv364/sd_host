@@ -84,6 +84,7 @@ module test_dma;
 	   .ram_read(ram_read),
 	   .fifo_read(fifo_read),
 	   .fifo_write(fifo_write),
+	   .start_flag(!RESET),
 	   .enable_write(enable_write)
 	   );
 

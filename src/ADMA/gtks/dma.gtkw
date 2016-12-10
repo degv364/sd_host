@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.76 (w)1999-2016 BSI
-[*] Sat Dec 10 05:22:24 2016
+[*] Sat Dec 10 05:52:08 2016
 [*]
 [dumpfile] "/home/daniel/repos/ucr/sd_host/src/ADMA/test_dma.vcd"
-[dumpfile_mtime] "Sat Dec 10 05:18:45 2016"
-[dumpfile_size] 18189
+[dumpfile_mtime] "Sat Dec 10 05:51:31 2016"
+[dumpfile_size] 25060
 [savefile] "/home/daniel/repos/ucr/sd_host/src/ADMA/gtks/dma.gtkw"
 [timestart] 0
 [size] 1920 1062
@@ -36,7 +36,9 @@ test_dma.ram.scope_11[63:0]
 test_dma.ram.scope_12[63:0]
 @28
 test_dma.dma.command_reg_write
-@23
+@22
 test_dma.dma.state_machine.state[5:0]
+@23
+test_dma.dma.ram_address[63:0]
 [pattern_trace] 1
 [pattern_trace] 0

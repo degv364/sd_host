@@ -57,6 +57,7 @@ module ram(input [63:0] address,
 
 `ifdef DMA
    always @(CLK) begin
+      
       //first address descriptor
       info [95:32]=0; //initial address (to read)
       info [31:16]=5; //length
@@ -72,6 +73,7 @@ module ram(input [63:0] address,
       info [223:208]=0;
       info [207:198]=0;
       info [197:192]=6'b110001; //link, valid
+      
    end // always @ (CLK)
    
 
