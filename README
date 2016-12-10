@@ -1,0 +1,16 @@
+Este es el proyecto del SD host. Para el curso de circuitos degitales 2.
+
+Autores: Ariel Fallas Pizarro, Daniel García Vaglio, Daniel Piedra Pérez, Esteban Zamora Alvarado.
+
+En doc se encuentran los documentos asociados a este trabajo.
+
+   bitácora: Se documentan las tareas de cada miembro por semana.
+
+   standard: Se estipulan las pautas a seguir en la escritura de código
+   del proyecto.
+
+
+En src se enceuntra el código que compone al proyecto. Estos son los módulos funcionales, los testers y los testbenchs.
+Se organiza por cada uno de los módulos: ADMA, Buffer, CMD, DAT, REG, SD_HOST.
+
+El makefile principal, se encuentra en la raíz de src. Este se utiliza para compilar las pruebas principales del proyecto, donde se hace funcionar el SD Host completo, con cada uno de los módulos funcionando en conjunto. 
