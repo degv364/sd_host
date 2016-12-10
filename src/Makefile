@@ -22,7 +22,7 @@ MODULES := $(foreach d, $(MOD_DIRS), $(wildcard $(d)/*.v))
 
 FLAGS := $(INC_PARAMS) -Ttyp
 
-ifneq ("$(WR)","0")
+ifneq ("$(RD)","1")
 FLAGS += -D WRITE
 endif
 
