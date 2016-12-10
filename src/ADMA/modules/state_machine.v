@@ -34,12 +34,6 @@ module state_machine(
 		     output 	   fifo_read,
 		     output 	   start_transfer
 		     );
-
-   
-
-
-
-   
    
    wire [95:0] 	fetch_address_descriptor;
    reg [95:0] 	address_descriptor;
@@ -50,7 +44,7 @@ module state_machine(
    
    reg [5:0] 	state;
 
-   //One hot
+   //Estados en codificacion one hot
    parameter ST_STOP = 6'b000001;
    parameter ST_FDS_START= 6'b010000;
    parameter ST_FDS  = 6'b000010;
@@ -66,7 +60,8 @@ module state_machine(
    wire 		INT;
    wire 		END;
    wire 		VALID;
-   
+
+   //Banderas internas
    assign address = address_descriptor[95:32];
    assign length  = address_descriptor[31:16];
    assign ACT1    = address_descriptor[5];
