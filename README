@@ -1,4 +1,4 @@
-4Este es el proyecto del SD host. Para el curso de circuitos degitales 2.
+4Este es el proyecto del SD host. Para el curso de circuitos digitales 2.
 
 Autores: Ariel Fallas Pizarro, Daniel García Vaglio, Daniel Piedra Pérez, Esteban Zamora Alvarado.
 
@@ -10,20 +10,20 @@ En doc se encuentran los documentos asociados a este trabajo.
    del proyecto.
 
 
-En src se enceuntra el código que compone al proyecto. Estos son los módulos funcionales, los testers y los testbenchs.
+En src se encuentra el código que compone al proyecto. Estos son los módulos funcionales, los testers y los testbenchs.
 Se organiza por cada uno de los módulos: ADMA, Buffer, CMD, DAT, REG, SD_HOST.
 
 El makefile principal, se encuentra en la raíz de src. Este se utiliza para compilar las pruebas principales del proyecto, donde se hace funcionar el SD Host completo, con cada uno de los módulos funcionando en conjunto.
 
    SD_HOST: archivos generales para las pruebas de los bloques en conjunto.
 
-   sim: directoorio con los archivos de simulación.
+   sim: directorio con los archivos de simulación.
 
    yosys_libs: archivos referentes a yosys para hacer sintetización.
 
    REG: Archivos referentes a los registros tanto conductuales como sintetizados.
 
-   ADMA: archivos del ADMA. los archivos de los submódulos y los testbenchs para cada submódulo del bloque. Makefile interno apra simulaciones del ADMA.
+   ADMA: archivos del ADMA. los archivos de los submódulos y los testbenchs para cada submódulo del bloque. Makefile interno para simulaciones del ADMA.
    CMD: archivos de CMD, módulos y pruebas internas con su respectivo makefile.
 
    DAT: archivos de DAT, Módulos, y pruebas internas con su respectivo makefile. Además un directorio para los módulos sintetizados.
@@ -32,4 +32,4 @@ El makefile principal, se encuentra en la raíz de src. Este se utiliza para com
 
    defines.v: aquí se encuentran los defines generales de todo el proyecto.
 
-SD-card-controller es un proyecto de sd host basado en el proyecto de opencores discutido en clase. No fue realizado por ninguno de los estudiantes involucrados en este proyecto, se agrega como submódulo para tomarlo de ejemplo, pero al fianl, solo se toam como ejemplo el qeu está disponible en open-cores. Este proyecto no se utiliza, para la realización de nuestro sd-host. 
+SD-card-controller es un proyecto de sd host basado en el proyecto de opencores discutido en clase. No fue realizado por ninguno de los estudiantes involucrados en este proyecto, se agrega como submódulo para tomarlo de ejemplo, pero al final, solo se toma como ejemplo el que está disponible en open-cores. Este proyecto no se utiliza, para la realización de nuestro sd-host. 
