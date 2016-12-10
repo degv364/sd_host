@@ -10,8 +10,15 @@ En todos los casos el nombre del archivo indica el modulo que es.
 
 Si desea probar el modulo <module>, utilice el sigiente comando:
 
-make <module>
+make dma_<module>
 
 Para limpiar el directorio:
 
 make clean
+
+
+Se debe notar que al inico se trabaja con un beffer interno, y luego se pasa a trabajar con el buffer externo para poder unir el trabajo con lo realizado con el resto de miembros.
+Entonces las pruebas que utilizan el buffer antiguo, no son utiles, pues los modulos funcionan con el buffer nuevo.
+
+Para verificar el funcionamiento de fetch : make dma_fetch
+Para verificar el funcionammiento de dma: make dma_dma

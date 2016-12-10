@@ -13,7 +13,8 @@ de DAT en el SD Host. Se tienen entonces los siguiente módulos en la subcarpeta
    - dat_tester.v: Módulo probador que genera las señales requeridas para verificar el
      funcionamiento de DAT en dat_tb.
    - buffer_wrapper.v: Módulo que encapsula los dos FIFOS requeridos para las transacciones (Rx/Tx)
-   - synth_DAT.v: Módulo sintetizado por Yosys para el bloque de DAT.
+   - synth_DAT.v: Módulo sintetizado por Yosys para el bloque de DAT, para el cual se pudo observar
+     que el comportamiento obtenido era lógicamente equivalente al conductual.
 
 Para ejecutar la simulación de estas pruebas y la visualización de las señales en GTKWave,
 se debe ejecutar el siguiente comando:

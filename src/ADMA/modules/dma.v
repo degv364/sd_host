@@ -4,12 +4,11 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "../../defines.v"
-`include "state_machine.v"
+`include "defines.v"
+`include "ADMA/modules/state_machine.v"
 
 
-//TODO: PASAR esto a separacion de logica combinacional y flipflops
-//FIXME: register -> error status
+
 
 module dma(	   
 	   input 	 RESET, //driver
@@ -62,7 +61,7 @@ module dma(
    
    assign stop=block_gap_control_register[0] | ~transfer_mode_register_in[0];
    
-   //FIXME: LOGIC to generate errors
+   
    //Instancia de la maquina de estados. 
    state_machine state_machine(.starting_address(starting_address),
 			       .RESET(RESET),

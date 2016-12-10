@@ -3,12 +3,11 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-`include "../../defines.v"
+`include "defines.v"
 
 
 //Modulo que realiza la transferencia de datos
-//FIXME: timeout termination
-//FIXME: Length indicates cant of bytes 	       
+	       
 module transfer(input start,
 		input 	      direction,
 		output 	      TFC,
@@ -30,15 +29,6 @@ module transfer(input start,
    wire 		      CLK; //just to make this module aware of clk
    reg 			      not_half_clk;
    reg 			      half_clk;
-   // always @(posedge CLK)begin
-   //    if (start==1)begin
-   // 	 half_clk=start;
-   //    end
-   //    else begin
-   // 	 half_clk+=1;
-   //    end
-   // end
-   
    
    
    
@@ -183,7 +173,7 @@ module transfer(input start,
 	   end
 	   else begin
 	      fifo_read=1;
-	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	      ram_address=ram_address+4; 
 	   end
 	
 	end // case: FIFO_RAM
@@ -201,7 +191,7 @@ module transfer(input start,
 	   end
 	   else begin
 	      fifo_write=1;
-	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	      ram_address=ram_address+4; 
 	   end
 	   
 	   if (ram_address==sum_result) begin
