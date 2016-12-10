@@ -1,5 +1,5 @@
 #este makefile es solo para pruebas del dma
-
+all: dma_dma
 
 dma_ram:
 	iverilog -o test_ram.x test_ram.v -I ..
@@ -27,9 +27,11 @@ dma_state_machine:
 	gtkwave test_state_machine.vcd
 
 dma_dma:
-	iverilog -o test_dma.x test_dma.v -I ..
+	cp ../buffer/generic_fifo_dc_gray.v ../buffer/generic_dpram.v .
+	iverilog -o test_dma.x test_dma.v -I .. ../buffer -D DMA
 	./test_dma.x
-	gtkwave test_dma.vcd
+	gtkwave test_dma.vcd gtks/dma.gtkw
+	rm generic_fifo_dc_gray.v generic_dpram.v
 
 dma_synth_fetch:
 	yosys yosys/fetch.ys
