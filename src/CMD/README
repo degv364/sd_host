@@ -1,0 +1,7 @@
+En esta carpeta se encuentra el bloque CMD.
+
+-La carpeta modules contiene los modulos relacionados con el bloque CMD, ademas de los testbench individuales.
+
+-En la carpeta simulations estan los archivos .gtkw, en donde se puede observar el resultado de las simulaciones. Cada simulacion posee un .gtkw. El mas importante es el archivo CMD_graphic.gtkw pues muestra una simulacion de envio y recepcion de comando.
+
+-Para correr las simulaciones basta con correr el make que se encuentra en la carpeta CMD. Luego de eso se puede abrir cada uno de los gtkw que se encuentran en la carpeta simulations.

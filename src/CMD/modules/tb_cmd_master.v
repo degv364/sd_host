@@ -81,7 +81,7 @@ module tb_cmd_master;
 	
 	gm_cmd_master generator(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_status,cmd_to_physical, cmd_busy_en, cmd_complete_en, timeout_error_en, response_status_en);
 	
-	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_status,cmd_to_physical, cmd_busy_en, cmd_complete_en, timeout_error_en, response_status_en);
+	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_status,cmd_to_physical, cmd_busy_en, cmd_complete_en, timeout_error_en, response_status_en,new_cmd_to_physical);
 
 
 endmodule
