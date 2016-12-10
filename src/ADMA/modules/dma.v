@@ -9,13 +9,7 @@
 
 
 //TODO: PASAR esto a separacion de logica combinacional y flipflops
-
-//FIXME: register -> Block size
-//FIXME: maybe register-> Block count register
-//                        verify length=block size*block count
-
 //FIXME: register -> error status
-//FIXME: register ->command to start
 
 module dma(	   
 	   input 	 RESET, //driver
@@ -46,16 +40,16 @@ module dma(
 	   output 	 enable_write    //reg
 	   );
 
+   //Variables internas del bloque de Direct Memory Access
    wire [63:0] 		 starting_address;
    wire 		 stop;
-   
    wire 			 command_reg_write;
    wire 		 command_reg_continue;
    wire 		 direction;
    reg [15:0] 		 error_adma_register;
    reg 			 enable_write;
    
-
+   //Logica combinacional para adaptar la maquina de estados a los registros
    assign starting_address[15:0]=adma_address_register_0;
    assign starting_address[31:16]=adma_address_register_1;
    assign starting_address[47:32]=adma_address_register_2;
@@ -68,11 +62,8 @@ module dma(
    
    assign stop=block_gap_control_register[0] | ~transfer_mode_register_in[0];
    
-   
    //FIXME: LOGIC to generate errors
-   //FIXME: logic to change state machine inputs according to block count and block size
-   
-   
+   //Instancia de la maquina de estados. 
    state_machine state_machine(.starting_address(starting_address),
 			       .RESET(RESET),
 			       .STOP(stop),
