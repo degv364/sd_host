@@ -10,7 +10,9 @@
 
 `timescale 1ns/10ps
 /* 
-Módulo de integración de los sub bloques de DAT_Control y DAT_phys, para encapsular la interacción
+ Descripción:
+ 
+ Módulo de integración de los sub bloques de DAT_Control y DAT_phys, para encapsular la interacción
  de ciertas señales internas de comunicación entre estos
 */
 module DAT(
