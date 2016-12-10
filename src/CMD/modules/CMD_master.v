@@ -14,7 +14,7 @@ module CMD_master(
 	input physical_inactive,
 	input [31:0] cmd_arg,
 	input [5:0] cmd_index, 
-	input [37:0] cmd_response,
+	input [47:0] cmd_response,
 	input timeout_error_from_physical,
 
 	output cmd_busy,
@@ -22,9 +22,13 @@ module CMD_master(
 	output REQ_out,
 	output ACK_out,
 	output timeout_error,
-	output [31:0]response_arg,
-	output [5:0]response_index,
-	output [37:0]cmd_to_physical
+	output [31:0]response_status,
+	output [37:0]cmd_to_physical,
+	output cmd_busy_en,
+	output cmd_complete_en,
+	output timeout_error_en,
+	output [31:0] response_status_en,
+	output new_cmd_to_physical
 	);
 
 	//States (one-hot)
@@ -37,21 +41,24 @@ module CMD_master(
 	wire reset, CLK_host, new_cmd, ACK_in, REQ_in;
 	wire [31:0] cmd_arg;
 	wire [5:0] cmd_index; 
-	wire [37:0] cmd_response;
+	wire [47:0] cmd_response;
 	
 	
 	//outputs
-	reg cmd_busy, cmd_complete,cmd_index_error,REQ_out,ACK_out,timeout_error;
-	reg [31:0]response_arg;
-	reg [5:0]response_index;
+	reg cmd_busy, cmd_complete,REQ_out,ACK_out,timeout_error;
+	reg [31:0]response_status;
 	reg [37:0]cmd_to_physical;
+	reg cmd_busy_en;
+	reg cmd_complete_en;
+	reg timeout_error_en;
+	reg [31:0] response_status_en;
+	reg new_cmd_to_physical;
 	
 	//other wires
 	
 	
 	//other regs
 	reg [3:0] current_st = ST_WAITING_CMD;
-	reg start_counting;
 	reg execute_complete;
 	
 	
@@ -96,8 +103,9 @@ module CMD_master(
 				end
 				
 				ST_FINISHING: begin
+				   if (ACK_in==1) begin
 					current_st <= ST_WAITING_CMD;
-							
+				   end	
 				end
 				
 				default: current_st <= ST_WAITING_CMD;
@@ -109,51 +117,67 @@ module CMD_master(
 	//Combinational logic
 	always @(*) begin
 	
-		cmd_busy = cmd_busy;
-		cmd_complete = cmd_complete;
-		cmd_index_error = cmd_index_error;
-		REQ_out = REQ_out;
-		ACK_out = ACK_out;
-		timeout_error = timeout_error;
-		response_arg = response_arg;
-		response_index = response_index;
-		cmd_to_physical = cmd_to_physical;
-		start_counting = start_counting;
-		execute_complete = execute_complete;
-		
 		case (current_st)
 			ST_WAITING_CMD: begin
 				cmd_busy = 0;
 				cmd_complete = 0;
-				cmd_index_error = 0;
 				REQ_out = 0;
 				ACK_out = 0;
 				timeout_error = 0;
-				response_arg = 32'h0000_0000;
-				response_index = 6'b000000;
+				response_status = 32'h0000_0000;
 				cmd_to_physical = 38'h0000_0000;
-				start_counting =0;
 				execute_complete =0;
+				
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
+				new_cmd_to_physical = 0;
 					
 			end
 		
 			ST_SETUP: begin
 				cmd_busy = 1;
+				cmd_complete = 0;
 				REQ_out = 1;
+				ACK_out = 0;
+				timeout_error = 0;
+				response_status = 32'h0000_0000;
 				cmd_to_physical[37:32] = cmd_index;
 				cmd_to_physical[31:0] = cmd_arg;
+				execute_complete =0;
+				new_cmd_to_physical = 1;
+				
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
 			
 							
 			end
 		
 			ST_WAITING_RESPONSE: begin
-				start_counting = 1;
+				cmd_busy = 1;
+				cmd_complete = 0;
+				REQ_out = 1;
+				response_status = 32'h0000_0000;
+				cmd_to_physical[37:32] = cmd_index;
+				cmd_to_physical[31:0] = cmd_arg;
+				new_cmd_to_physical = 0;
+				
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
+				
 				
 				if (REQ_in == 1 ) begin
 					ACK_out = 1;
 					execute_complete =1;
+					timeout_error = 0;
 				end
 				else if (timeout_error_from_physical == 1) begin
+					ACK_out = 0;
 					timeout_error = 1;
 					execute_complete = 1;
 				end
@@ -166,9 +190,22 @@ module CMD_master(
 			end
 			
 			ST_FINISHING: begin
-				response_index = cmd_response [37:32];
-				response_arg = cmd_response [31:0];
+				cmd_busy = 1;
+				REQ_out = 0;
 				ACK_out = 0;
+				timeout_error = 0;
+				response_status = cmd_response [39:8];
+				cmd_to_physical[37:32] = cmd_index;
+				cmd_to_physical[31:0] = cmd_arg;
+				execute_complete =0;
+				new_cmd_to_physical = 0;
+				
+				cmd_busy_en = 16'b0000_0000_0000_0001;
+				cmd_complete_en = 16'b0000_0000_0000_0001;
+				timeout_error_en = 16'b0000_0000_0000_0001;
+				response_status_en = 32'hFFFF_FFFF;
+				
+				
 				if (timeout_error == 1) begin
 					timeout_error = 1;
 					cmd_complete = 0;
@@ -181,6 +218,23 @@ module CMD_master(
 				
 			end
 			
+			default: begin
+				cmd_busy = 0;
+				cmd_complete = 0;
+				REQ_out = 0;
+				ACK_out = 0;
+				timeout_error = 0;
+				response_status = 32'h0000_0000;
+				cmd_to_physical = 38'h0000_0000;
+				execute_complete =0;
+				new_cmd_to_physical = 0;
+			
+				cmd_busy_en = 0;
+				cmd_complete_en = 0;
+				timeout_error_en = 0;
+				response_status_en = 32'h0000_0000;
+				
+			end
 			
 	
 		endcase

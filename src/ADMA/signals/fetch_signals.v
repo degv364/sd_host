@@ -17,7 +17,7 @@ module fetch_signal(output CLK,
    always #1 CLK=!CLK;
 
    initial begin
-      $dumpfile ("ADMA/test_fetch.vcd");
+      $dumpfile ("test_fetch.vcd");
       $dumpvars (0, test_fetch);
       # 0 start = 0;
       

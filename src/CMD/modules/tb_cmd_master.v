@@ -1,3 +1,4 @@
+`include "modules/CMD_master.v"
 module gm_cmd_master(
 
 	output reset,
@@ -8,7 +9,7 @@ module gm_cmd_master(
 	output physical_waiting_cmd,
 	output [31:0] cmd_arg,
 	output [5:0] cmd_index, 
-	output [37:0] cmd_response,
+	output [47:0] cmd_response,
 	output timeout_error_from_physical,
 
 	input cmd_busy,
@@ -16,9 +17,13 @@ module gm_cmd_master(
 	input REQ_out,
 	input ACK_out,
 	input timeout_error,
-	input [31:0]response_arg,
-	input [5:0]response_index,
-	input [37:0]cmd_to_physical
+	input [31:0]response_status,
+	input [37:0]cmd_to_physical,
+	input cmd_busy_en,
+	input cmd_complete_en,
+	input timeout_error_en,
+	input [31:0] response_status_en
+	
 	);
 	
 	reg reset=0;
@@ -31,7 +36,7 @@ module gm_cmd_master(
 	reg [31:0] cmd_arg=0;
 	reg [5:0] cmd_index=0; 
 	reg [15:0]timeout_value=0;
-	reg [37:0] cmd_response=0;
+	reg [47:0] cmd_response=0;
 	
 	
 	initial begin
@@ -62,16 +67,21 @@ module tb_cmd_master;
 	wire [31:0] cmd_arg;
 	wire [5:0] cmd_index; 
 	wire timeout_error_from_physical;
-	wire [37:0] cmd_response;
+	wire [47:0] cmd_response;
 
 	wire cmd_busy, cmd_complete,cmd_index_error,REQ_out,ACK_out,timeout_error;
-	wire [31:0]response_arg;
-	wire [5:0]response_index;
+	wire [31:0]response_status;
 	wire [37:0]cmd_to_physical;
 	
-	gm_cmd_master generator(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_to_physical);
+	wire cmd_busy_en;
+	wire cmd_complete_en;
+	wire timeout_error_en;
+	wire [31:0] response_status_en;
 	
-	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_arg,  response_index,cmd_to_physical);
+	
+	gm_cmd_master generator(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_status,cmd_to_physical, cmd_busy_en, cmd_complete_en, timeout_error_en, response_status_en);
+	
+	CMD_master test_master(reset, CLK_host, new_cmd, ACK_in, REQ_in, physical_waiting_cmd, cmd_arg, cmd_index, cmd_response, timeout_error_from_physical, cmd_busy, cmd_complete, REQ_out, ACK_out, timeout_error, response_status,cmd_to_physical, cmd_busy_en, cmd_complete_en, timeout_error_en, response_status_en);
 
 
 endmodule

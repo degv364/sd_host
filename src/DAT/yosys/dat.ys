@@ -1,0 +1,9 @@
+read_verilog modules/DAT.v
+read_verilog -lib ../yosys_libs/cmos_cells.v
+
+proc;; memory;; techmap;;
+
+dfflibmap -liberty ../yosys_libs/cmos_cells.lib
+abc -liberty ../yosys_libs/cmos_cells.lib;;
+
+write_verilog modules/synth_DAT.v

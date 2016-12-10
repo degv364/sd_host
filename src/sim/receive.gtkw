@@ -1,0 +1,31 @@
+[*]
+[*] GTKWave Analyzer v3.3.72 (w)1999-2016 BSI
+[*] Fri Dec  9 10:53:17 2016
+[*]
+[dumpfile] "/home/daniel/repos/ucr/sd_host/src/sim/sd_host_test.vcd"
+[dumpfile_mtime] "Fri Dec  9 10:49:57 2016"
+[dumpfile_size] 263171
+[savefile] "/home/daniel/repos/ucr/sd_host/src/sim/receive.gtkw"
+[timestart] 1189690
+[size] 1301 716
+[pos] 0 0
+*-14.000000 1200250 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sd_host_tb.
+[treeopen] sd_host_tb.sd_host0.
+[treeopen] sd_host_tb.sd_host0.CMD_0.
+[treeopen] sd_host_tb.sd_host0.CMD_0.CMD_physical_1.
+[treeopen] sd_host_tb.sd_host0.DAT_0.
+[sst_width] 243
+[signals_width] 255
+[sst_expanded] 1
+[sst_vpaned_height] 288
+@28
+sd_host_tb.sd_host0.CLK
+sd_host_tb.sd_host0.CLK_card
+sd_host_tb.sd_host0.RESET
+@22
+sd_host_tb.sd_host0.buffer_wrapper.rx_buf_din[31:0]
+sd_host_tb.sd_host0.DAT_0.dat_phys0.DAT_din[3:0]
+sd_host_tb.sd_host0.DAT_0.dat_phys0.rx_buf_din_out[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,6 +1,6 @@
-`include "CMD.v"
+`include "modules/CMD.v"
 
-module gm_CMD_TLB (
+module gm_CMD (
 	output reset, 
 	output CLK_host,
 	output new_cmd,
@@ -12,8 +12,7 @@ module gm_CMD_TLB (
 	input cmd_busy,
 	input cmd_complete,
 	input timeout_error,
-	input [31:0]response_arg,
-	input [5:0]response_index,
+	input [31:0]response_status,
 	input cmd_to_sd,
 	input cmd_to_sd_oe
 
@@ -106,14 +105,13 @@ module tb_cmd_tlb();
 	wire cmd_busy;
 	wire cmd_complete;
 	wire timeout_error;
-	wire [31:0]response_arg;
-	wire [5:0]response_index;
+	wire [31:0]response_status;
 	wire cmd_to_sd;
 	wire cmd_to_sd_oe;
 	
-	CMD_tlb CMD_tlb_1 (.reset(reset), .CLK_host(CLK_host), .new_cmd(new_cmd), .cmd_arg(cmd_arg), .cmd_index(cmd_index), .cmd_from_sd(cmd_from_sd), .CLK_SD_card(CLK_SD_card), .cmd_busy(cmd_busy), .cmd_complete(cmd_complete), .timeout_error(timeout_error), .response_arg(response_arg), .response_index(response_index), .cmd_to_sd(cmd_to_sd), .cmd_to_sd_oe(cmd_to_sd_oe) );
+	CMD CMD_1 (.reset(reset), .CLK_host(CLK_host), .new_cmd(new_cmd), .cmd_arg(cmd_arg), .cmd_index(cmd_index), .cmd_from_sd(cmd_from_sd), .CLK_SD_card(CLK_SD_card), .cmd_busy(cmd_busy), .cmd_complete(cmd_complete), .timeout_error(timeout_error), .response_status(response_status), .cmd_to_sd(cmd_to_sd), .cmd_to_sd_oe(cmd_to_sd_oe) );
 	
-	gm_CMD_TLB gm_CMD_TLB_1 (.reset(reset), .CLK_host(CLK_host), .new_cmd(new_cmd), .cmd_arg(cmd_arg), .cmd_index(cmd_index), .cmd_from_sd(cmd_from_sd), .CLK_SD_card(CLK_SD_card), .cmd_busy(cmd_busy), .cmd_complete(cmd_complete), .timeout_error(timeout_error), .response_arg(response_arg), .response_index(response_index), .cmd_to_sd(cmd_to_sd), .cmd_to_sd_oe(cmd_to_sd_oe) );
+	gm_CMD gm_CMD_1 (.reset(reset), .CLK_host(CLK_host), .new_cmd(new_cmd), .cmd_arg(cmd_arg), .cmd_index(cmd_index), .cmd_from_sd(cmd_from_sd), .CLK_SD_card(CLK_SD_card), .cmd_busy(cmd_busy), .cmd_complete(cmd_complete), .timeout_error(timeout_error), .response_status(response_status), .cmd_to_sd(cmd_to_sd), .cmd_to_sd_oe(cmd_to_sd_oe) );
 
 
 endmodule

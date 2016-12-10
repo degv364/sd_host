@@ -1,18 +1,18 @@
-all: individual_tb cmd
+all: cmd individual
 
 individual:
-	iverilog -o simulations/dsn.x CMD_master.v tb_cmd_master.v
-	iverilog -o simulations/dsn2.x CMD_physical.v tb_parallel_to_serial.v
-	iverilog -o simulations/dsn3.x CMD_physical.v tb_serial_to_parallel.v
-	iverilog -o simulations/dsn4.x CMD_physical.v tb_cmd_physical.v
+	iverilog -o simulations/dsn.x modules/CMD_master.v modules/tb_cmd_master.v
+	iverilog -o simulations/dsn4.x modules/CMD_physical.v modules/tb_cmd_physical.v
 	vvp simulations/dsn.x
-	vvp simulations/dsn2.x
-	vvp simulations/dsn3.x
 	vvp simulations/dsn4.x
 	
 cmd:
-	iverilog -o simulations/dsn5.x tb_CMD.v
+	iverilog -o simulations/dsn5.x modules/tb_CMD.v
 	vvp simulations/dsn5.x
 	
+	
+synth:
+	yosys yosys/cmd.ys
+	
 clean:
-	rm -f simulations/*.x simulations/*.vcd
+	rm -f simulations/*.x simulations/*.vcd yosys/synth_CMD.v

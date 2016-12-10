@@ -1,0 +1,33 @@
+4Este es el proyecto del SD host. Para el curso de circuitos degitales 2.
+
+Autores: Ariel Fallas Pizarro, Daniel García Vaglio, Daniel Piedra Pérez, Esteban Zamora Alvarado.
+
+En doc se encuentran los documentos asociados a este trabajo.
+
+   bitácora: Se documentan las tareas de cada miembro por semana.
+
+   standard: Se estipulan las pautas a seguir en la escritura de código
+   del proyecto.
+
+
+En src se enceuntra el código que compone al proyecto. Estos son los módulos funcionales, los testers y los testbenchs.
+Se organiza por cada uno de los módulos: ADMA, Buffer, CMD, DAT, REG, SD_HOST.
+
+El makefile principal, se encuentra en la raíz de src. Este se utiliza para compilar las pruebas principales del proyecto, donde se hace funcionar el SD Host completo, con cada uno de los módulos funcionando en conjunto.
+
+   SD_HOST: archivos generales para las pruebas de los bloques en conjunto.
+
+   sim: directoorio con los archivos de simulación.
+
+   yosys_libs: archivos referentes a yosys para hacer sintetización.
+
+   REG: Archivos referentes a los registros tanto conductuales como sintetizados.
+
+   ADMA: archivos del ADMA. los archivos de los submódulos y los testbenchs para cada submódulo del bloque. Makefile interno apra simulaciones del ADMA.
+   CMD: archivos de CMD, módulos y pruebas internas con su respectivo makefile.
+
+   DAT: archivos de DAT, Módulos, y pruebas internas con su respectivo makefile. Además un directorio para los módulos sintetizados.
+
+   buffer: archivos del buffer. Este archivo es toado del proyecto en opencores del sd host.
+
+   defines.v: aquí se encuentran los defines generales de todo el proyecto. 

@@ -3,7 +3,7 @@
 // Author: Daniel Garcia Vaglio
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
-`include "defines.v"
+`include "../../defines.v"
 
 
 //Modulo que realiza la transferencia de datos
@@ -68,7 +68,7 @@ module transfer(input start,
    wire [63:0] 	       length_64;
    wire [63:0] 	       sum_result;
    
-   assign length_64=length<<2; //length in bits, not in bytes
+   assign length_64=length<<0;//<<2; //length in bits, not in bytes
    assign sum_result=address_init+length_64;
    
 
@@ -177,7 +177,15 @@ module transfer(input start,
 	   else begin
 	      TFC=0;
 	   end
-	   ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   if (fifo_empty==1) begin
+	      ram_address=ram_address;
+	      fifo_read=0;
+	   end
+	   else begin
+	      fifo_read=1;
+	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   end
+	
 	end // case: FIFO_RAM
 	
 	RAM_FIFO: begin
@@ -187,14 +195,22 @@ module transfer(input start,
 	   fifo_write=1;
 	   data_to_fifo=data_from_ram;
 	   data_to_ram=0;
-	   ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   if (fifo_full==1)begin
+	      ram_address=ram_address;
+	      fifo_write=0;
+	   end
+	   else begin
+	      fifo_write=1;
+	      ram_address=ram_address+4; //TODO: this may not be the correct order, see when to update address
+	   end
+	   
 	   if (ram_address==sum_result) begin
 	      //transfer is complete
 	      TFC=1;
 	   end
 	   else begin
 	      TFC=0;
-	   end 
+	   end
 	end // case: RAM_FIFO
 	
 	WAIT_READ: begin
@@ -206,6 +222,10 @@ module transfer(input start,
 	   data_to_ram=data_to_ram;
 	   ram_address=ram_address;
 	   TFC=0;
+	   if (fifo_empty==0) begin
+	      fifo_read=1;
+	   end
+	   
 	   
 	   
        	end
@@ -219,6 +239,10 @@ module transfer(input start,
 	   data_to_ram=0;
 	   ram_address=ram_address;
 	   TFC=0;
+	   if (fifo_full==0) begin
+	      fifo_write=1;   
+	   end
+	   
 	   
 	   
 	end
@@ -241,7 +265,7 @@ module transfer(input start,
 	 half_clk=start;
       end
       else begin
-	 half_clk+=1;
+	 half_clk=half_clk + 1;
       end
    end
       

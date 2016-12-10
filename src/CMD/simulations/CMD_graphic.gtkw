@@ -1,75 +1,40 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Wed Nov 30 16:31:28 2016
+[*] Sun Dec  4 00:38:03 2016
 [*]
-[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/test_cmd_tlb.vcd"
-[dumpfile_mtime] "Wed Nov 30 16:22:57 2016"
-[dumpfile_size] 24095
-[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host_NO_GIT/simulations/CMD_tlb_graphic.gtkw"
-[timestart] 426
-[size] 1215 1000
+[dumpfile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host/src/CMD/simulations/test_cmd_tlb.vcd"
+[dumpfile_mtime] "Sun Dec  4 00:37:37 2016"
+[dumpfile_size] 25257
+[savefile] "/home/daniel/ucr/digitales2/SD_Host/desarrollo/sd_host/src/CMD/simulations/CMD_graphic.gtkw"
+[timestart] 418
+[size] 1301 744
 [pos] -1 -1
-*-0.522895 427 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-2.522895 427 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_cmd_tlb.
-[treeopen] tb_cmd_tlb.CMD_tlb_1.
-[treeopen] tb_cmd_tlb.CMD_tlb_1.CMD_master_1.
-[treeopen] tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.
-[treeopen] tb_cmd_tlb.gm_CMD_TLB_1.
+[treeopen] tb_cmd_tlb.CMD_1.
+[treeopen] tb_cmd_tlb.CMD_1.CMD_physical_1.
 [sst_width] 225
-[signals_width] 238
+[signals_width] 299
 [sst_expanded] 1
-[sst_vpaned_height] 211
+[sst_vpaned_height] 221
 @28
-tb_cmd_tlb.gm_CMD_TLB_1.CLK_SD_card
-tb_cmd_tlb.gm_CMD_TLB_1.CLK_host
-tb_cmd_tlb.gm_CMD_TLB_1.reset
-tb_cmd_tlb.gm_CMD_TLB_1.new_cmd
-tb_cmd_tlb.gm_CMD_TLB_1.cmd_busy
-tb_cmd_tlb.gm_CMD_TLB_1.cmd_index[5:0]
-tb_cmd_tlb.gm_CMD_TLB_1.cmd_arg[31:0]
+tb_cmd_tlb.CLK_SD_card
+tb_cmd_tlb.CLK_host
 @22
-tb_cmd_tlb.gm_CMD_TLB_1.response_arg[31:0]
+tb_cmd_tlb.CMD_1.cmd_index[5:0]
+tb_cmd_tlb.CMD_1.cmd_arg[31:0]
 @28
-tb_cmd_tlb.gm_CMD_TLB_1.response_index[5:0]
-tb_cmd_tlb.gm_CMD_TLB_1.cmd_to_sd
 tb_cmd_tlb.cmd_from_sd
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.start_sending
 @22
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.parallel_to_send[47:0]
+tb_cmd_tlb.CMD_1.response_status[31:0]
 @200
 -physical
-@28
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.current_st[5:0]
 @22
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.parallel_to_send[47:0]
-@28
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.start_sending
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.cmd_to_sd
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.cmd_to_sd_oe
-@24
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.parallel_to_serial_1.counter[5:0]
-@28
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.start_counting
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.timeout_error
-@24
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.counter_1.counter[5:0]
-@28
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.counter_1.finished
-tb_cmd_tlb.CMD_tlb_1.CMD_physical_1.finished_64_cycles
-@200
--master
-@28
-tb_cmd_tlb.CMD_tlb_1.CMD_master_1.current_st[3:0]
-tb_cmd_tlb.CMD_tlb_1.CMD_master_1.cmd_busy
+tb_cmd_tlb.CMD_1.CMD_physical_1.cmd_to_send[47:0]
 @200
 -Gen_mon
-@28
-tb_cmd_tlb.cmd_from_sd
-tb_cmd_tlb.gm_CMD_TLB_1.start_sending
-tb_cmd_tlb.gm_CMD_TLB_1.start_listening
 @22
-tb_cmd_tlb.gm_CMD_TLB_1.parallel_out[47:0]
-@23
-tb_cmd_tlb.gm_CMD_TLB_1.cmd_response[47:0]
+tb_cmd_tlb.gm_CMD_1.parallel_out[47:0]
+tb_cmd_tlb.gm_CMD_1.cmd_response[47:0]
 [pattern_trace] 1
 [pattern_trace] 0

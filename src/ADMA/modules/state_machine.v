@@ -4,11 +4,11 @@
 // Project: SD Host Controller
 ////////////////////////////////////////////////////////
 
-`include "defines.v"
+`include "../../defines.v"
 
 //includes
-`include "ADMA/modules/fetch.v"
-`include "ADMA/modules/transfer.v"
+`include "fetch.v"
+`include "transfer.v"
 
 
 //FIXME: PASAR esto a separacion de logica combinacional y flipflops
@@ -34,12 +34,6 @@ module state_machine(
 		     output 	   fifo_read,
 		     output 	   start_transfer
 		     );
-
-   
-
-
-
-   
    
    wire [95:0] 	fetch_address_descriptor;
    reg [95:0] 	address_descriptor;
@@ -50,7 +44,7 @@ module state_machine(
    
    reg [5:0] 	state;
 
-   //One hot
+   //Estados en codificacion one hot
    parameter ST_STOP = 6'b000001;
    parameter ST_FDS_START= 6'b010000;
    parameter ST_FDS  = 6'b000010;
@@ -66,7 +60,8 @@ module state_machine(
    wire 		INT;
    wire 		END;
    wire 		VALID;
-   
+
+   //Banderas internas
    assign address = address_descriptor[95:32];
    assign length  = address_descriptor[31:16];
    assign ACT1    = address_descriptor[5];
@@ -149,19 +144,24 @@ module state_machine(
 	   end
 	   
 	   ST_FDS: begin
-	      if (VALID==0) begin
-		 next_state=ST_FDS;
-	      end 
+	      if (END==1)begin
+		 next_state=ST_STOP;
+	      end
 	      else begin
-		 if (address_fetch_done==1) begin
-		    next_state=ST_CACDR;
+		 if (VALID==0) begin
+		    next_state=ST_FDS;
 		 end 
 		 else begin
-		    next_state=ST_FDS;
-		 end
+		    if (address_fetch_done==1) begin
+		       next_state=ST_CACDR;
+		    end 
+		    else begin
+		       next_state=ST_FDS;
+		    end
 		 
-	      end
-
+		 end
+	      end 
+	      
 	   end // case: ST_FDS
 	   
 	   ST_CACDR: begin
@@ -323,6 +323,7 @@ module state_machine(
 	   //Actually transfer the data.
 	   begin_fetch=0;
 	   start_transfer=1;
+	   //ram_address=ram_address;
 	   ram_address=ram_address_transfer;
 	end // case: ST_TFR_START
 	

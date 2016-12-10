@@ -25,5 +25,9 @@ $(BINARY).o: $(SRC_DIR)/*
 
 $(BINARY).vcd: $(BINARY).o
 	$(SIM) $< -l $(BINARY).txt
+
+synth:
+	yosys yosys/dat.ys
+
 clean:
 	rm -f *.o *.vcd *.txt 

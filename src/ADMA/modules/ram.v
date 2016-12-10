@@ -13,7 +13,7 @@
 `include "defines.v"
 
 //`define GENERAL
-`define DMA
+//`define DMA
 
 module ram(input [63:0] address,
 	   input [31:0] data_in, 
@@ -28,16 +28,16 @@ module ram(input [63:0] address,
    wire [63:0] 	 address_bits;
    assign address_bits= address<<3;
    
-   reg [1024:0] info=0;
+   reg [1023:0] info=0;
 
    always @(posedge CLK) begin
       //if (address[4:0]==0) begin
       if (address[1:0]==0)begin
 	 if (write==1) begin
-	    info[address_bits+:31]=data_in;
+	    info[address_bits+:32]=data_in;
 	 end
 	 if (read==1) begin
-	    data_out=info[address_bits+:31];
+	    data_out=info[address_bits+:32];
 	 end
       end
    end
@@ -76,6 +76,28 @@ module ram(input [63:0] address,
    
 
 `endif
+   
+`ifdef SD_HOST_COMPLETE
+   //first address descriptor
+     integer i = 0;
+     initial begin
+     	info [95:32]=24; //initial address (to read)
+     	info [31:16]=80; //length
+     	info [15:6]=0;
+     	info [5:0]=6'b010001;//tran, valid.
+     	for(i=127; i<1023; i = i + 32) begin
+   	   info [i-:32] = 0;// i*52427+3435973836;
+   		
+   	end
+	info [191:128]=0;
+	info [127:112]=0;
+	info [111:102]=0;
+	info [101:96]=6'b000010;//end comunication
+	
+     end
+   	  
+   
+`endif   
    
    wire [63:0] scope_00;
    wire [63:0] scope_01;
