@@ -6,7 +6,9 @@
 
 `timescale 1ns/10ps
 /*
-Módulo de control para el bloque DAT. Este módulo opera a la frecuencia del Host, y utiliza
+ Descripción:
+ 
+ Módulo de control para el bloque DAT. Este módulo opera a la frecuencia del Host, y utiliza
  la información del Transfer Mode Register y una señal de inicio proveniente del bloque CMD 
  (respuesta recibida) para indicar el comienzo de una operación de lectura o escritura.
  
@@ -17,18 +19,18 @@ Módulo de control para el bloque DAT. Este módulo opera a la frecuencia del Ho
  Command Inhibit (DAT), Transfer Complete (Normal Interrupt Status), entre otras.
 */
 module DAT_control (
-		    input  host_clk, //Reloj del Host
-		    input  rst_L, //Reset 
-		    input  tf_direction_reg, //Bit de dirección (Transfer Mode Reg)
-		    input  resp_recv,        //Respuesta recibida de CMD
-		    input  tx_buf_empty,     //FIFO Tx vacío
-		    input  rx_buf_full,      //FIFO Rx lleno
-		    input  tf_finished,      //Se termina la transferencia (de DAT_Phys)
-		    input  dat_phys_busy,    //DAT_Phys está ocupado
-		    output wr_tf_active_reg, //Bit de escritura activa (Present State Reg)
-		    output rd_tf_active_reg, //Bit de lectura activa (Present State Reg)
-		    output cmd_inhibit_dat_reg, //Inhabilitación de comandos de DAT (Present State)
-		    output [2:0] PSR_wr_enb, //Habilitación de escritura en el Present State Reg
+		    input  host_clk,           //Reloj del Host
+		    input  rst_L,              //Reset 
+		    input  tf_direction_reg,   //Bit de dirección (Transfer Mode Reg)
+		    input  resp_recv,          //Respuesta recibida de CMD
+		    input  tx_buf_empty,       //FIFO Tx vacío
+		    input  rx_buf_full,        //FIFO Rx lleno
+		    input  tf_finished,        //Se termina la transferencia (de DAT_Phys)
+		    input  dat_phys_busy,      //DAT_Phys está ocupado
+		    output wr_tf_active_reg,   //Bit de escritura activa (Present State Reg)
+		    output rd_tf_active_reg,   //Bit de lectura activa (Present State Reg)
+		    output cmd_inhibit_dat_reg,//Inhabilitación de comandos de DAT (Present State)
+		    output [2:0] PSR_wr_enb,   //Habilitación de escritura en el Present State Reg
 		    output tf_complete_reg, //Bit de transferencia completa (Normal Interrupt Reg)
 		    output NISR_wr_enb,     //Habilitación de escritura en el Normal Interrupt Reg
 		    output dat_wr_flag,     //Indicar a la capa física escritura

@@ -8,7 +8,9 @@
 
 `timescale 1ns/10ps
 /*
-Módulo de capa física para el bloque DAT. Este módulo opera a la frecuencia de la tarjeta SD, y se
+ Descripción:
+ 
+ Módulo de capa física para el bloque DAT. Este módulo opera a la frecuencia de la tarjeta SD, y se
  encarga de efectuar la escritura o lectura de la línea de datos de 4 pines de la tarjeta, 
  iniciando el proceso según lo indique la capa de control de DAT e interactuando con el FIFO de
  lectura o escritura tal como corresponda.
