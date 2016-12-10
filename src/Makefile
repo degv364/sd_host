@@ -1,5 +1,5 @@
 #////////////////////////////////////////////////////////
-#// File: makefile
+#// File: Makefile
 #// Authors: Ariel Fallas Pizarro, Daniel Garcia Vaglio, Daniel Piedra Perez, Esteban Zamora Alvarado
 #// Project: SD Host Controller
 #////////////////////////////////////////////////////////
@@ -20,7 +20,11 @@ SIM_DIR := sim
 INC_PARAMS := $(foreach d, $(INC_DIRS), -I$d)
 MODULES := $(foreach d, $(MOD_DIRS), $(wildcard $(d)/*.v))
 
-FLAGS := $(INC_PARAMS) -Ttyp 
+FLAGS := $(INC_PARAMS) -Ttyp
+
+ifneq ("$(RD)","1")
+FLAGS += -D WRITE
+endif
 
 #-------------- Targets -----------------
 
@@ -33,11 +37,9 @@ else
 	$(VIEW) $(SIM_DIR)/$(BINARY).vcd
 endif
 
-$(SIM_DIR)/$(BINARY).x: $(MODULES)
-	$(CC) $(FLAGS) -o $@ $(TEST_BENCH) yosys_libs/cmos_cells.v
-
-$(BINARY).vcd: $(SIM_DIR)/$(BINARY).x
-	$(SIM) $< -l $(SIM_DIR)/$(BINARY).txt
+$(BINARY).vcd:
+	$(CC) $(FLAGS) -o $(SIM_DIR)/$(BINARY).x $(TEST_BENCH) yosys_libs/cmos_cells.v
+	$(SIM) $(SIM_DIR)/$(BINARY).x -l $(SIM_DIR)/$(BINARY).txt
 
 clean:
 	rm -f $(SIM_DIR)/*.x $(SIM_DIR)/*.vcd $(SIM_DIR)/*.txt 

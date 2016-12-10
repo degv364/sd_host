@@ -1,14 +1,14 @@
 [*]
-[*] GTKWave Analyzer v3.3.76 (w)1999-2016 BSI
-[*] Sat Dec 10 04:41:15 2016
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Sat Dec 10 05:09:03 2016
 [*]
-[dumpfile] "/home/daniel/repos/ucr/sd_host/src/sim/sd_host_test.vcd"
-[dumpfile_mtime] "Sat Dec 10 04:35:55 2016"
+[dumpfile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.vcd"
+[dumpfile_mtime] "Sat Dec 10 05:08:16 2016"
 [dumpfile_size] 190756
-[savefile] "/home/daniel/repos/ucr/sd_host/src/sim/sd_host_test.gtkw"
+[savefile] "/home/estebanza/Documents/Cursos/Digitales_II/Proyectos/repo_sd_host/src/sim/sd_host_test.gtkw"
 [timestart] 0
-[size] 1869 1062
-[pos] 1920 0
+[size] 1920 1055
+[pos] 0 -28
 *-14.291505 870960 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] sd_host_tb.
 [treeopen] sd_host_tb.ram.
@@ -21,7 +21,7 @@
 [sst_width] 243
 [signals_width] 372
 [sst_expanded] 1
-[sst_vpaned_height] 637
+[sst_vpaned_height] 659
 @28
 sd_host_tb.sd_host0.CLK
 sd_host_tb.sd_host0.CLK_card
@@ -73,6 +73,7 @@ sd_host_tb.sd_host0.DAT_0.dat_phys0.tx_buf_rd_enb
 @22
 sd_host_tb.sd_host0.DAT_0.dat_phys0.curr_tx_buf_dout_in[31:0]
 sd_host_tb.sd_host0.DAT_0.dat_phys0.DAT_dout[3:0]
+sd_host_tb.sd_host0.DAT_0.dat_phys0.rx_buf_din_out[31:0]
 sd_host_tb.sd_host0.DAT_0.dat_phys0.DAT_din[3:0]
 @20000
 -
