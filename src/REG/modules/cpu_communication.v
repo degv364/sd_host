@@ -1,17 +1,16 @@
+/* Este módulo es un bloque completamente combinacional, el cual es utilizado para
+		poder escribir en los registros implementados con reg*/
+
 module cpu_reg_communication(
  output [31:0] rd_data,
  output        acknowledge, 
-//output [WIDTH/2 -1: 0] rd_data_16,
-
-//output [WIDTH-4 -1: 0] rd_data_8,
-
-//output acknowledge,
  input [31:0]  wr_data,
 
 //
 
 
-//
+//Salida de CPU communication hacia los distintos regristos
+// Para saber en donde deseo pasar el dato write.
 
 output [31:0] out_004h,
 output [31:0] out_006h,
@@ -27,9 +26,11 @@ output [31:0] out_030h, // La compu no escribe en este registro
 output [31:0] out_032h,
 output [31:0] out_054h,
 
-output [11:0] enb,
+output [11:0] enb, // One hot enable para los registros q utilizamos
 
-//
+
+// Entradas a CPU communication para saber cuál registro es el q deseo leer
+
  input [31:0]  in_004h,
  input [31:0]  in_006h,
  input [31:0]  in_008h,
@@ -44,11 +45,10 @@ output [11:0] enb,
  input [31:0]  in_032h,
  input [31:0]  in_054h,
 
-//
 
-input [11:0] addrs,
-input req,
-input wr_valid
+input [11:0] addrs, // Dirección del registro deseado
+input req,  // Solicitud
+input wr_valid // Para escribir
 
 );
 
@@ -80,6 +80,7 @@ out_004h=31'h0000_0000;
 out_006h=31'h0000_0000;
 out_008h=31'h0000_0000;
 out_00Ah=31'h0000_0000;
+
 out_00Eh=31'h0000_0000;
 out_010h=31'h0000_0000;
 out_012h=31'h0000_0000;

@@ -1,0 +1,29 @@
+Este bloque corresponde a los registros del SD_Host, los cuales fueron implementados en dos módulos. cpu_communication y regs.
+En la carpeta modules, encontrará los bloques funcionales así como un par de pruebas.
+En la carpeta sintetizado, encontrará los sintetizados de los módulos anteriores, así como las mismas pruebas.
+
+#######################
+#En la carpeta modules#
+#######################
+
+Para observar las pruebas a communication haga:
+
+make communication
+
+Par observar las pruebas a regs haga:
+
+make regs
+
+Y haga "make clean" para limpiar la carpeta de archivos *~ *.vcd y *.x
+
+###########################
+#En la carpeta sintetizado#
+###########################
+
+Para hacer la síntesis :
+
+make synth
+
+Correr prueba :
+
+make regs

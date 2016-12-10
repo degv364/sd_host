@@ -1,5 +1,5 @@
 #Listo
-read_verilog ../modules/regs.v
+read_verilog ../modules/cpu_communication.v
 
 # elaborate design hierarchy
 hierarchy 
