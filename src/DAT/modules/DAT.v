@@ -9,7 +9,10 @@
 `include "../../defines.v"
 
 `timescale 1ns/10ps
-
+/* 
+Módulo de integración de los sub bloques de DAT_Control y DAT_phys, para encapsular la interacción
+ de ciertas señales internas de comunicación entre estos
+*/
 module DAT(
 	   input 			host_clk,
 	   input 			sd_clk,
@@ -37,7 +40,7 @@ module DAT(
 	   output 			sdc_busy_L
 	   );
 
-   //Internal DAT flags
+   //Banderas internas entre DAT_control y DAT_phys
    wire 	 dat_phys_busy_flag;
    wire 	 dat_write_flag;
    wire 	 dat_read_flag;

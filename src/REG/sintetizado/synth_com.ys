@@ -24,5 +24,5 @@ opt
 
 
 #Crea el archivo ya convertido a estructural.
-write_verilog reg_sintetizado.v
+write_verilog com_sintetizado.v
 
