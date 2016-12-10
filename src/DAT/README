@@ -1,0 +1,24 @@
+////////////////////////////////////////////////////////
+// Archivo: README
+// Author: Esteban Zamora A
+// Project: SD Host Controller
+////////////////////////////////////////////////////////
+
+Este directorio contiene los módulos en Verilog utilizados para la implementación del bloque
+de DAT en el SD Host. Se tienen entonces los siguiente módulos en la subcarpeta modules/:
+   - DAT_control.v: Capa de control del bloque DAT (frecuencia del Host)
+   - DAT_phys.v: Capa física del bloque DAT (frecuencia de la tarjeta SD)
+   - DAT.v: Bloque de integración de DAT_control y DAT_phys
+   - dat_tb.v: Testbench utilizado para la verificación del funcionamiento adecuado de DAT
+   - dat_tester.v: Módulo probador que genera las señales requeridas para verificar el
+     funcionamiento de DAT en dat_tb.
+   - buffer_wrapper.v: Módulo que encapsula los dos FIFOS requeridos para las transacciones (Rx/Tx)
+   - synth_DAT.v: Módulo sintetizado por Yosys para el bloque de DAT.
+
+Para ejecutar la simulación de estas pruebas y la visualización de las señales en GTKWave,
+se debe ejecutar el siguiente comando:
+
+   $ make
+	
+Con esto se compilan los módulos correspondientes en Icarus Verilog y se muestran las señales
+involucradas en las pruebas.
